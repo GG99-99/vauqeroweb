@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund:wght@300&display=swap');
+@import url("header.css");
+@import url("article.css");
+ 
+
+body {
+  
+  font-family: "Playwrite DE Grund", cursive;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+
+
+  padding: 0;
+  margin: 0;
+  margin-block: 0;
+
+  background-image: linear-gradient(rgba(0,0,0,0.5), 
+    rgba(0,0,0,0.5)), 
+    url('../images/silla-barberia.jpg');
+  
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+a {
+  color: #00B7FF;
+}
+
+

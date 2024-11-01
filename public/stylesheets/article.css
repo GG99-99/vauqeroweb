@@ -1,0 +1,16 @@
+article{
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.ubicacion{
+    width: 85%;
+    height: 85%;
+    background-color: #cecccc;
+
+    display: flex;
+    flex-wrap: wrap;
+}

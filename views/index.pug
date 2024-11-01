@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  header
+    div(class='header-div')
+      div(class='header_tittel-box')
+        h1(class='header-h1') Peluqueria <span class='header-h1_span'>Vaquero</span>
+        p(class='welcome-p') Bienvenido / Welcome / 你好
+
+      div(class='header_personas-box')
+        h3(class='h3-personas-box') Personas en espera 
+        div(class='number-personas-box') 
+          p(class='number-personas') #{cp} 
+
+
+  article 
+    div(class='ubicacion')
+      div(class='mapa-box') 
+      div(class='informacion')
+        div(class='info-titulo-box') 
+          h3(class='info-titulo') Ubicacion y Contacto 
+        div(class='info-contacto')
+
+        
