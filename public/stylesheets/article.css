@@ -1,16 +1,95 @@
 article{
-    height: 100vh;
+    min-height: 100vh;
+    width: 100vw;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+    font-weight: 300;
+    font-family: "Poppins", sans-serif;
+    font-style: normal;
+    color: #ffff;
 }
 
-.ubicacion{
-    width: 85%;
-    height: 85%;
-    background-color: #cecccc;
 
+
+
+
+.ubicacion{
+    width: 85vw;
+    min-height: 65vh;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    grid-auto-rows: auto;
+    row-gap: 20px;
+    column-gap: 15px;
+    padding: 30px;
+
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border:1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+    justify-content: center;
+
+    
+}
+
+.mapa-box, .informacion-box{
+    height: auto;   
+}
+
+.informacion-box{
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2vw;
+    position: relative;
+    
+}
+
+
+
+.mapa-box{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.map-link, .direccion-p{
+    color: #ffff;
+    font-size: var(--normal-size);
+}
+
+
+.info-titulo, .contactanos-h3, .contactanos-spam{
+    margin: 0;
+    font-size: var(--tittle-normal-size);
+}
+
+.direccion-p{
+    text-align: center;
+    display: inline-block;
+    width: 80%;
+    margin: 0;
+}
+
+.contactanos-spam{
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.what-svg{
+    position: relative;
+    top: -3.5px;
+}
+
+.map{
+    margin-bottom: 10px;
+    
 }

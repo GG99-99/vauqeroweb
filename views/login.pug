@@ -1,0 +1,23 @@
+extends layout
+
+block linkCss 
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/login.css')
+
+block content 
+    header(class='main')
+        div(class="login-div")
+            div(class="login-title")
+                p(class="login-p") Iniciar Sesion 
+
+            div( class="login-boxes")
+                div
+                    label(for="")  Usuario  
+                    input(type="text" id="username" class="input")
+
+                div    
+                    label(for="")  Clave 
+                    input(type="password" id="password" class="input")
+                
+                input(type="submit" class="submit-button" id="submit")
+    script(src="/javascripts/PB-login.js")

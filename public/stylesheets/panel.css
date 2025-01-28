@@ -1,0 +1,221 @@
+body{
+    background-image: none;
+}
+
+ul{
+    list-style: none;
+}
+
+
+/*  ------------------ Header ------------------  */
+header{
+    display: flex;
+    height: 9vh;
+    padding: 3vh 5vw;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1.5px solid;
+
+}
+.icon{
+    height: 5vh;
+    width: 5vh;
+    border: 1px solid;
+    border-color: rgb(179, 179, 179);
+    border-radius: 1vh;
+    padding: 0.5vh;
+}
+
+
+
+/*  ------------------ Article ------------------  */
+
+article{
+    display: flex;
+    flex-direction: column;
+    height: 91vh;
+    align-items: center;
+    gap: 2vh;
+    margin-top: 2vh;
+}
+
+.turno{
+    font-size: 4vh;
+}
+
+.list-client-box{
+    height: 59vh;
+    width: 80vw;
+    
+}
+
+.button-upturn{
+    background-color: transparent;
+    height: 6vh;
+    width: 6vh;
+    font-size: 1.5vh;
+    cursor: pointer;
+}
+
+.list-client-ul{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+    padding: 3%;
+    overflow: scroll;
+    height: 100%;
+}
+
+li{
+    list-style: none;
+    display: flex;
+    
+}
+
+.list-client-li{
+    border: 1px solid black;
+    border-radius: 1vw;
+    padding: 1vh;
+    height: 8vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.li_client-information{
+    display: inline-flex;
+    gap: 5%;
+    width: 50%;
+}
+
+
+
+.cliente-name-div, .cliente-id-div{
+    font-size: 2vh;
+}
+
+.decline-cliente-button{
+    height: 4vh;
+    width: 4vh;
+    border: 1px solid #000000;
+    border-radius: 1vh;
+}
+
+.decline-client-icon{
+    height: 3.9vh;
+    width: 3.9vh;
+}
+/* -------- Footer --------  */
+
+footer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 40vh;
+    
+}
+
+.form-addclient{
+    gap: 2vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.box-input-text{
+    display: flex;
+    flex-direction: column;
+}
+
+.p-addclient{
+    font-size: 2vh;
+}
+
+
+.input-addclient{
+    height: 4vh;
+    padding: 8px;
+    width: 60vw;
+    font-size: 1.5vh;
+}
+
+
+.button-addclient{
+    background-color: transparent;
+    height: 3vh;
+    width: 20vw;
+    border: 1px solid;
+    border-color: black;
+    font-size: 1.5vh;
+    cursor: pointer;
+    
+}
+
+
+
+
+
+/* ---------------------- Modular logout ---------------------- */
+.logout-screen{
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.526);
+    position: fixed;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.logout-card-box{
+    height: 30vh;
+    width: 70vw;
+    background-color: rgb(213, 213, 213);
+    border-radius: 2vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8vh;
+}
+
+.logout-button-box{
+    display: flex;
+    align-items: center;
+    gap: 2vw;
+    
+}
+
+.logout-text{
+    padding: 5%;
+    font-size: 2vh;
+}
+
+.logout-no-close, .logout-close{
+    width: 30vw;
+    height: 5vh;
+    border: 1px solid rgba(0, 0, 0, 0.526);
+    display: flex;
+    border-radius: 0.7vw;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5vh;
+    transition: all 0.5s;
+    
+}
+
+.logout-no-close:hover{
+    background-color: rgba(225, 0, 0, 0.821);
+    color: white;
+}
+
+.logout-close:hover{
+    background-color: rgba(1, 189, 1, 0.688);
+    color: white;
+}
+ /*---------------------------------------------------------*/
+.OPASITY30{
+    opacity: 30%;
+}

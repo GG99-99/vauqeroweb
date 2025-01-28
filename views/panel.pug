@@ -1,0 +1,62 @@
+extend layout 
+
+block linkCss 
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/panel.css')
+
+block content 
+    div(class="logout-screen")
+        div(class="logout-card-box")
+            div(class="logout-text")
+                p Estas seguro que quieres cerrar sesion? 
+            div(class="logout-button-box")
+                div(class="logout-no-close") No 
+                div(class="logout-close") Si 
+    header 
+        div(class="add-user-box")
+            img(src="/images/nuevo-cliente.png", alt="" class="icon") 
+        div(class="logout-box")
+            img(src="/images/cerrar-sesion.png", alt="" class="icon openLogoutScreenButton")
+
+    article 
+        div(class="turno")= turno 
+
+        div(class="list-client-box")
+            ul(class="list-client-ul")
+
+                each cliente in clientes 
+
+                    case cliente.status  
+                        when 'esperando'
+                            li(class="list-client-li" idCliente=cliente._id)
+                                div(class="li_client-information")
+                                    strong  
+                                        div(class='cliente-id-div')=cliente._id 
+                                    div(class='cliente-name-div')=cliente.name 
+                                div(class="decline-cliente-button" idCliente=cliente._id)
+                                    img(src="/images/trash.png", alt="" class="decline-client-icon" idCliente=cliente._id)
+
+                        when 'declinado'
+                            li(class="list-client-li OPASITY30" idCliente=cliente._id)
+                                div(class="li_client-information")
+                                    strong  
+                                        div(class='cliente-id-div')=cliente._id 
+                                    div(class='cliente-name-div')=cliente.name 
+                                div(class='declinado-text') turno declinado 
+                                        
+                                
+
+        div(class="botton-upturn-box")
+            div 
+                img(src="/images/mas.png" alt="" class="button-upturn" ) 
+
+    footer 
+        div(class="form-addclient") 
+            div 
+                p(class="p-addclient")  Ingresar nuevo cliente
+            div(class="box-input-text") 
+                input(type="text" class="input-addclient" placeholder="Nombre") 
+            div     
+                input(type="button" class="button-addclient" value="agregar ")
+
+    script(src="/javascripts/PB-panel.js") 
