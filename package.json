@@ -2,6 +2,7 @@
   "name": "vaqueroweb",
   "version": "0.0.0",
   "private": true,
+  "nodemonConfig": {"ext": "","ignore": ["*.test.ts", "db/*", "*.json"], "delay": "2" },
   "scripts": {
     "start": "nodemon ./bin/www"
   },

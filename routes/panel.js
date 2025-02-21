@@ -14,8 +14,8 @@ let clientInst;
 /* GET users listing. */
 router.route('/')
 .get(function(req, res, next) {
-
   
+  clientInst.checkClients(clientInst.turnoNow)
 
   const token = req.cookies.access_token
   if(!token){ return res.status(403).redirect('/login') }
@@ -25,9 +25,6 @@ router.route('/')
   try {
     const data = jwt.verify(token, SECRET_JWT_KEY)  // para verificar el token JWT y de paso obtiene los valores de Username y password que le asignamos en el route(login.js)
   }catch(err){}
-
-  
- 
 
   res.render('panel', {
     turno: clientInst.turnoNow,
@@ -46,11 +43,17 @@ router.route('/')
 
   if(accion == 'upturn'){
     await clientInst.upTurn()
-    console.log(`el nuevo turno es ${clientInst.turnoNow}`)
+    //console.log(`el nuevo turno es ${clientInst.turnoNow}`)
     res.send(clientInst.turnoNow.toString())
   }
   
-  
+  else if(accion == 'downturn'){
+      await clientInst.downTurn()
+      //console.log(`el nuevo turno es ${clientInst.turnoNow}`)
+      res.send(clientInst.turnoNow.toString())
+    
+  }
+
   else if(accion == 'addclient'){
     turnoLastClient = await clientInst.addClient(nombre)
     
@@ -58,7 +61,7 @@ router.route('/')
   }
 
   else if(accion == 'declinecliente'){
-    await ClientReporitory.declineClient(id)
+    clientInst.declineClient(id)
     res.send({'estado':'good'})
   }
   

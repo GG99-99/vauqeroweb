@@ -17,6 +17,16 @@ async function upturnFunc() {
                 console.log(res)
                 let turno = document.querySelector(".turno")
                 turno.innerHTML = res
+
+                let idGreen = parseInt(res) - 1
+                let elemento = document.querySelector(`.list-client-li[idcliente="${idGreen}"]`)
+                
+                if(!elemento.classList.contains("declinado") && !elemento.classList.contains("OPASITY30")){
+                    elemento.classList.add("GREEN")
+                    let trashBlock = elemento.querySelector(":scope > div.decline-cliente-button")
+                    trashBlock.outerHTML = `<div class="listo-text">listo</div>`
+                }
+                
             }
         } catch(err){console.error('Error al actualizar el turno:', err);}
     });
@@ -159,6 +169,6 @@ button.addEventListener('click', async event => {
 
     let declineBoxForChange = document.querySelector(`.decline-cliente-button[idcliente="${id}"]`)
     declineBoxForChange.outerHTML= '<div class="declinado-text">turno declinado </div>'
-    // <div class="declinado-text">turno declinado </div>    [ cambiar el outer html del bottom trash a esto ]
+    
 })})
 

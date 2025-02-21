@@ -8,7 +8,7 @@ const Client = Schema('Client', {
     name: {type: String, require: true},
     status: {type: String, default: "esperando"}
 
-    // status: [esperando, decline]
+    
 })
 
 
@@ -37,12 +37,9 @@ async function leerjsonTurno() {
 
 class ClientReporitory{
 
-    constructor(jsonTurno
-    ){
+    constructor(jsonTurno){
         this.turnoNow = jsonTurno;
-        this.turno = 1  // esto se le pasara a la funcion upTurn y SendClients y sendTurnoNow
-         // esta variable se exportara, porque es la que recibira la funcion addClient
-        
+        this.turno = 1  // esta variable es para manejar el ultimo turno registrado especialmente en addClient   
     }
 
      static async crear(){  // esto es para crear la funcion y poder usar el valor jsonTurno, pues es un valor que se obtiene de manera asyncronica
@@ -54,14 +51,14 @@ class ClientReporitory{
     addClient(name){  // para que vaquero pueda agregar clientes a la lista de espera
         try {
             let allClients = Client.find()
-            console.log(allClients)
+            //console.log(allClients)
             if (allClients.length === 0){
                 this.turno = 1
-                console.log(this.turno)
+                //console.log(this.turno)
                 }
 
                 else if (allClients.length > 0){
-                    console.log()
+                    //console.log()
                     let cliente
                     for (cliente of allClients){  
                         if (cliente._id >= this.turno){
@@ -78,12 +75,20 @@ class ClientReporitory{
             }catch (err){console.log("Error en la base datos",err)}
     }
 
-    static async declineClient(id){   // en vez de eliminarlo de la base de datos hay que hacer que le cambie la propiedad status a "cancelado"
+    declineClient(id){   // en vez de eliminarlo de la base de datos hay que hacer que le cambie la propiedad status a "cancelado"
+
         let clientFound = Client.find({_id:Number(id)});
-        console.log(clientFound)
+
+        //console.log(clientFound)
+
         clientFound.status = "declinado";
         Client.update({_id:Number(id)}, clientFound).save()
-        console.log("Ha finalizado correctamente el proceso de declinar")
+        //console.log("Ha finalizado correctamente el proceso de declinar")
+
+        if (Number(clientFound._id) == Number(this.turnoNow)){
+            //console.log("todo bien")
+            this.turnoNow = this.turnoNow + 1
+        }
         
         //clientFound.remove();
     }
@@ -97,9 +102,18 @@ class ClientReporitory{
             await fs.writeFile(jsonPath, updatedJsonData)
             return jsonTurno.turno
             } catch (err){}
-        }
+    }
 
-
+    async downTurn(){
+        try {
+            jsonTurno.turno = jsonTurno.turno - 1
+            this.turnoNow = jsonTurno.turno
+            const updatedJsonData = JSON.stringify(jsonTurno, null, 2);
+            await fs.writeFile(jsonPath, updatedJsonData)
+            return jsonTurno.turno
+            }catch(err){console.log(err)}
+    }
+    
     static sendClients(){ // para que se muestre los clientes en espera a vaquero y tambien a los clientes
         try{
             let clientes = Client.find() // para selecionar toda la lista
@@ -107,8 +121,32 @@ class ClientReporitory{
         }catch(err){console.log(err)}      
     }
 
-     
-}
+    checkClients(turno){ // el turno es la misma propiedad this.turnoNow pero se la pasare desde el panel.js
+
+        let allClientsReady = Client.find()
+
+        for(let cliente of allClientsReady){
+            if (cliente.status == "esperando" && cliente._id<this.turnoNow ){
+                let clientFound = Client.find({_id:Number(cliente._id)})
+                clientFound.status = "listo"
+                Client.update({_id:cliente._id}, clientFound).save()
+            }
+            else{continue}
+        }   
+
+        let allClientsSecondChg = Client.find({_id:{$gte: turno, $lte: turno + 10}});
+        console.log(allClientsSecondChg)
+        for(let cliente of allClientsSecondChg){
+            if(cliente.status == "listo"){
+                let clientFound = Client.find({_id:Number(cliente._id)})
+                clientFound.status = "esperando"
+                Client.update({_id:cliente._id}, clientFound).save()
+            }
+            else{continue}
+        }
+    }
+} 
+
 
 
 

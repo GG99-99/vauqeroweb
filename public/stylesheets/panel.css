@@ -49,13 +49,49 @@ article{
     
 }
 
-.button-upturn{
+.buttons-updown-box{
+    display: flex;
+    gap: 15vw;
+}
+
+.button-downturn, .button-upturn{
     background-color: transparent;
-    height: 6vh;
-    width: 6vh;
+    height: 5.5vh;
+    width: 5.5vh;
     font-size: 1.5vh;
     cursor: pointer;
+    border: solid 0.2vh #000000;
+    border-radius: 30%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }
+
+.line{
+    width: 60%;
+    height: 7%;
+    background-color: #000000;
+    
+}
+
+.line-vertical::after{
+    content: " ";
+    width: 60%;
+    height: 7%;
+    background-color: #000000;
+    transform: rotate(90deg);
+    display: inline-block;
+    position: absolute;
+    right: 19%;
+    
+}
+
+
+
+
 
 .list-client-ul{
     display: flex;
@@ -105,6 +141,8 @@ li{
     height: 3.9vh;
     width: 3.9vh;
 }
+
+
 /* -------- Footer --------  */
 
 footer{
@@ -151,6 +189,7 @@ footer{
     cursor: pointer;
     
 }
+
 
 
 
@@ -218,4 +257,9 @@ footer{
  /*---------------------------------------------------------*/
 .OPASITY30{
     opacity: 30%;
+}
+
+.GREEN{
+    color: rgba(0, 188, 13, 0.747);
+    border-color: rgba(0, 188, 13, 0.747);
 }

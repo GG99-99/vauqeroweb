@@ -27,6 +27,7 @@ block content
                 each cliente in clientes 
 
                     case cliente.status  
+                    
                         when 'esperando'
                             li(class="list-client-li" idCliente=cliente._id)
                                 div(class="li_client-information")
@@ -37,18 +38,30 @@ block content
                                     img(src="/images/trash.png", alt="" class="decline-client-icon" idCliente=cliente._id)
 
                         when 'declinado'
-                            li(class="list-client-li OPASITY30" idCliente=cliente._id)
+                            li(class="list-client-li OPASITY30 declinado" idCliente=cliente._id)
                                 div(class="li_client-information")
                                     strong  
                                         div(class='cliente-id-div')=cliente._id 
                                     div(class='cliente-name-div')=cliente.name 
                                 div(class='declinado-text') turno declinado 
-                                        
+
+                        when 'listo'
+                             li(class="list-client-li GREEN" idCliente=cliente._id)
+                                div(class="li_client-information")
+                                    strong  
+                                        div(class='cliente-id-div')=cliente._id 
+                                    div(class='cliente-name-div')=cliente.name 
+                                div(class='listo-text') listo            
                                 
 
-        div(class="botton-upturn-box")
-            div 
-                img(src="/images/mas.png" alt="" class="button-upturn" ) 
+        div(class="buttons-updown-box")
+            div(class="button-downturn")
+                div(class="line")
+
+            div(class="button-upturn")
+                div(class="line line-vertical") 
+                
+            
 
     footer 
         div(class="form-addclient") 
