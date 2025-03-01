@@ -1,4 +1,7 @@
 
+
+
+
 async function upturnFunc() {
     //console.log('se esta asiendo la peticion fetch para subir el turno')
     const url = 'http://localhost:3000/panel'

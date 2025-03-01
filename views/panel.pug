@@ -1,8 +1,12 @@
 extend layout 
 
+block script 
+    script(type="module", src="/module/socket.js") 
+
 block linkCss 
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/panel.css')
+
 
 block content 
     div(class="logout-screen")

@@ -3,6 +3,9 @@ var router = express.Router();
 const  jwt = require('jsonwebtoken')
 const { SECRET_JWT_KEY } = require('../repositorys/config')
 
+
+
+
 const { ClientReporitory } = require('../repositorys/client-repository')
 let clientInst; 
 

@@ -2,7 +2,15 @@
   "name": "vaqueroweb",
   "version": "0.0.0",
   "private": true,
-  "nodemonConfig": {"ext": "","ignore": ["*.test.ts", "db/*", "*.json"], "delay": "2" },
+  "nodemonConfig": {
+    "ext": "",
+    "ignore": [
+      "*.test.ts",
+      "db/*",
+      "*.json"
+    ],
+    "delay": "2"
+  },
   "scripts": {
     "start": "nodemon ./bin/www"
   },
@@ -16,6 +24,7 @@
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^9.0.2",
     "morgan": "~1.9.1",
-    "pug": "2.0.0-beta11"
+    "pug": "2.0.0-beta11",
+    "socket.io": "^4.8.1"
   }
 }

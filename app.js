@@ -8,17 +8,20 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
 
+
+
+
 // aqui se exportan las rutas
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var registerRouter = require('./routes/register');
 var loginRouter = require('./routes/login')
 var panelRouter = require('./routes/panel')
-var logoutRouter = require('./routes/logout')
+var logoutRouter = require('./routes/logout');
+const { createServer } = require('http');
 
 
-var app = express();
-
+const app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
