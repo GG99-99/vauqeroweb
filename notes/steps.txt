@@ -1,0 +1,12 @@
+% Sube la rama a GitHub:
+Utiliza el siguiente comando para subir la rama a tu repositorio remoto en GitHub:
+
+    x git push origin <nombre-de-la-rama>
+
+origin es el nombre por defecto del repositorio remoto. Si tienes un nombre diferente, reemplázalo.
+
+Si es la primera vez que subes esta rama, es posible que necesites usar la opción -u para establecer la rama remota de seguimiento:
+
+   x  git push -u origin <nombre-de-la-rama>
+
+- Subir rama socket-io al repositorio remoto

@@ -1,4 +1,9 @@
+//import { socket } from "../module/socket";
 
+import { io } from 'https://cdn.socket.io/4.8.1/socket.io.esm.min.js';
+
+const socket = io('ws://localhost:3000');
+socket.emit('msg', 'hola estoy probando')
 
 
 
@@ -55,8 +60,8 @@ async function addClient() {
                 let res = await response.json()  // para poder acceder a la propiedad del turno que se le asigno al cliente y su nombre para agregarlo al body
                 console.log(res)
 
-                ulListClientes = document.querySelector(".list-client-ul")
-                ulListNewClient =`
+                let ulListClientes = document.querySelector(".list-client-ul")
+                let ulListNewClient =`
 
                 <li class="list-client-li" idcliente=${res.turnoCliente}>
                     <div class="li_client-information">

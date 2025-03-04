@@ -1,0 +1,16 @@
+1) El archivo www es que se ejecutara con nodemon.
+
+2) el archivo ioServer.js es un archivo intermedio entre www y app.js ..., su objetivo es contener las configuraicones principales del objeto (io) que es el que se encarga del trabajo de websocket
+
+3) en el archivo ioServer.js tambien es donde se crean el puerto y el servidor. El objeto app debe estar importado en este lugar pues se le debe pasar como parametro al objeto server, buscar la siguiente linea para entenderlo 
+    - server = http.createServer(app);
+
+
+
+
+
+
+
+x FUNCIONES DEL ARCHIVO ioServer.js
+
+La función [normalizePort] está diseñada para tomar un valor de entrada (generalmente una cadena o un número) y convertirlo en un número de puerto válido para una aplicación de red. Su objetivo es manejar diferentes tipos de entradas y asegurarse de que el puerto resultante sea utilizable.
