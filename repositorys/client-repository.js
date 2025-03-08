@@ -2,6 +2,8 @@ const dbLocal = require("db-local");
 const fs = require("fs").promises
 const path = require('path');
 
+const ioRoute = path.resolve(__dirname, "..", "ioSocket.js")
+const {io} = require(ioRoute)
 
 const { Schema } = new dbLocal({ path: "./db" });
 const Client = Schema('Client', {
@@ -152,15 +154,6 @@ class ClientReporitory{
 
 
 
-
-
-
-// ------- Para resetar los estados a declinado (para desarrollo unicacmente) ------- \\ 
-/*let AllClientsDev = ClientReporitory.sendClients()
-for(clienteFound of AllClientsDev){
-    clienteFound.status = 'esperando'
-    Client.update({_id:Number(clienteFound._id)}, clienteFound)
-}*/
 
 
 module.exports = {ClientReporitory}
