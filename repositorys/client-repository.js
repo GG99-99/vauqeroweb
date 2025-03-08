@@ -2,6 +2,7 @@ const dbLocal = require("db-local");
 const fs = require("fs").promises
 const path = require('path');
 
+
 const { Schema } = new dbLocal({ path: "./db" });
 const Client = Schema('Client', {
     _id: {type: Number, require: true, unique: 'true'},
@@ -10,6 +11,8 @@ const Client = Schema('Client', {
 
     
 })
+
+
 
 
 
@@ -65,7 +68,7 @@ class ClientReporitory{
                             this.turno = cliente._id + 1
                         }else{continue}    
                     }
-                    console.log(this.turno)
+                    //console.log(this.turno)
                     // aqui se retorna la lista al frontend
                 }
 
@@ -135,7 +138,7 @@ class ClientReporitory{
         }   
 
         let allClientsSecondChg = Client.find({_id:{$gte: turno, $lte: turno + 10}});
-        console.log(allClientsSecondChg)
+        //console.log(allClientsSecondChg)
         for(let cliente of allClientsSecondChg){
             if(cliente.status == "listo"){
                 let clientFound = Client.find({_id:Number(cliente._id)})

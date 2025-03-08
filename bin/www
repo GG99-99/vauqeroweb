@@ -5,10 +5,8 @@
  */
 
 
-
-
-var debug = require('debug')('vaqueroweb:server');
-const { port, server, io, http, app } = require('./ioServer')
+//var debug = require('debug')('vaqueroweb:server');
+const { port, server, app} = require('./Server')
 
 
 

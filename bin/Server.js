@@ -1,7 +1,8 @@
 
 var http = require('http');
 var app = require('../app');
-const { Server } = require('socket.io')
+const {io} = require('../ioSocket')
+
 
 /**
  * Get port from environment for store in Express.
@@ -13,17 +14,10 @@ var port = normalizePort(process.env.PORT || '3000');
 var server = http.createServer(app);
 
 
-/* Create socket.io server
+/* Attatch server to socket.io 
 */
+io.attach(server)
 
-const io = new Server(server)
-
-io.on('connection', (socket) =>{
-  console.log("un usuario se ha conectado")
-
-  socket.on('disconnect', ()=>{console.log("un usuario se ha desconectaado")})
-  socket.on('msg', (msg)=>{console.log(msg)})
-})
 
 
 
@@ -44,4 +38,4 @@ function normalizePort(val) {
 }
 
 
-module.exports = {port, http, app, io, server}
+module.exports = {port, app, server}
