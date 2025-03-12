@@ -12,4 +12,24 @@ io.on('connection', (socket) =>{
 })
 
 
+//Esta linea de codigo es para que el socket que se creara cuando el administrador este en la ruta panel se encuentre en un espacio virtual diferente y apartado
+io.of("/panel").socketsJoin("RoomAdmin")
+
+
+// -Esta linea de codigo es para que el socket que se creara cuando el cliente este en la ruta index, se encuentre en un espacio virtual diferente  
+io.of("/").socketsJoin("RoomClients")
+// por motivos de broadcast, esto es necesario
+
+
+
+/*
+*         Eventos que se emitiran para los clientes
+*         - Cuando (Administrador): 
+*             1)Agrege cliente,                      
+*             2)Cancele cliente, 
+*             3)Aumente o Descienda turno,
+*             4)Cliente listo.
+*                                                                                                             
+*/
+
 module.exports = {io}

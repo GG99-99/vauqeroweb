@@ -36,22 +36,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
-/*app.use((req, res, next) => {  // esto es para que en todas las peticiones se verifique si el usuario tiene token
-  const token = req.cookies.access_token
-  let data = null
-  req.session = {user: null}
 
-  try{
-    data = jwt.verify(token, SECRET_JWT_KEY)  // para esta parte se deberia importar el archivo (config.js)
-    req.session.user = data
-  }.catch{}
-
-  next() // para que continue con la siguiente funcion que debe ejecucar node
-})*/
 
 // manejar rutas
 app.use('/', indexRouter);     
-app.use('/users', usersRouter);
+//app.use('/users', usersRouter);
 app.use('/register', registerRouter);
 app.use('/login', loginRouter);
 app.use('/panel', panelRouter);

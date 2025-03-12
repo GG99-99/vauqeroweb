@@ -6,6 +6,17 @@ const path = require('path');
 const ioRoute = path.resolve(__dirname, "..", "ioSocket.js")
 const {io} = require(ioRoute)
 
+/*
+*       [ ] en este documento debo crear funciones que utilizan los metodos del objeto clientInst
+*           || en analisis ||
+*           - Estos metodos se exportaran a ioSocket.js, para ser llamados segun algun evento que se reciba 
+*             desde un socket de usuario 
+*                                                                                                               
+*                                                                                                              
+*                                                                                                               
+*                                                                                                               
+*                                                                                                               
+*/
 
 
 
@@ -22,8 +33,10 @@ let clientInst;
 router.route('/')
 .get(function(req, res, next) {
   
+  // esta funcion es para revisar que no existe ningun cliente con un estado de listo cuando su tuno es  superior al altual
   clientInst.checkClients(clientInst.turnoNow)
-
+  
+  // para obtener el jsonwebtoken del usuario
   const token = req.cookies.access_token
   if(!token){ return res.status(403).redirect('/login') }
 
