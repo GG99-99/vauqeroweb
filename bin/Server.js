@@ -1,6 +1,6 @@
 const path = require('path');
 const ioRoute = path.resolve(__dirname, "..", "ioSocket.js")
-const {io} = require(ioRoute)
+const {io} = require(ioRoute);
 var http = require('http');
 //var app = require('../app');
 const appRoute = path.resolve(__dirname, "..", "app.js")

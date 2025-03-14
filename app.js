@@ -6,6 +6,9 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+/*
+El middleware cookieParser se utiliza para analizar las cookies adjuntas al objeto de solicitud del cliente. Hace que las cookies estén disponibles en req.cookies y las cookies firmadas en req.signedCookies.
+*/
 var logger = require('morgan');
 const cors = require('cors');
 
@@ -17,7 +20,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var registerRouter = require('./routes/register');
 var loginRouter = require('./routes/login')
-var panelRouter = require('./routes/panel')
+var { router: panelRouter} = require('./routes/panel')
 var logoutRouter = require('./routes/logout');
 const { createServer } = require('http');
 
@@ -32,7 +35,7 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser()); // Este middleware analiza las cookies adjuntas al objeto de solicitud del cliente
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 

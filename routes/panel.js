@@ -19,8 +19,6 @@ const {io} = require(ioRoute)
 */
 
 
-
-
 const { ClientReporitory } = require('../repositorys/client-repository')
 let clientInst; 
 
@@ -36,9 +34,12 @@ router.route('/')
   // esta funcion es para revisar que no existe ningun cliente con un estado de listo cuando su tuno es  superior al altual
   clientInst.checkClients(clientInst.turnoNow)
   
-  // para obtener el jsonwebtoken del usuario
+  // para obtener el jsonwebtoken del usuario que se almacenan en las cookies
   const token = req.cookies.access_token
   if(!token){ return res.status(403).redirect('/login') }
+
+  // para poder obtener estos valores se debe agregar en app.js el middelware var cookieParser = require('cookie-parser');
+  
 
   todosLosClientes = ClientReporitory.sendClients().reverse()
 
@@ -89,4 +90,4 @@ router.route('/')
 
 
 
-module.exports = router;
+module.exports = {router};

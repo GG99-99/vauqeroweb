@@ -6,7 +6,7 @@ const ioRoute = path.resolve(__dirname, "..", "ioSocket.js")
 const {io} = require(ioRoute)
 
 const { Schema } = new dbLocal({ path: "./db" });
-const Client = Schema('Client', {
+const ClientDB = Schema('Client', {
     _id: {type: Number, require: true, unique: 'true'},
     name: {type: String, require: true},
     status: {type: String, default: "esperando"}
@@ -14,6 +14,10 @@ const Client = Schema('Client', {
     
 })
 
+/*
+- Crear la instancia de Client Repository aqui en forma de promesa que su resolve sea la instancia y esa instancia igualarla a una variable en panel.js con variable = promesaClient.then(resolveCallback, rejectCallback)
+
+*/
 
 
 
@@ -55,7 +59,7 @@ class ClientReporitory{
 
     addClient(name){  // para que vaquero pueda agregar clientes a la lista de espera
         try {
-            let allClients = Client.find()
+            let allClients = ClientDB.find()
             //console.log(allClients)
             if (allClients.length === 0){
                 this.turno = 1
@@ -74,7 +78,7 @@ class ClientReporitory{
                     // aqui se retorna la lista al frontend
                 }
 
-                Client.create({_id:this.turno ,name: name}).save(); // GUARDA EL REGISTRO EN LA BASE DE DATOS
+                ClientDB.create({_id:this.turno ,name: name}).save(); // GUARDA EL REGISTRO EN LA BASE DE DATOS
                 let datosCliente = {turnoCliente : this.turno,name : name}
                 return datosCliente 
             }catch (err){console.log("Error en la base datos",err)}
@@ -82,12 +86,12 @@ class ClientReporitory{
 
     declineClient(id){   // en vez de eliminarlo de la base de datos hay que hacer que le cambie la propiedad status a "cancelado"
 
-        let clientFound = Client.find({_id:Number(id)});
+        let clientFound = ClientDB.find({_id:Number(id)});
 
         //console.log(clientFound)
 
         clientFound.status = "declinado";
-        Client.update({_id:Number(id)}, clientFound).save()
+        ClientDB.update({_id:Number(id)}, clientFound).save()
         //console.log("Ha finalizado correctamente el proceso de declinar")
 
         if (Number(clientFound._id) == Number(this.turnoNow)){
@@ -121,31 +125,31 @@ class ClientReporitory{
     
     static sendClients(){ // para que se muestre los clientes en espera a vaquero y tambien a los clientes
         try{
-            let clientes = Client.find() // para selecionar toda la lista
+            let clientes = ClientDB.find() // para selecionar toda la lista
             return clientes   
         }catch(err){console.log(err)}      
     }
 
     checkClients(turno){ // el turno es la misma propiedad this.turnoNow pero se la pasare desde el panel.js
 
-        let allClientsReady = Client.find()
+        let allClientsReady = ClientDB.find()
 
         for(let cliente of allClientsReady){
             if (cliente.status == "esperando" && cliente._id<this.turnoNow ){
-                let clientFound = Client.find({_id:Number(cliente._id)})
+                let clientFound = ClientDB.find({_id:Number(cliente._id)})
                 clientFound.status = "listo"
-                Client.update({_id:cliente._id}, clientFound).save()
+                ClientDB.update({_id:cliente._id}, clientFound).save()
             }
             else{continue}
         }   
 
-        let allClientsSecondChg = Client.find({_id:{$gte: turno, $lte: turno + 10}});
+        let allClientsSecondChg = ClientDB.find({_id:{$gte: turno, $lte: turno + 10}});
         //console.log(allClientsSecondChg)
         for(let cliente of allClientsSecondChg){
             if(cliente.status == "listo"){
-                let clientFound = Client.find({_id:Number(cliente._id)})
+                let clientFound = ClientDB.find({_id:Number(cliente._id)})
                 clientFound.status = "esperando"
-                Client.update({_id:cliente._id}, clientFound).save()
+                ClientDB.update({_id:cliente._id}, clientFound).save()
             }
             else{continue}
         }
@@ -156,5 +160,5 @@ class ClientReporitory{
 
 
 
-module.exports = {ClientReporitory}
+module.exports = {ClientReporitory, ClientDB}
 

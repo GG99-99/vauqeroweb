@@ -2,12 +2,15 @@
 
 var express = require('express');
 var router = express.Router();
+const path = require('path');
+
+const clientRepositoryPath = path.resolve(__dirname, '../repositorys/client-repository');
+const { ClientReporitory } = require(clientRepositoryPath);
 
 /* GET home page. */
 
-
 router.get('/', function(req, res, next) {
-  cp = 5;
+  let clientes = ClientReporitory.sendClients().reverse();
   res.render('index');
 });
 

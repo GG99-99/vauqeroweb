@@ -1,6 +1,9 @@
 
 
 import { io } from 'https://cdn.socket.io/4.8.1/socket.io.esm.min.js';
+//import pug from 'https://cdn.jsdelivr.net/npm/pug@3.0.3/+esm';
+
+
 
 const socket = io('ws://localhost:3000');
 socket.emit('msg', 'hola estoy probando')
@@ -21,7 +24,7 @@ async function upturnFunc() {
             if(!response.ok){throw new Error("Ah ocurrido un error")};
             if(response.ok){
                 //console.log('todo nice con la peticion fetch de subir turno')
-                res = await response.json()  // para poder acceder a la propiedad turnoNow
+                let res = await response.json()  // para poder acceder a la propiedad turnoNow
                 console.log(res)
                 let turno = document.querySelector(".turno")
                 turno.innerHTML = res
