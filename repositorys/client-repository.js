@@ -1,9 +1,9 @@
 const dbLocal = require("db-local");
-const fs = require("fs").promises
+const fs = require("fs")
 const path = require('path');
 
-const ioRoute = path.resolve(__dirname, "..", "ioSocket.js")
-const {io} = require(ioRoute)
+//const ioRoute = path.resolve(__dirname, "..", "ioSocket.js")
+//const {io} = require(ioRoute)
 
 const { Schema } = new dbLocal({ path: "./db" });
 const ClientDB = Schema('Client', {
@@ -13,46 +13,42 @@ const ClientDB = Schema('Client', {
 
     
 })
-
 /*
-- Crear la instancia de Client Repository aqui en forma de promesa que su resolve sea la instancia y esa instancia igualarla a una variable en panel.js con variable = promesaClient.then(resolveCallback, rejectCallback)
-
+*   Branch: syncConversion
+*   Motivo: Cambiar funciones asincronicas a sincronicas del client-repository.js y panel.js
+*   Fecha: 14/3/2025
+*
 */
 
 
-
-
 const jsonPath = path.join(__dirname, 'json', 'turnos.json')
-let jsonTurno;
 
-async function leerjsonTurno() {
+
+function leerjsonTurno() {
   try {
-    // Leer el archivo JSON de forma asíncrona 
-    const data = await fs.readFile(jsonPath, 'utf8');
+    // Leer el archivo JSON de forma síncrona 
+    const data = fs.readFileSync(jsonPath);
     
     // Parsear el contenido del archivo
-    jsonTurno = JSON.parse(data);
-
+    return JSON.parse(data);
     //console.log(jsonTurno);  // Verifica si jsonTurno se llena correctamente
   } catch (err) {
     console.error('Error al leer el archivo JSON:', err);
   }
 }
 
-(async () => { // Para que se lea el archivo json y se cree el objeto jsonTurno
-  await leerjsonTurno();
-})();
-
+// Para que se lea el archivo json y se cree el objeto jsonTurno
+let jsonTurno= leerjsonTurno();
+console.log(jsonTurno)
 
 class ClientReporitory{
 
     constructor(jsonTurno){
         this.turnoNow = jsonTurno;
-        this.turno = 1  // esta variable es para manejar el ultimo turno registrado especialmente en addClient   
+        this.turnoForAsing = 1  // esta variable es para manejar el ultimo turno registrado especialmente en addClient   
     }
 
-     static async crear(){  // esto es para crear la funcion y poder usar el valor jsonTurno, pues es un valor que se obtiene de manera asyncronica
-        await leerjsonTurno()
+     static crear(){  // esto es para crear la funcion y poder usar el valor jsonTurno, pues es un valor que se obtiene de manera asyncronica
         return new ClientReporitory(jsonTurno.turno);
 
     }
@@ -62,7 +58,7 @@ class ClientReporitory{
             let allClients = ClientDB.find()
             //console.log(allClients)
             if (allClients.length === 0){
-                this.turno = 1
+                this.turnoForAsing = 1
                 //console.log(this.turno)
                 }
 
@@ -70,17 +66,17 @@ class ClientReporitory{
                     //console.log()
                     let cliente
                     for (cliente of allClients){  
-                        if (cliente._id >= this.turno){
-                            this.turno = cliente._id + 1
+                        if (cliente._id >= this.turnoForAsing){
+                            this.turnoForAsing = cliente._id + 1
                         }else{continue}    
                     }
                     //console.log(this.turno)
                     // aqui se retorna la lista al frontend
                 }
 
-                ClientDB.create({_id:this.turno ,name: name}).save(); // GUARDA EL REGISTRO EN LA BASE DE DATOS
-                let datosCliente = {turnoCliente : this.turno,name : name}
-                return datosCliente 
+                ClientDB.create({_id:this.turnoForAsing ,name: name}).save(); // GUARDA EL REGISTRO EN LA BASE DE DATOS
+                let Cliente = {_id: this.turnoForAsing, name : name}
+                return Cliente 
             }catch (err){console.log("Error en la base datos",err)}
     }
 
@@ -98,27 +94,32 @@ class ClientReporitory{
             //console.log("todo bien")
             this.turnoNow = this.turnoNow + 1
         }
-        
+        return clientFound
         //clientFound.remove();
     }
 
-    async upTurn(){ // para que vaquero actualize el turno que se mostrara en la pagina de clientes y en el panel
+    upTurn(){ // para que vaquero actualize el turno que se mostrara en la pagina de clientes y en el panel
         try {
             jsonTurno.turno += 1  // esta el la variable que almacena los datos del arvhivo json turnos.json
             this.turnoNow = jsonTurno.turno
 
             const updatedJsonData = JSON.stringify(jsonTurno, null, 2);
-            await fs.writeFile(jsonPath, updatedJsonData)
-            return jsonTurno.turno
+            fs.writeFileSync(jsonPath, updatedJsonData);
+
+            let clienteListo = ClientDB.find({_id: this.turnoNow - 1});
+            clienteListo.status = "listo";
+            ClientDB.update({_id: Number(this.turnoNow)}, clienteListo)
+
+            return {"turno": this.turnoNow, "clienteListo": clienteListo}
             } catch (err){}
     }
 
-    async downTurn(){
+    downTurn(){
         try {
             jsonTurno.turno = jsonTurno.turno - 1
             this.turnoNow = jsonTurno.turno
             const updatedJsonData = JSON.stringify(jsonTurno, null, 2);
-            await fs.writeFile(jsonPath, updatedJsonData)
+            fs.writeFileSync(jsonPath, updatedJsonData)
             return jsonTurno.turno
             }catch(err){console.log(err)}
     }
@@ -143,7 +144,7 @@ class ClientReporitory{
             else{continue}
         }   
 
-        let allClientsSecondChg = ClientDB.find({_id:{$gte: turno, $lte: turno + 10}});
+        let allClientsSecondChg = ClientDB.find({_id:{$gte: this.turnoNow, $lte: this.turnoNow}});
         //console.log(allClientsSecondChg)
         for(let cliente of allClientsSecondChg){
             if(cliente.status == "listo"){
@@ -153,6 +154,11 @@ class ClientReporitory{
             }
             else{continue}
         }
+    }
+
+    static getLastClient(){
+        let lastClient = ClientDB.find({$limit: 1})
+        return lastClient
     }
 } 
 

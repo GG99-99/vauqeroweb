@@ -25,7 +25,9 @@ block content
             img(src="/images/cerrar-sesion.png", alt="" class="icon openLogoutScreenButton")
 
     article 
-        div(class="turno")= turno 
+        div(class="turno-box") 
+            div(class="turno-text") Turno actual:  
+            div(class="turno")= turno 
 
         div(class="list-client-box")
             ul(class="list-client-ul")
@@ -35,16 +37,19 @@ block content
                     case cliente.status  
                     
                         when 'esperando'
-                            li(class="list-client-li" idCliente=cliente._id)
+
+
+                            li.list-client-li(class=cliente._id === turno ? "ACTUAL": " " ,idCliente=cliente._id)
                                 div(class="li_client-information")
                                     strong  
                                         div(class='cliente-id-div')=cliente._id 
                                     div(class='cliente-name-div')=cliente.name 
                                 div(class="decline-cliente-button" idCliente=cliente._id)
-                                    img(src="/images/trash.png", alt="" class="decline-client-icon" idCliente=cliente._id)
+                                    div(class="arrow1")
+                                    div(class="arrow2")
 
                         when 'declinado'
-                            li(class="list-client-li OPASITY30 declinado" idCliente=cliente._id)
+                           li(class="list-client-li OPASITY30 declinado" idCliente=cliente._id)
                                 div(class="li_client-information")
                                     strong  
                                         div(class='cliente-id-div')=cliente._id 
@@ -78,5 +83,6 @@ block content
             div     
                 input(type="button" class="button-addclient" value="agregar ")
 
-    script(type="module" src="/javascripts/PB-panel.js") 
+    script(type="module" src="/javascripts/PB-panel.js")
+      
      

@@ -39,6 +39,15 @@ article{
     margin-top: 2vh;
 }
 
+.turno-box{
+    display: flex;
+    gap: 2vw;
+}
+
+.turno-text{
+    font-size: 4vh;
+}
+
 .turno{
     font-size: 4vh;
 }
@@ -100,6 +109,7 @@ article{
     padding: 3%;
     overflow: scroll;
     height: 100%;
+    align-items: center;
 }
 
 li{
@@ -116,6 +126,14 @@ li{
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 90%;
+    transition: width 0.3s;
+}
+
+.ACTUAL{
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    width: 100%;
 }
 
 .li_client-information{
@@ -135,12 +153,35 @@ li{
     width: 4vh;
     border: 1px solid #000000;
     border-radius: 1vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
 }
 
-.decline-client-icon{
+.arrow1, .arrow2{
+    width: 80%;
+    height: 10%;
+    background-color: #000000;
+    position: absolute;
+    border-radius: 2px;
+    
+}
+
+.arrow1{
+    rotate: 135deg;
+}
+
+.arrow2{
+    rotate: 45deg;
+}
+
+/*.decline-client-icon{
     height: 3.9vh;
     width: 3.9vh;
-}
+}*/
 
 
 /* -------- Footer --------  */

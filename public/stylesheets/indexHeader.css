@@ -62,3 +62,60 @@ header{
     font-size: 12vw;
     margin-block: 0;
 }
+
+
+
+
+
+/* -------------------- list Clients  ----------------------*/
+
+.list-client-ul{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+    padding: 3%;
+    overflow: scroll;
+    height: 100%;
+}
+
+li{
+    list-style: none;
+    display: flex;
+    
+}
+
+.list-client-li{
+    border: 1px solid black;
+    border-radius: 1vw;
+    padding: 1vh;
+    height: 8vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #b2b2b28c;
+}
+
+.li_client-information{
+    display: inline-flex;
+    gap: 5%;
+    width: 50%;
+}
+
+
+
+.cliente-name-div, .cliente-id-div{
+    font-size: 2vh;
+}
+
+.listo-text, .extra-text{
+    font-size: 2vh;
+}
+ /*---------------------------------------------------------*/
+ .OPASITY30{
+    opacity: 30%;
+}
+
+.GREEN{
+    color: rgba(0, 188, 13, 0.747);
+    border-color: rgba(0, 188, 13, 0.747);
+}

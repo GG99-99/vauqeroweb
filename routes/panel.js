@@ -1,10 +1,11 @@
+const { ClientReporitory } = require('../repositorys/client-repository')
 var express = require('express');
 var router = express.Router();
 const  jwt = require('jsonwebtoken')
 const { SECRET_JWT_KEY } = require('../repositorys/config')
 const path = require('path');
 const ioRoute = path.resolve(__dirname, "..", "ioSocket.js")
-const {io} = require(ioRoute)
+const {clientInst} = require(ioRoute)
 
 /*
 *       [ ] en este documento debo crear funciones que utilizan los metodos del objeto clientInst
@@ -19,12 +20,9 @@ const {io} = require(ioRoute)
 */
 
 
-const { ClientReporitory } = require('../repositorys/client-repository')
-let clientInst; 
 
-(async () => {
-   clientInst = await ClientReporitory.crear();  // para crear instancia de la clase ClientRepository
-})();
+  // para crear instancia de la clase ClientRepository
+
 
 
 /* GET users listing. */
@@ -60,31 +58,31 @@ router.route('/')
   if(!token){ return res.status(403).redirect('/login') }
   try { const data = jwt.verify(token, SECRET_JWT_KEY)}catch(err){}  // para verificar el token JWT y de paso obtiene los valores de Username y password que le asignamos en el route(login.js),  SI EL TOKEN NO ES VALIDO ESTA FUNCION DEBUELVE UN ERROR POR TANTO NO ES NECESARIO USAR UNA [IF]
 
-  const { accion, nombre, id } = req.body
+  //const { nombre, id } = req.body
 
-  if(accion == 'upturn'){
-    await clientInst.upTurn()
-    //console.log(`el nuevo turno es ${clientInst.turnoNow}`)
-    res.send(clientInst.turnoNow.toString())
-  }
+  // if(accion == 'upturn'){
+  //   await clientInst.upTurn()
+  //   //console.log(`el nuevo turno es ${clientInst.turnoNow}`)
+  //   res.send(clientInst.turnoNow.toString())
+  // }
   
-  else if(accion == 'downturn'){
-      await clientInst.downTurn()
-      //console.log(`el nuevo turno es ${clientInst.turnoNow}`)
-      res.send(clientInst.turnoNow.toString())
+  // else if(accion == 'downturn'){
+  //     await clientInst.downTurn()
+  //     //console.log(`el nuevo turno es ${clientInst.turnoNow}`)
+  //     res.send(clientInst.turnoNow.toString())
     
-  }
+  // }
 
-  else if(accion == 'addclient'){
-    turnoLastClient = await clientInst.addClient(nombre)
+  // else if(accion == 'addclient'){
+  //   turnoLastClient = await clientInst.addClient(nombre)
     
-    res.json(turnoLastClient)
-  }
+  //   res.json(turnoLastClient)
+  // }
 
-  else if(accion == 'declinecliente'){
-    clientInst.declineClient(id)
-    res.send({'estado':'good'})
-  }
+  // else if(accion == 'declinecliente'){
+  //   clientInst.declineClient(id)
+  //   res.send({'estado':'good'})
+  // }
   
 });
 
