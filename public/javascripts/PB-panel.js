@@ -7,92 +7,169 @@ import { createWaitClient, createDeclnClient, createGreenClient } from './comple
 
 const socket = io('ws://localhost:3000');
 
+//  MODIFICACION A LOS METODOS DE CREAR CLIENTES
+
+class CRC{
+
+    static crtWaitClnt(client){
+        let elm = createWaitClient(client)
+        let declineButton = elm.querySelector(".decline-cliente-button") // boton de declinar
+        declineButton.addEventListener('click', event => {
+            let target = event.currentTarget           
+            let id = target.getAttribute('idcliente');
+            declineClient(id)
+           
+        })
+
+        return elm
+    }
+
+    static crtGreenClnt(client){
+        let elm = createGreenClient(client)
+        return elm
+    }
+
+    static crtDeclineClnt(client){
+        let elm = createDeclnClient(client)
+        let desDeclineButton = elm.querySelector(".desdecline-button")
+
+        desDeclineButton.addEventListener('click', event => {
+            let target = event.currentTarget
+            let id = target.getAttribute('idcliente')
+            desDecline(id)
+
+
+        })
+
+        return elm
+    }
+}
+
+
+
 // --------- sockets handlers (respuestas) ---------- \\
 
 
 socket.on('upturnRES', (msg) => {
     console.log(msg)
 
-    // ultimo cliente
-    //let elemento = document.querySelector(`.list-client-li[idcliente="${msg.lastcliente_id}"]`)
-    //console.log(elemento)
 
     let turnoBox = document.querySelector(".turno")
     turnoBox.innerHTML = msg.newTurno
 
-    let replaceClient = createGreenClient(msg.clienteListo[0]);
-    let elemntForUpdate = document.querySelector(`.list-client-li[idcliente="${msg.clienteListo[0]._id}"]`)
-    elemntForUpdate.replaceWith(replaceClient)
-
     let newActualClient = document.querySelector(`.list-client-li[idcliente="${msg.newTurno}"]`)
     newActualClient.classList.add("ACTUAL")
+
+    if(msg.clienteListo)
+    {
+        let replaceClient = createGreenClient(msg.clienteListo);
+
+        let elemntForUpdate = document.querySelector(`.list-client-li[idcliente="${msg.clienteListo._id}"]`)
+        elemntForUpdate.replaceWith(replaceClient)
+
+       
+
+    }
+
+    
 })
 
-socket.on("downturnRES", (turno) => {
-    let turnoBox = document.querySelector(".turno")
-    turnoBox.innerHTML = turno
+// {"turno":, "cliente":}
+socket.on("downturnRES", (res) => {
+
+    if (res.turno){
+        console.log(res)
+    
+        let lastActualClient = document.querySelector(".ACTUAL")
+        lastActualClient.classList.remove("ACTUAL")
+    
+    
+        let turnoBox = document.querySelector(".turno")
+        turnoBox.innerHTML = res.turno
+        
+        
+        let newActualClient = document.querySelector(`.list-client-li[idcliente="${res.turno}"]`)
+        
+        
+        if (newActualClient.classList.contains("GREEN"))
+        {
+           let replaceClient = createWaitClient(res.cliente)
+           replaceClient.classList.add("ACTUAL")
+    
+    
+            let buttonDecline = replaceClient.querySelector(".decline-cliente-button")
+            buttonDecline.addEventListener('click', event => {
+                let target = event.currentTarget
+                console.log(target)
+                let id = target.getAttribute('idcliente');
+                console.log(id)
+                declineClient(id)
+               
+            })
+    
+           newActualClient.replaceWith(replaceClient)
+    
+        
+        }
+    }
+    
+
 })
 
+// {_id:,name}
 socket.on("newClientRES", (cliente)=>{
     console.log(cliente)
-    let liElement = createWaitClient(cliente);
+    let liElement = CRC.crtWaitClnt(cliente);
     let ul = document.querySelector(".list-client-ul")
     ul.appendChild(liElement)
-    console.log(liElement.childNodes)
 
-    let buttonInLiElm = liElement.querySelector(".decline-cliente-button")
-    buttonInLiElm.addEventListener('click', event => {
-        let target = event.currentTarget
-        console.log(target)
-        let id = target.getAttribute('idcliente');
-        console.log(id)
-        declineClient(id)
+    // console.log(liElement.childNodes)
+
+    // let buttonInLiElm = liElement.querySelector(".decline-cliente-button") // boton de declinar
+    // buttonInLiElm.addEventListener('click', event => {
+    //     let target = event.currentTarget
+    //     console.log(target)
+    //     let id = target.getAttribute('idcliente');
+    //     console.log(id)
+    //     declineClient(id) })
        
-    })
 })
 
-
-socket.on("declineClientRES", (cliente)=>{
-    let leElement = createDeclnClient(cliente[0]);
-    let elemento2 = document.querySelector(`.list-client-li[idcliente="${cliente[0]._id}"]`);
-
+//{"clienteDecl": clientForDecl, "newTurno": this.turno, "newActualClient": newActualClient}
+socket.on("declineClientRES", (res)=>{
+    let leElement = createDeclnClient(res.clienteDecl);
+    let elemento2 = document.querySelector(`.list-client-li[idcliente="${res.clienteDecl._id}"]`);
     elemento2.replaceWith(leElement);
+
+    if (res.newTurno){
+        let turnoBox = document.querySelector(".turno")
+        turnoBox.innerHTML = res.newTurno
+
+        let newActualClient = document.querySelector(`.list-client-li[idcliente="${res.newTurno}"]`)
+        newActualClient.classList.add("ACTUAL")
+    }
 })
-// -------------------------------------
+
+socket.on("desDeclineRES", client =>{
+    if (client.status == 'listo')
+    {
+        let clientDesDecline = CRC.crtGreenClnt(client)
+
+        let elemntForUpdate = document.querySelector(`.list-client-li[idcliente="${client._id}"]`)
+
+        elemntForUpdate.replaceWith(clientDesDecline)
+
+    }else if (client.status == 'esperando'){
+        let clientDesDecline = CRC.crtWaitClnt(client)
+
+        let elemntForUpdate = document.querySelector(`.list-client-li[idcliente="${client._id}"]`)
+
+        elemntForUpdate.replaceWith(clientDesDecline)
+    }
 
 
-/*async function upturnFunc() {
-    //console.log('se esta asiendo la peticion fetch para subir el turno')
-    const url = 'http://localhost:3000/panel'
-    const accion = 'upturn'
+})
 
-    fetch(url, {
-        method: 'POST',
-        headers:{'Content-Type': 'application/json'},
-        body: JSON.stringify({accion})
-    }).then(async response => {
-        try {
-            if(!response.ok){throw new Error("Ah ocurrido un error")};
-            if(response.ok){
-                //console.log('todo nice con la peticion fetch de subir turno')
-                let res = await response.json()  // para poder acceder a la propiedad turnoNow
-                console.log(res)
-                let turno = document.querySelector(".turno")
-                turno.innerHTML = res
-
-                let idGreen = parseInt(res) - 1
-                let elemento = document.querySelector(`.list-client-li[idcliente="${idGreen}"]`)
-                
-                if(!elemento.classList.contains("declinado") && !elemento.classList.contains("OPASITY30")){
-                    elemento.classList.add("GREEN")
-                    let trashBlock = elemento.querySelector(":scope > div.decline-cliente-button")
-                    trashBlock.outerHTML = `<div class="listo-text">listo</div>`
-                }
-                
-            }
-        } catch(err){console.error('Error al actualizar el turno:', err);}
-    });
-}*/
 
 function upturnFunc() {
     socket.emit('upturn')
@@ -120,6 +197,15 @@ export function declineClient(id) {
     socket.emit('declineClient', id)
 }
 
+// --------------- DESDECLINAR CLIENTE --------------- //
+
+function desDecline(id){
+    socket.emit('desDecline', id)
+    return
+}
+
+
+// --------------------------------------------------- //
 
 async function closeSesion() {
     const url = "http://localhost:3000/logout"
@@ -181,3 +267,14 @@ button.addEventListener('click', event => {
 
 let buttonDownTurn = document.querySelector(".button-downturn")
 buttonDownTurn.addEventListener("click", downTurn)
+
+
+let desDeclineButton = document.querySelectorAll('.desdecline-button')
+desDeclineButton.forEach(button => {
+    button.addEventListener('click', event => {
+        let target = event.currentTarget
+        let id = target.getAttribute('idcliente')
+        desDecline(id)
+})})
+
+// trabajar con el ioSocket

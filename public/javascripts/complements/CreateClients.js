@@ -112,12 +112,7 @@ export function createGreenClient(cliente){
 export function createDeclnClient (cliente){
 
 /*
-li(class="list-client-li OPASITY30 declinado" idCliente=cliente._id)
-    div(class="li_client-information")
-        strong  
-            div(class='cliente-id-div')=cliente._id 
-        div(class='cliente-name-div')=cliente.name 
-    div(class='declinado-text') turno declinado 
+ 
 */
 
     
@@ -139,17 +134,33 @@ li(class="list-client-li OPASITY30 declinado" idCliente=cliente._id)
     divClientName.classList.add("cliente-name-div")
     divClientName.innerHTML = cliente.name
 
-    let divDeclnText = cElm("div")
-    divDeclnText.classList.add("declinado-text")
-    divDeclnText.innerHTML = "turno declinado"
+    let buttonSide = cElm("div")
+    buttonSide.classList.add('buttonSide')
 
+    let dclinadoText = cElm("div")
+    dclinadoText.classList.add("declinado-text")
+
+    let spanDcln = cElm("span")
+    spanDcln.innerHTML = "Declinado"
+
+    let desDeclineButton = cElm("div")
+    desDeclineButton.classList.add("desdecline-button")
+    desDeclineButton.setAttribute('idCliente', cliente._id)
+
+    let circularButton = cElm('div')
+    circularButton.classList.add('circular-button')
     
    // ulFather.appendChild(liElement)
     liElement.appendChild(divInformation)
-    divInformation.appendChild(strongE)
-    strongE.appendChild(divClientID)
-    divInformation.appendChild(divClientName)
-    liElement.appendChild(divDeclnText)
+        divInformation.appendChild(strongE)
+            strongE.appendChild(divClientID)
+            divInformation.appendChild(divClientName)
+    liElement.appendChild(buttonSide)
+        buttonSide.appendChild(dclinadoText)
+            dclinadoText.appendChild(spanDcln)
+        buttonSide.appendChild(desDeclineButton)
+            desDeclineButton.appendChild(circularButton)
+    //liElement.appendChild(divDeclnText)
     
     return liElement
 }

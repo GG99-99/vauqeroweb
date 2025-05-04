@@ -148,7 +148,7 @@ li{
     font-size: 2vh;
 }
 
-.decline-cliente-button{
+.decline-cliente-button, .desdecline-button{
     height: 4vh;
     width: 4vh;
     border: 1px solid #000000;
@@ -183,6 +183,29 @@ li{
     width: 3.9vh;
 }*/
 
+/*   Clientes declinados   */
+
+.buttonSide{
+    gap: 2vw;
+    display: flex;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circular-button{
+    height: 2.5vh;
+    width: 2.5vh;
+    border-radius: 50%;
+    border: 1px solid #000000;
+}
+
+.declinado-text{
+    display: inline-block;
+    height: 100%;
+    text-align: center;
+}
 
 /* -------- Footer --------  */
 
@@ -220,14 +243,16 @@ footer{
 }
 
 
+
 .button-addclient{
     background-color: transparent;
     height: 3vh;
     width: 20vw;
     border: 1px solid;
     border-color: black;
-    font-size: 1.5vh;
+    font-size: 2vh;
     cursor: pointer;
+    opacity: 100%;
     
 }
 

@@ -1,3 +1,4 @@
+
 const dbLocal = require("db-local");
 const fs = require("fs")
 const path = require('path');
@@ -82,46 +83,210 @@ class ClientReporitory{
 
     declineClient(id){   // en vez de eliminarlo de la base de datos hay que hacer que le cambie la propiedad status a "cancelado"
 
-        let clientFound = ClientDB.find({_id:Number(id)});
-
+        let clientForDeclArr = ClientDB.find({_id:Number(id)});
+        let clientForDecl = clientForDeclArr[0]
         //console.log(clientFound)
 
-        clientFound.status = "declinado";
-        ClientDB.update({_id:Number(id)}, clientFound).save()
+        clientForDecl.status = "declinado";
+        ClientDB.update({_id:Number(id)}, clientForDecl).save()
         //console.log("Ha finalizado correctamente el proceso de declinar")
 
-        if (Number(clientFound._id) == Number(this.turnoNow)){
+        if (clientForDecl._id == this.turnoNow){
             //console.log("todo bien")
-            this.turnoNow = this.turnoNow + 1
+            jsonTurno.turno += 1  
+            this.turnoNow = jsonTurno.turno
+
+            
+
+
+            let newActualClientArr = ClientDB.find({_id: this.turnoNow})
+            let newActualClient = newActualClientArr[0]
+
+            if (newActualClient.status == "declinado")
+            {
+                while(newActualClient.status == "declinado")
+                {
+                    jsonTurno.turno += 1  
+                    this.turnoNow = jsonTurno.turno
+
+                    newActualClientArr = ClientDB.find({_id: this.turnoNow})
+                    newActualClient = newActualClientArr[0]
+                }
+            }
+
+
+
+            const updatedJsonData = JSON.stringify(jsonTurno, null, 2);
+            fs.writeFileSync(jsonPath, updatedJsonData);
+
+            return {"clienteDecl": clientForDecl, "newTurno": this.turnoNow}
+
         }
-        return clientFound
+        return {"clienteDecl": clientForDecl}
         //clientFound.remove();
     }
 
     upTurn(){ // para que vaquero actualize el turno que se mostrara en la pagina de clientes y en el panel
         try {
-            jsonTurno.turno += 1  // esta el la variable que almacena los datos del arvhivo json turnos.json
-            this.turnoNow = jsonTurno.turno
 
-            const updatedJsonData = JSON.stringify(jsonTurno, null, 2);
-            fs.writeFileSync(jsonPath, updatedJsonData);
+            let cantClientes = ClientDB.find({_id: this.turnoNow}).length
+            let cantiClientesTotales = ClientDB.find().length
 
-            let clienteListo = ClientDB.find({_id: this.turnoNow - 1});
-            clienteListo.status = "listo";
-            ClientDB.update({_id: Number(this.turnoNow)}, clienteListo)
+            // esto para estar seguros de que los elementos que estan arriba del cliente en turno, no sean todos declinados
+            // ------------------------------------------------------------------------------------------\\
+            let contador = 0
+            let confirmNextClientsArr = ClientDB.find({_id: {$gt: this.turnoNow}})
+            for (let cliente of confirmNextClientsArr){
+                if (cliente.status == 'esperando'){
+                    contador = 0
+                    break
+                }else if (cliente.status == 'declinado'){
+                    contador = 1
+                }
+            }
 
-            return {"turno": this.turnoNow, "clienteListo": clienteListo}
+            if (contador == 1){
+                return
+            }
+            // ------------------------------------------------------------------------------------------\\
+            
+            if ( cantClientes >= 1 && cantiClientesTotales > this.turnoNow)
+            {
+                let clienteListoArr = ClientDB.find({_id: this.turnoNow});
+                let clienteListo= clienteListoArr[0];
+                clienteListo.status = "listo";
+
+                ClientDB.update({_id: Number(this.turnoNow)}, clienteListo).save()
+
+                jsonTurno.turno += 1  // esta el la variable que almacena los datos del arvhivo json turnos.json
+                this.turnoNow = jsonTurno.turno
+
+                let newClientActualArr = ClientDB.find({_id: this.turnoNow});
+                let newClientActual = newClientActualArr[0]
+
+                if (newClientActual.status == 'declinado')
+                {
+                    while(newClientActual.status == 'declinado')
+                    {
+                        jsonTurno.turno += 1  
+                        this.turnoNow = jsonTurno.turno
+
+                        newClientActualArr = ClientDB.find({_id: this.turnoNow});
+                        newClientActual = newClientActualArr[0]
+
+                    } 
+
+                    const updatedJsonData = JSON.stringify(jsonTurno, null, 2);
+                    fs.writeFileSync(jsonPath, updatedJsonData);
+
+                    
+                }
+
+                const updatedJsonData = JSON.stringify(jsonTurno, null, 2);
+                fs.writeFileSync(jsonPath, updatedJsonData);
+
+                return {"turno": this.turnoNow, "clienteListo": clienteListo}
+
+            }else if(cantClientes == 0 && this.turnoNow < cantiClientesTotales)
+            {
+                    
+                jsonTurno.turno += 1  
+                this.turnoNow = jsonTurno.turno
+
+                const updatedJsonData = JSON.stringify(jsonTurno, null, 2);
+                fs.writeFileSync(jsonPath, updatedJsonData);
+                return {"turno": this.turnoNow}
+            }else if(cantiClientesTotales == this.turnoNow){}
+
+            
+
+
             } catch (err){}
     }
 
     downTurn(){
-        try {
-            jsonTurno.turno = jsonTurno.turno - 1
-            this.turnoNow = jsonTurno.turno
-            const updatedJsonData = JSON.stringify(jsonTurno, null, 2);
-            fs.writeFileSync(jsonPath, updatedJsonData)
-            return jsonTurno.turno
-            }catch(err){console.log(err)}
+
+        if (this.turnoNow > 1){
+            try 
+            {
+                
+                if(ClientDB.find({_id: this.turnoNow-1}).length > 0 )
+                {
+                    let cliente = ClientDB.find({_id: this.turnoNow - 1});
+                    let client = cliente[0]
+        
+                    if (client.status == "listo")
+                    {
+                        jsonTurno.turno = jsonTurno.turno - 1
+                        this.turnoNow = jsonTurno.turno
+                        const updatedJsonData = JSON.stringify(jsonTurno, null, 2);
+                        fs.writeFileSync(jsonPath, updatedJsonData);
+    
+                        client.status = "esperando";
+                        ClientDB.update({_id: this.turnoNow}, client).save();
+                        
+    
+                        return {"turno": this.turnoNow, "cliente": client}
+    
+    
+                    }else if (client.status == 'declinado')           
+                    {
+                        while (client.status == "declinado")
+                        {
+    
+                            // vuelvo a bajar el jsonTurno para tomar el siguiente elemento, si el siguiente elemento
+                            // sigue siendo del tipo declinado seguire bajando el turno
+                            jsonTurno.turno = jsonTurno.turno - 1
+                            this.turnoNow = jsonTurno.turno
+            
+                            cliente = ClientDB.find({_id: this.turnoNow})
+                            client = cliente[0]
+                            
+                        };
+                        const updatedJsonData = JSON.stringify(jsonTurno, null, 2);
+                        fs.writeFileSync(jsonPath, updatedJsonData);
+    
+                        client.status = "esperando";
+                        ClientDB.update({_id: this.turnoNow}, client).save()
+                        
+    
+                        return {"turno": this.turnoNow, "cliente": client}
+    
+                }
+        
+                }    
+                
+                }catch(err){console.log(err)}
+        }
+        
+    }
+
+    desDecline(id)
+    {
+        console.log(id)
+        let backClientArr = ClientDB.find({_id: Number(id)-1})
+        let backClient = backClientArr[0]
+
+        let clientDeclineArr = ClientDB.find({_id: Number(id)})
+        let clientDesDecline = clientDeclineArr[0]
+
+        if (backClient.status == 'listo' || backClient.status == 'declinado')
+        {
+
+            clientDesDecline.status = 'listo'
+
+            ClientDB.update({_id: Number(id)}, clientDesDecline).save()
+
+            return clientDesDecline  // su status sera listo
+
+        }else if (backClient.status == 'esperando')
+        {
+            clientDesDecline.status = 'esperando'
+
+            ClientDB.update({_id: Number(id)}, clientDesDecline).save()
+
+            return clientDesDecline  // su status sera esperando
+        }
     }
     
     static sendClients(){ // para que se muestre los clientes en espera a vaquero y tambien a los clientes
@@ -144,7 +309,7 @@ class ClientReporitory{
             else{continue}
         }   
 
-        let allClientsSecondChg = ClientDB.find({_id:{$gte: this.turnoNow, $lte: this.turnoNow}});
+        let allClientsSecondChg = ClientDB.find({_id:{$gte: this.turnoNow}});
         //console.log(allClientsSecondChg)
         for(let cliente of allClientsSecondChg){
             if(cliente.status == "listo"){

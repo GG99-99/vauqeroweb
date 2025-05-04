@@ -54,7 +54,12 @@ block content
                                     strong  
                                         div(class='cliente-id-div')=cliente._id 
                                     div(class='cliente-name-div')=cliente.name 
-                                div(class='declinado-text') turno declinado 
+                                
+                                div(class='buttonSide')
+                                    div(class='declinado-text') 
+                                        span Declinado 
+                                    div(class= 'desdecline-button' idCliente=cliente._id)
+                                        div(class='circular-button')
 
                         when 'listo'
                              li(class="list-client-li GREEN" idCliente=cliente._id)

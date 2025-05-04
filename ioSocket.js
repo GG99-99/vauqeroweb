@@ -19,18 +19,20 @@ io.on('connection', (socket) =>{
   // Subir turno
   socket.on('upturn', ()=>{
     let upturnRes = clientInst.upTurn();
-    let lastClient = ClientReporitory.getLastClient();
-    console.log(lastClient)
-    
+    // let lastClient = ClientReporitory.getLastClient();
+    // console.log(lastClient)
+    console.log(upturnRes)
     //---- Crear elemento cliente para el html ----//
     
     // Este es el evento que se envia a los usuarios de Panel y Index
-    io.emit('upturnRES', {
-      "newTurno": upturnRes.turno,
-      "lastclient": lastClient,
-      "clienteListo": upturnRes.clienteListo
-      
-    })
+    if (upturnRes != undefined){
+      io.emit('upturnRES', {
+        "newTurno": upturnRes.turno,
+        "clienteListo": upturnRes.clienteListo
+        
+      })
+    }
+    
 
   // Crear nuevos Clientes
   
@@ -46,14 +48,19 @@ io.on('connection', (socket) =>{
   }) 
   
   socket.on("downturn", ()=> {
-    let turno = clientInst.downTurn()
-    io.emit("downturnRES", turno)
+    let turnoRes = clientInst.downTurn()
+    io.emit("downturnRES", turnoRes)
   })
 
 
   socket.on("declineClient", (id)=>{
-    let cliente = clientInst.declineClient(id)
-    io.emit("declineClientRES", cliente)
+    let res = clientInst.declineClient(id)
+    io.emit("declineClientRES", res)
+  })
+
+  socket.on("desDecline", id => {
+    let res = clientInst.desDecline(id)
+    io.emit("desDeclineRES", res)
   })
   
 })
