@@ -3,6 +3,17 @@ const { ClientReporitory } = require('./repositorys/client-repository')
 
 let clientInst = ClientReporitory.crear();
 
+let sillas = 2
+let clientInstArr = []
+
+
+for (let i = 1; i <= sillas; i++){
+  clientInstArr[i] = ClientReporitory.crear(i);
+ 
+}
+
+console.log(clientInstArr)
+
 
 
 const io = new Server()
