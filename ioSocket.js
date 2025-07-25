@@ -1,97 +1,69 @@
 const { Server } = require('socket.io')
 const { ClientReporitory } = require('./repositorys/client-repository')
 
-let clientInst = ClientReporitory.crear();
+// plq - instancia de peluquero
+let plq01 = new ClientReporitory("A")
+let plq02 = new ClientReporitory("B")
 
-let sillas = 2
-let clientInstArr = []
-
-
-for (let i = 1; i <= sillas; i++){
-  clientInstArr[i] = ClientReporitory.crear(i);
- 
-}
-
-console.log(clientInstArr)
-
-
-
+const plqs = [plq01, plq02]
 const io = new Server()
-
 
 io.on('connection', (socket) =>{
 
-  console.log("un usuario se ha conectado")
-  
+    console.log("un usuario se ha conectado")
+    socket.on('disconnect', ()=>{console.log("un usuario se ha desconectaado")})
 
-  socket.on('disconnect', ()=>{console.log("un usuario se ha desconectaado")})
+    socket.on('upturn', (silla)=>{
+      let plq = plqs.find((plq) => plq.silla === silla);
+      let upturnRes = plq.upTurn()
 
+      // Este es el evento que se envia a los usuarios de Panel y Index
+      if (upturnRes){
+        io.emit('upturnRES', {
+          "newTurno": upturnRes.turno,
+          "clienteListo": upturnRes.clienteListo,
+          "clienteActual": upturnRes.clienteActual,
+          "silla": upturnRes.silla,
+        })
+      }
+    })
 
-  // Subir turno
-  socket.on('upturn', ()=>{
-    let upturnRes = clientInst.upTurn();
-    // let lastClient = ClientReporitory.getLastClient();
-    // console.log(lastClient)
-    console.log(upturnRes)
-    //---- Crear elemento cliente para el html ----//
-    
-    // Este es el evento que se envia a los usuarios de Panel y Index
-    if (upturnRes != undefined){
-      io.emit('upturnRES', {
-        "newTurno": upturnRes.turno,
-        "clienteListo": upturnRes.clienteListo
-        
-      })
-    }
-    
+    socket.on("newClient", (name, silla) => {
 
-  // Crear nuevos Clientes
-  
+      let newClient = plqs.find((plq) => plq.silla === silla)
+      let newClientForSend = newClient.addClient(name)
 
-  })
+      io.emit("newClientRES", newClientForSend)
 
+    })
 
-  socket.on("newClient", (name) => {
-    let newClient = clientInst.addClient(name);
-    console.log(newClient)
-    io.emit("newClientRES", newClient)
+    socket.on("downturn", (silla)=> {
+      let plq = plqs.find((plq) => plq.silla === silla);
+      let downTurnRes = plq.downTurn()
+      io.emit("downturnRES", downTurnRes)
+    })
 
-  }) 
-  
-  socket.on("downturn", ()=> {
-    let turnoRes = clientInst.downTurn()
-    io.emit("downturnRES", turnoRes)
-  })
+    socket.on("declineClient", (msg)=>{
+      let plq = plqs.find((plq) => plq.silla === msg.silla);
+      let res = plq.declineClient(msg.id)
+      io.emit("declineClientRES", res)
+    })
 
-
-  socket.on("declineClient", (id)=>{
-    let res = clientInst.declineClient(id)
-    io.emit("declineClientRES", res)
-  })
-
-  socket.on("desDecline", id => {
-    let res = clientInst.desDecline(id)
-    io.emit("desDeclineRES", res)
-  })
+    socket.on("desDecline", (msg) => {
+      let plq = plqs.find((plq) => plq.silla === msg.silla);
+      let res = plq.desDecline(msg.id)
+      io.emit("desDeclineRES", res)
+    })
   
 })
 
 
-//Esta linea de codigo es para que el socket que se creara cuando el administrador este en la ruta panel se encuentre en un espacio virtual diferente y apartado
-io.of("/panel").socketsJoin("RoomAdmin")
+// //Esta linea de codigo es para que el socket que se creara cuando el administrador este en la ruta panel se encuentre en un espacio virtual diferente y apartado
+// io.of("/panel").socketsJoin("RoomAdmin")
+//
+//
+// // -Esta linea de codigo es para que el socket que se creara cuando el cliente este en la ruta index, se encuentre en un espacio virtual diferente, por motivos de broadcast, esto es necesario
+// io.of("/").socketsJoin("RoomClients")
 
 
-// -Esta linea de codigo es para que el socket que se creara cuando el cliente este en la ruta index, se encuentre en un espacio virtual diferente, por motivos de broadcast, esto es necesario  
-io.of("/").socketsJoin("RoomClients")
-
-/*
-*         Eventos que se emitiran para los clientes
-*         - Cuando (Administrador): 
-*             1)Agrege cliente,                      
-*             2)Cancele cliente, 
-*             3)Aumente o Descienda turno,
-*             4)Cliente listo.
-*                                                                                                             
-*/
-
-module.exports = {io, clientInst}
+module.exports = {io, plqs}

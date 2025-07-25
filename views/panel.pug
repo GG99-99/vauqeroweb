@@ -19,75 +19,85 @@ block content
                 div(class="logout-no-close") No 
                 div(class="logout-close") Si 
     header 
-        div(class="add-user-box")
+        div(class="btn-AddClient-box")
             img(src="/images/nuevo-cliente.png", alt="" class="icon") 
         div(class="logout-box")
             img(src="/images/cerrar-sesion.png", alt="" class="icon openLogoutScreenButton")
 
-    article 
-        div(class="turno-box") 
-            div(class="turno-text") Turno actual:  
-            div(class="turno")= turno 
-
-        div(class="list-client-box")
-            ul(class="list-client-ul")
-
-                each cliente in clientes 
-
-                    case cliente.status  
-                    
-                        when 'esperando'
+    article
+        div(class="btns-sillas")
+            each plq in peluqueros
+                div(class="btn-silla" silla=plq.silla) Silla #{plq.silla}
 
 
-                            li.list-client-li(class=cliente._id === turno ? "ACTUAL": " " ,idCliente=cliente._id)
-                                div(class="li_client-information")
-                                    strong  
-                                        div(class='cliente-id-div')=cliente._id 
-                                    div(class='cliente-name-div')=cliente.name 
-                                div(class="decline-cliente-button" idCliente=cliente._id)
-                                    div(class="arrow1")
-                                    div(class="arrow2")
 
-                        when 'declinado'
-                           li(class="list-client-li OPASITY30 declinado" idCliente=cliente._id)
-                                div(class="li_client-information")
-                                    strong  
-                                        div(class='cliente-id-div')=cliente._id 
-                                    div(class='cliente-name-div')=cliente.name 
-                                
-                                div(class='buttonSide')
-                                    div(class='declinado-text') 
-                                        span Declinado 
-                                    div(class= 'desdecline-button' idCliente=cliente._id)
-                                        div(class='circular-button')
+        each plq in peluqueros
+            div(class = "plq-div" silla=plq.silla)
+                div(class="turno-box")
+                    div(class="turno-text") Turno actual:
+                    div(class="turno" silla=plq.silla)= plq.turnoNow
 
-                        when 'listo'
-                             li(class="list-client-li GREEN" idCliente=cliente._id)
-                                div(class="li_client-information")
-                                    strong  
-                                        div(class='cliente-id-div')=cliente._id 
-                                    div(class='cliente-name-div')=cliente.name 
-                                div(class='listo-text') listo            
-                                
+                div(class="list-client-box")
+                    ul(class="list-client-ul")
 
-        div(class="buttons-updown-box")
-            div(class="button-downturn")
-                div(class="line")
+                        each cliente in clientes
+                            if cliente.silla === plq.silla
 
-            div(class="button-upturn")
-                div(class="line line-vertical") 
-                
-            
+                                case cliente.status
+                                    when 'esperando'
+                                        li.list-client-li(class=cliente.nturno === plq.turnoNow ? "ACTUAL": " " , nturno = cliente.nturno, cliente_id=cliente._id, silla=cliente.silla)
 
-    footer 
-        div(class="form-addclient") 
-            div 
+                                            div(class="li_client-information")
+                                                strong
+                                                    div(class='cliente-turno-div')=cliente.nturno
+                                                div(class='cliente-name-div')=cliente.name
+                                            div(class="decline-cliente-button", cliente_id=cliente._id, silla=plq.silla)
+                                                div(class="arrow1")
+                                                div(class="arrow2")
+
+                                    when 'declinado'
+                                       li(class="list-client-li OPASITY30 declinado", nturno=cliente.turno, cliente_id=cliente._id, silla=cliente.silla)
+                                            div(class="li_client-information")
+                                                strong
+                                                    div(class='cliente-turno-div')=cliente.nturno
+                                                div(class='cliente-name-div')=cliente.name
+
+                                            div(class='buttonSide')
+                                                div(class='declinado-text')
+                                                    span Declinado
+                                                div(class= 'desdecline-button', cliente_id=cliente._id, silla=cliente.silla)
+                                                    div(class='circular-button')
+
+                                    when 'listo'
+                                         li(class="list-client-li GREEN" nturno = cliente.nturno, cliente_id=cliente._id, silla=cliente.silla)
+                                            div(class="li_client-information")
+                                                strong
+                                                    div(class='cliente-turno-div')=cliente.nturno
+                                                div(class='cliente-name-div')=cliente.name
+                                            div(class='listo-text') listo
+
+
+                div(class="buttons-updown-box")
+                    div(class="button-downturn" silla=plq.silla)
+                        div(class="line")
+
+                    div(class="button-upturn", silla=plq.silla)
+                        div(class="line line-vertical")
+
+
+
+    footer
+
+    div(class='frmContainer')
+        div(class="frmAddClient")
+            div
                 p(class="p-addclient")  Ingresar nuevo cliente
-            div(class="box-input-text") 
-                input(type="text" class="input-addclient" placeholder="Nombre") 
-            div     
-                input(type="button" class="button-addclient" value="agregar ")
+            div(class="box-input-text")
+                input(type="text" class="input-addclient" placeholder="Nombre")
+            div
+                input(type="button" class="btn-addClient" value="Agregar" data-silla="")
 
-    script(type="module" src="/javascripts/PB-panel.js")
+    script(type="module" src="javascripts/PB-panel.js")
+    script(type="module" src="javascripts/PB-panelTabs.js")
       
      

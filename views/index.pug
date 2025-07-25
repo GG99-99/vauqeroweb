@@ -11,36 +11,45 @@ block content
       div(class='header_tittel-box')
         h1(class='header-h1') Peluqueria <span class='header-h1_span'>Vaquero</span>
         p(class='welcome-p') Bienvenido / Welcome / 你好
+    div(class='btn-silla-box')
+        each plq in peluqueros
+          div(class='btn-silla', silla=plq.silla) Silla #{plq.silla}
 
-      div(class='header_personas-box')
-        div(class="turno")= turno 
+    each plq in peluqueros
+      div(class='plq-div' silla=plq.silla)
+        div(class="turno" silla=plq.silla)= plq.turnoNow
         ul(class="list-client-ul")
-            each cliente in clientes 
-                case cliente.status  
-                
-                    when 'esperando'
-                        li(class="list-client-li" idCliente=cliente._id)
-                            div(class="li_client-information")
-                                strong  
-                                    div(class='cliente-id-div')=cliente._id 
-                                div(class='cliente-name-div')=cliente.name
-                            div(class='extra-text') esperando
+            each cliente in clientes
+                if cliente.silla === plq.silla
+                    case cliente.status
 
-                    when 'declinado'
-                        li(class="list-client-li OPASITY30 declinado" idCliente=cliente._id)
-                            div(class="li_client-information")
-                                strong  
-                                    div(class='cliente-id-div')=cliente._id 
-                                div(class='cliente-name-div')=cliente.name 
-                            div(class='extra-text') turno declinado 
+                        when 'esperando'
+                            li.list-client-li(class=cliente.nturno === plq.turnoNow ? "ACTUAL": " " , nturno = cliente.nturno, cliente_id=cliente._id, silla=cliente.silla)
+                                div(class="li_client-information")
+                                    strong
+                                        div(class='cliente-nturno-div')=cliente.nturno
+                                    div(class='cliente-name-div')=cliente.name
 
-                    when 'listo'
-                          li(class="list-client-li GREEN" idCliente=cliente._id)
-                            div(class="li_client-information")
-                                strong  
-                                    div(class='cliente-id-div')=cliente._id 
-                                div(class='cliente-name-div')=cliente.name 
-                            div(class='listo-text') listo            
+                                div(class="client-text") #{cliente.nturno === plq.turnoNow ? "En turno":" "}
+
+
+
+
+                        when 'declinado'
+                            li(class="list-client-li OPASITY30 declinado" cliente_id=cliente._id, silla=cliente.silla)
+                                div(class="li_client-information")
+                                    strong
+                                        div(class='cliente-nturno-div')=cliente.nturno
+                                    div(class='cliente-name-div')=cliente.name
+                                div(class='client-text') declinado
+
+                        when 'listo'
+                              li(class="list-client-li GREEN" cliente_id=cliente._id, silla=cliente.silla)
+                                div(class="li_client-information")
+                                    strong
+                                        div(class='cliente-nturno-div')=cliente.nturno
+                                    div(class='cliente-name-div')=cliente.name
+                                div(class='client-text') listo
 
 
   article 

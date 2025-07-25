@@ -5,6 +5,7 @@ import { io } from 'https://cdn.socket.io/4.8.1/socket.io.esm.min.js';
 import { createWaitClient, createDeclnClient, createGreenClient } from './complements/CreateClients.js';
 
 
+
 const socket = io('ws://localhost:3000');
 
 //  MODIFICACION A LOS METODOS DE CREAR CLIENTES
@@ -14,10 +15,14 @@ class CRC{
     static crtWaitClnt(client){
         let elm = createWaitClient(client)
         let declineButton = elm.querySelector(".decline-cliente-button") // boton de declinar
+
         declineButton.addEventListener('click', event => {
-            let target = event.currentTarget           
-            let id = target.getAttribute('idcliente');
-            declineClient(id)
+            let target = event.currentTarget
+            console.log(target)
+            let id = target.getAttribute('cliente_id');
+            let silla = target.getAttribute('silla');
+            console.log(silla)
+            declineClient(id, silla)
            
         })
 
@@ -35,8 +40,9 @@ class CRC{
 
         desDeclineButton.addEventListener('click', event => {
             let target = event.currentTarget
-            let id = target.getAttribute('idcliente')
-            desDecline(id)
+            let id = target.getAttribute('cliente_id');
+            let silla = target.getAttribute('silla');
+            desDecline(id, silla)
 
 
         })
@@ -47,24 +53,23 @@ class CRC{
 
 
 
-// --------- sockets handlers (respuestas) ---------- \\
+// --------- SOCKETS HANDLER (respuestas) ---------- \\
 
 
 socket.on('upturnRES', (msg) => {
-    console.log(msg)
 
 
-    let turnoBox = document.querySelector(".turno")
+    let turnoBox = document.querySelector(`.turno[silla="${msg.silla}"]`)
     turnoBox.innerHTML = msg.newTurno
 
-    let newActualClient = document.querySelector(`.list-client-li[idcliente="${msg.newTurno}"]`)
+    let newActualClient = document.querySelector(`.list-client-li[cliente_id="${msg.clienteActual._id}"]`)
     newActualClient.classList.add("ACTUAL")
 
     if(msg.clienteListo)
     {
         let replaceClient = createGreenClient(msg.clienteListo);
 
-        let elemntForUpdate = document.querySelector(`.list-client-li[idcliente="${msg.clienteListo._id}"]`)
+        let elemntForUpdate = document.querySelector(`.list-client-li[cliente_id="${msg.clienteListo._id}"]`)
         elemntForUpdate.replaceWith(replaceClient)
 
        
@@ -74,43 +79,39 @@ socket.on('upturnRES', (msg) => {
     
 })
 
-// {"turno":, "cliente":}
+// !!! hacer que busque por silla y demas cambios de lugar
 socket.on("downturnRES", (res) => {
 
-    if (res.turno){
-        console.log(res)
-    
-        let lastActualClient = document.querySelector(".ACTUAL")
+    // !!!! me quede en este metodo
+
+    if (res){
+
+        let lastActualClient = document.querySelector(`.ACTUAL[silla='${res.clienteActual.silla}']`)
         lastActualClient.classList.remove("ACTUAL")
     
     
-        let turnoBox = document.querySelector(".turno")
+        let turnoBox = document.querySelector(`.turno[silla='${res.clienteActual.silla}']`)
         turnoBox.innerHTML = res.turno
         
         
-        let newActualClient = document.querySelector(`.list-client-li[idcliente="${res.turno}"]`)
-        
-        
-        if (newActualClient.classList.contains("GREEN"))
-        {
-           let replaceClient = createWaitClient(res.cliente)
-           replaceClient.classList.add("ACTUAL")
-    
-    
-            let buttonDecline = replaceClient.querySelector(".decline-cliente-button")
-            buttonDecline.addEventListener('click', event => {
-                let target = event.currentTarget
-                console.log(target)
-                let id = target.getAttribute('idcliente');
-                console.log(id)
-                declineClient(id)
-               
-            })
-    
-           newActualClient.replaceWith(replaceClient)
+        let newActualClient = document.querySelector(`.list-client-li[cliente_id="${res.clienteActual._id}"]`)
+
+       let replaceClient = createWaitClient(res.clienteActual)
+       replaceClient.classList.add("ACTUAL")
+
+
+        let buttonDecline = replaceClient.querySelector(".decline-cliente-button")
+        buttonDecline.addEventListener('click', event => {
+            let target = event.currentTarget
+            let id = target.getAttribute('cliente_id');
+            declineClient(id)
+
+        })
+
+       newActualClient.replaceWith(replaceClient)
     
         
-        }
+
     }
     
 
@@ -118,34 +119,27 @@ socket.on("downturnRES", (res) => {
 
 // {_id:,name}
 socket.on("newClientRES", (cliente)=>{
-    console.log(cliente)
+
     let liElement = CRC.crtWaitClnt(cliente);
-    let ul = document.querySelector(".list-client-ul")
-    ul.appendChild(liElement)
+    let ul = document.querySelector(`.plq-div[silla="${cliente.silla}"]`)
+    let list = ul.querySelector('.list-client-ul')
+    list.appendChild(liElement)
 
-    // console.log(liElement.childNodes)
 
-    // let buttonInLiElm = liElement.querySelector(".decline-cliente-button") // boton de declinar
-    // buttonInLiElm.addEventListener('click', event => {
-    //     let target = event.currentTarget
-    //     console.log(target)
-    //     let id = target.getAttribute('idcliente');
-    //     console.log(id)
-    //     declineClient(id) })
        
 })
 
 //{"clienteDecl": clientForDecl, "newTurno": this.turno, "newActualClient": newActualClient}
 socket.on("declineClientRES", (res)=>{
     let leElement = createDeclnClient(res.clienteDecl);
-    let elemento2 = document.querySelector(`.list-client-li[idcliente="${res.clienteDecl._id}"]`);
+    let elemento2 = document.querySelector(`.list-client-li[cliente_id="${res.clienteDecl._id}"]`);
     elemento2.replaceWith(leElement);
 
-    if (res.newTurno){
-        let turnoBox = document.querySelector(".turno")
-        turnoBox.innerHTML = res.newTurno
+    if (res.turno){
+        let turnoBox = document.querySelector(`.turno[silla='${res.clienteDecl.silla}']`)
+        turnoBox.innerHTML = res.turno
 
-        let newActualClient = document.querySelector(`.list-client-li[idcliente="${res.newTurno}"]`)
+        let newActualClient = document.querySelector(`.list-client-li[cliente_id="${res.turno}"]`)
         newActualClient.classList.add("ACTUAL")
     }
 })
@@ -154,16 +148,12 @@ socket.on("desDeclineRES", client =>{
     if (client.status == 'listo')
     {
         let clientDesDecline = CRC.crtGreenClnt(client)
-
-        let elemntForUpdate = document.querySelector(`.list-client-li[idcliente="${client._id}"]`)
-
+        let elemntForUpdate = document.querySelector(`.list-client-li[cliente_id="${client._id}"]`)
         elemntForUpdate.replaceWith(clientDesDecline)
 
     }else if (client.status == 'esperando'){
         let clientDesDecline = CRC.crtWaitClnt(client)
-
-        let elemntForUpdate = document.querySelector(`.list-client-li[idcliente="${client._id}"]`)
-
+        let elemntForUpdate = document.querySelector(`.list-client-li[cliente_id="${client._id}"]`)
         elemntForUpdate.replaceWith(clientDesDecline)
     }
 
@@ -171,41 +161,71 @@ socket.on("desDeclineRES", client =>{
 })
 
 
-function upturnFunc() {
-    socket.emit('upturn')
+// -------- FUNCIONALIDAD TEMPORAL PARA SCROLL ------------//
+
+let clientes_li = document.querySelectorAll(".list-client-li")
+clientes_li.forEach(cliente => {
+    cliente.addEventListener("click", event => {
+        console.log("posicion respecto al contenedor", {
+            left: cliente.offsetLeft,
+            top: cliente.offsetTop,
+        })
+    })
+})
+
+// -------------------------------------------//
+
+
+
+
+// --------------- SUBIR TURNO --------------- //
+function upturnFunc(silla) {
+    socket.emit('upturn', silla)
     return
 }
 
+// --------------- BAJAR TURNO--------------- //
+function downTurn(silla){
+    socket.emit("downturn", silla)
+    return
+}
+
+// --------------- AGREGAR CLIENTE --------------- //
 function addClient() {
 
+    const btnAddclient = document.querySelector('.btn-addClient')
+    const  silla = btnAddclient.dataset.silla
+
     let inputAddClient = document.querySelector('.input-addclient')   
-    const nombre = inputAddClient.value 
+    const nombre = inputAddClient.value
 
-    socket.emit("newClient", nombre)
+    socket.emit("newClient", nombre, silla)
     inputAddClient.value = ''
+    let frmContainer = document.querySelector('.frmContainer')
+    frmContainer.style.display = 'none'
 
     return
 }
 
-function downTurn(){
-    socket.emit("downturn")
-    return
-}
+
+
 // --------------- DECLINAR CLIENTE --------------- //
 
-export function declineClient(id) {
-    socket.emit('declineClient', id)
+export function declineClient(id, silla) {
+    let msg = {'id': id, 'silla': silla};
+    socket.emit('declineClient', msg)
 }
 
-// --------------- DESDECLINAR CLIENTE --------------- //
+// --------------- DES-DECLINAR CLIENTE --------------- //
 
-function desDecline(id){
-    socket.emit('desDecline', id)
-    return
+function desDecline(id, silla){
+    let msg = {'id': id, 'silla': silla};
+    socket.emit('desDecline', msg)
+
 }
 
 
-// --------------------------------------------------- //
+// -------------- MANEJO DE SESION ------------- //
 
 async function closeSesion() {
     const url = "http://localhost:3000/logout"
@@ -232,10 +252,28 @@ function closeScreenLogout(){
 }
 
 
-const buttonUpTurn = document.querySelector(".button-upturn");
-buttonUpTurn.addEventListener('click', upturnFunc);
+// BOTON SUBIR TURNO
+const buttonUpTurn = document.querySelectorAll(".button-upturn");
+buttonUpTurn.forEach(button => {
+    button.addEventListener('click', (e)=>{
+        let silla = e.currentTarget.getAttribute('silla');
+        upturnFunc(silla)
+    });
+})
 
-const buttonAddClient = document.querySelector(".button-addclient");
+
+// BOTON BAJAR TURNO
+const buttonDownTurn = document.querySelectorAll(".button-downturn")
+buttonDownTurn.forEach((button)=>{
+    button.addEventListener("click", (e)=>{
+        let silla = e.currentTarget.getAttribute('silla');
+        downTurn(silla)
+    })
+})
+
+
+// BOTON AGREGAR CLIENTE
+const buttonAddClient = document.querySelector(".btn-addClient");
 buttonAddClient.addEventListener('click', addClient);
 
 // boton de abrir la pantalla para cerrar sesion
@@ -250,31 +288,44 @@ closeLogoutScreenButton.addEventListener('click', closeScreenLogout)
 const buttonLogout = document.querySelector(".logout-close");
 buttonLogout.addEventListener('click', closeSesion)
 
-// botones de eliminar clientes
-
+// BOTON DECLINAR CLIENTE
 let declineElementButtons = document.querySelectorAll('.decline-cliente-button')
 declineElementButtons.forEach(button => {
 button.addEventListener('click', event => {
     let target = event.currentTarget
-    console.log(target)
-    let id = target.getAttribute('idcliente');
-    console.log(id)
-    declineClient(id)
+    let id = target.getAttribute('cliente_id');
+    let silla = target.getAttribute('silla');
+    declineClient(id, silla)
    
 })})
 
-// boton bajar turno
 
-let buttonDownTurn = document.querySelector(".button-downturn")
-buttonDownTurn.addEventListener("click", downTurn)
-
-
+// BOTON DES-DECLINAR CLIENTE
 let desDeclineButton = document.querySelectorAll('.desdecline-button')
 desDeclineButton.forEach(button => {
     button.addEventListener('click', event => {
         let target = event.currentTarget
-        let id = target.getAttribute('idcliente')
-        desDecline(id)
+        let id = target.getAttribute('cliente_id');
+        let silla = target.getAttribute('silla');
+        desDecline(id, silla)
 })})
 
-// trabajar con el ioSocket
+
+
+// CONTENEDOR DE VENTANA AGREGAR CLIENTES
+
+let frmContainer = document.querySelector('.frmContainer')
+
+let addClientButton = document.querySelector('.btn-AddClient-box')
+addClientButton.addEventListener('click', (event) => {
+    frmContainer.style.display = 'flex';
+})
+
+frmContainer.addEventListener('click', (event) => {
+    if(event.target === frmContainer){
+        frmContainer.style.display = 'none'
+    }
+});
+
+
+

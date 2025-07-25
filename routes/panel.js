@@ -5,49 +5,33 @@ const  jwt = require('jsonwebtoken')
 const { SECRET_JWT_KEY } = require('../repositorys/config')
 const path = require('path');
 const ioRoute = path.resolve(__dirname, "..", "ioSocket.js")
-const {clientInst} = require(ioRoute)
+const {plqs} = require(ioRoute)  // peluqueros
 
-/*
-*       [ ] en este documento debo crear funciones que utilizan los metodos del objeto clientInst
-*           || en analisis ||
-*           - Estos metodos se exportaran a ioSocket.js, para ser llamados segun algun evento que se reciba 
-*             desde un socket de usuario 
-*                                                                                                               
-*                                                                                                              
-*                                                                                                               
-*                                                                                                               
-*                                                                                                               
-*/
-
-
-
-  // para crear instancia de la clase ClientRepository
 
 
 
 /* GET users listing. */
 router.route('/')
 .get(function(req, res, next) {
-  
+
   // esta funcion es para revisar que no existe ningun cliente con un estado de listo cuando su tuno es  superior al altual
-  clientInst.checkClients(clientInst.turnoNow)
-  
+  plqs[0].checkClients()
+  plqs[1].checkClients()
+
   // para obtener el jsonwebtoken del usuario que se almacenan en las cookies
   const token = req.cookies.access_token
   if(!token){ return res.status(403).redirect('/login') }
 
-  // para poder obtener estos valores se debe agregar en app.js el middelware var cookieParser = require('cookie-parser');
-  
 
-  todosLosClientes = ClientReporitory.sendClients().reverse()
+  let All_Clients = plqs[0].sendAllClients();
 
   try {
     const data = jwt.verify(token, SECRET_JWT_KEY)  // para verificar el token JWT y de paso obtiene los valores de Username y password que le asignamos en el route(login.js)
   }catch(err){}
 
   res.render('panel', {
-    turno: clientInst.turnoNow,
-    clientes: todosLosClientes
+    peluqueros: plqs, // !!! Manejar como enviar los turnos de cada instancia de Worker
+    clientes: All_Clients
   })
   
 })
@@ -58,32 +42,6 @@ router.route('/')
   if(!token){ return res.status(403).redirect('/login') }
   try { const data = jwt.verify(token, SECRET_JWT_KEY)}catch(err){}  // para verificar el token JWT y de paso obtiene los valores de Username y password que le asignamos en el route(login.js),  SI EL TOKEN NO ES VALIDO ESTA FUNCION DEBUELVE UN ERROR POR TANTO NO ES NECESARIO USAR UNA [IF]
 
-  //const { nombre, id } = req.body
-
-  // if(accion == 'upturn'){
-  //   await clientInst.upTurn()
-  //   //console.log(`el nuevo turno es ${clientInst.turnoNow}`)
-  //   res.send(clientInst.turnoNow.toString())
-  // }
-  
-  // else if(accion == 'downturn'){
-  //     await clientInst.downTurn()
-  //     //console.log(`el nuevo turno es ${clientInst.turnoNow}`)
-  //     res.send(clientInst.turnoNow.toString())
-    
-  // }
-
-  // else if(accion == 'addclient'){
-  //   turnoLastClient = await clientInst.addClient(nombre)
-    
-  //   res.json(turnoLastClient)
-  // }
-
-  // else if(accion == 'declinecliente'){
-  //   clientInst.declineClient(id)
-  //   res.send({'estado':'good'})
-  // }
-  
 });
 
 

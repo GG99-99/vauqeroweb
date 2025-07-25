@@ -8,7 +8,9 @@ export function createWaitClient(cliente){
     // [ 1.1 ]
     let liElement = cElm("li")
     liElement.classList.add("list-client-li")
-    liElement.setAttribute('idCliente', cliente._id)
+    liElement.setAttribute('cliente_id', cliente._id)
+    liElement.setAttribute("nturno", cliente.nturno)
+    liElement.setAttribute("silla", cliente.silla)
 
     // [ 1.1.1  A ]
     let divInformation = cElm("div")
@@ -21,8 +23,8 @@ export function createWaitClient(cliente){
 
     // [ 1.1.1.1.1A  ]
     let divClientID = cElm("div")
-    divClientID.classList.add('cliente-id-div')
-    divClientID.innerHTML = cliente._id
+    divClientID.classList.add('cliente-nturno-div')
+    divClientID.innerHTML = cliente.nturno
     
 
     // [ 1.1.1.1 B]
@@ -33,7 +35,7 @@ export function createWaitClient(cliente){
 
     let declineButton = cElm('div')
     declineButton.classList.add('decline-cliente-button')
-    declineButton.setAttribute("idCliente", cliente._id)
+    declineButton.setAttribute("cliente_id", cliente._id)
     
 
     let arrow1 = cElm('div')
@@ -60,23 +62,11 @@ export function createWaitClient(cliente){
 
 export function createGreenClient(cliente){
 
-    /* 
-        ulFather
-            liClient
-                divLiClientInformation
-                    divStrong
-                    divClientName
-                divListoText 
-    */
-
-
-    //let ulFather = document.getElementsByClassName("list-client-ul")
-    // [1]
-
-    // [1.1]
     let liClient = cElm("li")
     liClient.classList.add("list-client-li",  "GREEN")
-    liClient.setAttribute('idCliente', cliente._id)
+    liClient.setAttribute('cliente_id', cliente._id)
+    liClient.setAttribute("nturno", cliente.nturno)
+    liClient.setAttribute("silla", cliente.silla)
 
 
     // crear div con clase li_client-information
@@ -88,8 +78,8 @@ export function createGreenClient(cliente){
     let divStrong = cElm("strong")
 
     let divClientID = cElm("div")
-    divClientID.classList.add("cliente-id-div")
-    divClientID.innerHTML = cliente._id
+    divClientID.classList.add("cliente-nturno-div")
+    divClientID.innerHTML = cliente.nturno
 
     let divClientName = cElm("div")
     divClientName.classList.add("cliente-name-div")
@@ -97,7 +87,7 @@ export function createGreenClient(cliente){
 
 
     let divListoText = cElm("div")
-    divListoText.classList.add("listo-text")
+    divListoText.classList.add("client-text")
     divListoText.innerHTML = "listo"
 
 
@@ -111,15 +101,13 @@ export function createGreenClient(cliente){
 
 export function createDeclnClient (cliente){
 
-/*
- 
-*/
-
-    
     let liElement = cElm("li")
     liElement.classList.add("list-client-li")
     liElement.classList.add("OPASITY30")
-    liElement.setAttribute('idCliente', cliente._id)
+    liElement.classList.add("declinado")
+    liElement.setAttribute("cliente_id", cliente._id)
+    liElement.setAttribute("nturno", cliente.nturno)
+    liElement.setAttribute("silla", cliente.silla)
 
     let divInformation = cElm("div")
     divInformation.classList.add("li_client-information")
@@ -127,8 +115,8 @@ export function createDeclnClient (cliente){
     let strongE = cElm("strong")
 
     let divClientID = cElm("div")
-    divClientID.classList.add('cliente-id-div')
-    divClientID.innerHTML = cliente._id
+    divClientID.classList.add('cliente-turno-div')
+    divClientID.innerHTML = cliente.nturno
 
     let divClientName = cElm("div")
     divClientName.classList.add("cliente-name-div")
@@ -145,7 +133,7 @@ export function createDeclnClient (cliente){
 
     let desDeclineButton = cElm("div")
     desDeclineButton.classList.add("desdecline-button")
-    desDeclineButton.setAttribute('idCliente', cliente._id)
+    desDeclineButton.setAttribute('cliente_id', cliente._id)
 
     let circularButton = cElm('div')
     circularButton.classList.add('circular-button')
@@ -167,8 +155,7 @@ export function createDeclnClient (cliente){
 
 // cElm ==> significa Create Element, la uso para escribir menos
 export function cElm(e) {
-    let elm = document.createElement(`${e}`)
-    return elm
+    return document.createElement(`${e}`)
 }
 
 //module.exports = {createWaitClient, createGreenClient, createDeclnClient}

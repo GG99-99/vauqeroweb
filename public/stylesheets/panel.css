@@ -6,6 +6,15 @@ ul{
     list-style: none;
 }
 
+.hide{
+    display: none;
+}
+
+
+.focus{
+    background-color: black;
+    color: white;
+}
 
 /*  ------------------ Header ------------------  */
 header{
@@ -26,11 +35,41 @@ header{
     padding: 0.5vh;
 }
 
+.btnAddClient{
+    cursor: pointer;
+}
 
+.logout-box{
+    cursor: pointer;
+}
 
 /*  ------------------ Article ------------------  */
 
 article{
+    padding-top: 3vh;
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    height: 91vh;
+}
+
+.btns-sillas{
+    display: flex;
+    gap: 2vw;
+}
+
+.btn-silla{
+    border-radius: 7%;
+    border: solid 1px rgb(10, 10, 10);
+    padding: 1vh;
+    cursor: pointer;
+
+}
+
+
+
+.plq-div{
     display: flex;
     flex-direction: column;
     height: 91vh;
@@ -38,7 +77,6 @@ article{
     gap: 2vh;
     margin-top: 2vh;
 }
-
 .turno-box{
     display: flex;
     gap: 2vw;
@@ -126,7 +164,7 @@ li{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 90%;
+    width: 65vw;
     transition: width 0.3s;
 }
 
@@ -144,7 +182,7 @@ li{
 
 
 
-.cliente-name-div, .cliente-id-div{
+.cliente-name-div, .cliente-turno-div{
     font-size: 2vh;
 }
 
@@ -203,22 +241,36 @@ li{
 
 .declinado-text{
     display: inline-block;
-    height: 100%;
+    height: auto;
     text-align: center;
 }
 
 /* -------- Footer --------  */
 
-footer{
-    display: flex;
-    flex-direction: column;
+/*footer{*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*    height: 40vh;*/
+/*    */
+/*}*/
+
+/* Formulario agregar cliente */
+
+.frmContainer{
+    display: none;
     align-items: center;
     justify-content: center;
-    height: 40vh;
-    
-}
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.57);
+    position: absolute;
+    color: white;
+    top: 0;
 
-.form-addclient{
+}
+.frmAddClient{
     gap: 2vh;
     display: flex;
     flex-direction: column;
@@ -231,28 +283,32 @@ footer{
 }
 
 .p-addclient{
-    font-size: 2vh;
+    font-size: 4vh;
 }
 
 
 .input-addclient{
     height: 4vh;
     padding: 8px;
-    width: 60vw;
-    font-size: 1.5vh;
+    width: 70vw;
+    font-size: 1.2vh;
+    border-radius: 0.5vh;
+    border-style: solid;
+    border-color: white;
 }
 
 
 
-.button-addclient{
+.btn-addClient{
     background-color: transparent;
-    height: 3vh;
-    width: 20vw;
-    border: 1px solid;
-    border-color: black;
+    height: 5vh;
+    width: 25vw;
+    border: 0.5px solid;
+    border-color: #ffffff;
     font-size: 2vh;
     cursor: pointer;
     opacity: 100%;
+    color: white;
     
 }
 
