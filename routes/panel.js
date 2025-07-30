@@ -29,6 +29,8 @@ router.route('/')
     const data = jwt.verify(token, SECRET_JWT_KEY)  // para verificar el token JWT y de paso obtiene los valores de Username y password que le asignamos en el route(login.js)
   }catch(err){}
 
+
+
   res.render('panel', {
     peluqueros: plqs, // !!! Manejar como enviar los turnos de cada instancia de Worker
     clientes: All_Clients

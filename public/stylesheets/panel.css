@@ -23,7 +23,7 @@ header{
     padding: 3vh 5vw;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1.5px solid;
+    border-bottom: 1px solid rgba(0,0,0,0.3);
 
 }
 .icon{
@@ -54,6 +54,7 @@ article{
     height: 91vh;
 }
 
+
 .btns-sillas{
     display: flex;
     gap: 2vw;
@@ -76,7 +77,74 @@ article{
     align-items: center;
     gap: 2vh;
     margin-top: 2vh;
+    position: relative;
 }
+
+
+/*  CAJA PARA INDICAR APERTURA O CIERRE  */
+.top-plq{
+    display: flex;
+    position: relative;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.open-box{
+    border : 1px solid rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    gap: 3px;
+    border-radius: 80px;
+    position: absolute;
+    left: 0;
+    cursor: pointer;
+}
+
+#outer-circle{
+    height: 23px;
+    width: 23px;
+    /*border : 1px solid rgba(0,0,0,0.4);*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.25s;
+
+}
+
+#inner-circle{
+    height: 15px;
+    width: 15px;
+    /*border : 1px solid rgba(0,0,0,0.4);*/
+    border-radius: 50%;
+    transition: background-color 0.25s;
+}
+
+.green-outer{
+
+    background-color: rgba(3, 213, 81, 0.3);
+}
+
+.red-outer{
+    background-color: rgba(213, 0, 0, 0.43);
+}
+
+.green-inner{
+    background-color: rgba(171,255,202,1);
+}
+
+.red-inner{
+    background-color: rgba(255, 65, 65, 1);
+}
+#open-text{
+    font-size: 20px;
+}
+/*--------------------------------------------*/
+
+
+
 .turno-box{
     display: flex;
     gap: 2vw;
@@ -182,11 +250,11 @@ li{
 
 
 
-.cliente-name-div, .cliente-turno-div{
+.cliente-name-div, .cliente-nturno-div{
     font-size: 2vh;
 }
 
-.decline-cliente-button, .desdecline-button{
+.decline-client-button, .desdecline-button{
     height: 4vh;
     width: 4vh;
     border: 1px solid #000000;
@@ -239,7 +307,7 @@ li{
     border: 1px solid #000000;
 }
 
-.declinado-text{
+.client-text{
     display: inline-block;
     height: auto;
     text-align: center;
@@ -258,7 +326,7 @@ li{
 
 /* Formulario agregar cliente */
 
-.frmContainer{
+.frmContainer, .frmContainer-not-open{
     display: none;
     align-items: center;
     justify-content: center;
@@ -270,6 +338,9 @@ li{
     top: 0;
 
 }
+
+
+
 .frmAddClient{
     gap: 2vh;
     display: flex;
@@ -384,4 +455,45 @@ li{
 .GREEN{
     color: rgba(0, 188, 13, 0.747);
     border-color: rgba(0, 188, 13, 0.747);
+}
+
+
+
+
+/*  --- FRM DE AVERTENCIA --- */
+
+.sub-frm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 30%;
+    background-color: rgb(213, 213, 213);
+    border-radius: 20px;
+    color: black;
+    gap: 10px;
+    padding: 15px;
+
+}
+
+.not-open-text{
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.not-open-text>span{
+    color: red;
+}
+.ok-button{
+    cursor: pointer;
+    display: flex;
+    height: 30px;
+    text-align: center;
+    align-items: center;
+    background-color: #1e1d1d;
+    border-radius: 6px ;
+    color: white;
+    padding: 8px;
+
+
 }

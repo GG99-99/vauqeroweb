@@ -2,17 +2,38 @@ import { io } from 'https://cdn.socket.io/4.8.1/socket.io.esm.min.js';
 const socket = io('ws://localhost:3000');
 import {createWaitClient, createGreenClient, createDeclnClient, cElm} from "./complements/CreateClients.js"
 
+class CRC{
+    static crtWaitClnt(cliente) {
+        let cliente_wait = createWaitClient(cliente);
+        cliente_wait.replaceWith(
+            cliente_wait.querySelector(".decline-cliente-button"))
+        return cliente_wait;
+    }
+
+    static crtGreenClnt(cliente) {
+        return createGreenClient(cliente);
+
+    }
+
+    static crtDeclineClnt(cliente) {
+        let cliente_decline = createDeclnClient(cliente);
+        let btn_for_remove = cliente_decline.querySelector(".desdecline-button");
+        btn_for_remove.remove()
+        return cliente_decline;
+    }
+}
 
 // --------- sockets handlers (respuestas) ---------- \\
-socket.on('upturnRES', (msg) => {
-    console.log(msg)
-    let clienteListo = document.querySelector(`.list-client-li[cliente_id="${msg.clienteListo._id}"]`)
-    let clienteListo_green = createGreenClient(msg.clienteListo)
+socket.on('upturnRES', (res) => {
+    console.log(res)
+    let clienteListo = document.querySelector(`.list-client-li[cliente_id="${res.clienteListo._id}"]`)
+    let clienteListo_green = CRC.crtGreenClnt(res.clienteListo)
     clienteListo.replaceWith(clienteListo_green)
 
 
 
-    let clienteActual = document.querySelector(`.list-client-li[cliente_id="${msg.clienteActual._id}"]`)
+    // --- NUEVO CLIENTE ACTUAL
+    let clienteActual = document.querySelector(`.list-client-li[cliente_id="${res.clienteActual._id}"]`)
     clienteActual.classList.add("ACTUAL")
 
     //agregar text de EN TURNO al clienteActual
@@ -21,8 +42,9 @@ socket.on('upturnRES', (msg) => {
     client_text2.innerHTML = "En turno"
     clienteActual.appendChild(client_text2)
 
+    // --- ACTUALIZAR TURNO
     let turnoBox = document.querySelector(".turno")
-    turnoBox.innerHTML = msg.newTurno
+    turnoBox.innerHTML = res.newTurno
 })
 
 socket.on("downturnRES", (res) => {
@@ -45,9 +67,8 @@ socket.on("downturnRES", (res) => {
 
         let newActualClient = document.querySelector(`.list-client-li[cliente_id="${res.clienteActual._id}"]`)
 
-        let newActualClient_wait = createWaitClient(res.clienteActual)
+        let newActualClient_wait = CRC.crtWaitClnt(res.clienteActual)
         newActualClient_wait.classList.add("ACTUAL")
-        newActualClient_wait.removeChild(newActualClient_wait.querySelector(".decline-cliente-button"))  // remover el boton de declinar
 
         //agregar text de EN TURNO al newActualClient_wait
         let client_text = cElm('div')
@@ -63,12 +84,48 @@ socket.on("downturnRES", (res) => {
 
 socket.on("newClientRES", (cliente)=>{
     console.log(cliente)
-    let liElement = createWaitClient(cliente);
-    liElement.removeChild(liElement.querySelector(".decline-cliente-button"))
+    let new_cliente = CRC.crtWaitClnt(cliente);
     let ul = document.querySelector(".list-client-ul")
-    ul.appendChild(liElement)
+    ul.appendChild(new_cliente)
 })
 
+socket.on("declineRES", (res) =>{
+    let cliente_for_decline = document.querySelector(`.list-client-li[cliente_id="${res.clienteDecl._id}"]`)
+    cliente_for_decline.replaceWith(CRC.crtDeclineClnt(res.clienteDecl))  // cambiar el cliente a declinado
+
+    if(res.turno){
+        let turnoBox = document.querySelector(`.turno[silla="${res.clienteDecl.silla}"]`)
+        turnoBox.innerHTML = res.turno
+    }
+
+    if(res.newActualClient){
+        //document.querySelector('.ACTUAL').classList.remove("ACTUAL") // remover la etiqueta actual al cliente en turno
+
+        let new_cliente_actual = CRC.crtWaitClnt(res.newActualClient)
+        new_cliente_actual.classList.add("ACTUAL")
+
+        // --- REMPLAZAR EL CLIENTE A SU FORMA CON CLIENTE ACTUAL
+        document.querySelector(`.li-client-li[cliente_id="${res.newActualClient._id}"]`).replaceWith(new_cliente_actual)
+    }
+
+
+
+})
+
+socket.on("desDeclineRES", (res) =>{
+    if(res.cliente.status === 'esperando'){
+        let cliente_wait = CRC.crtWaitClnt(res.cliente)
+        let cliente_for_replace = document.querySelector(`.list-client-li[cliente_id="${res.cliente._id}"]`)
+        cliente_for_replace.replaceWith(cliente_wait)
+
+
+    }
+    else if (res.cliente.status === 'listo'){
+        let cliente_gree = CRC.crtGreenClnt(res.cliente)
+        let cliente_for_replace = document.querySelector(`.list-client-li[cliente_id="${res.cliente._id}"]`)
+        cliente_for_replace.replaceWith(cliente_gree)
+    }
+})
 
 
 

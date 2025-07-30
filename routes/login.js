@@ -12,8 +12,8 @@ router.route('/')
     const token = req.cookies.access_token
     if(!token){ res.render('login') }
     else if (token){
-      try { 
-        const data = jwt.verify(token, SECRET_JWT_KEY) 
+      try {
+        const data = jwt.verify(token, SECRET_JWT_KEY)
         res.redirect('/panel')  // si el token es valido te enviara directamente al panel
       }catch(err){}
     }
@@ -41,7 +41,7 @@ router.route('/')
       res.send({user, token})
       
     } catch (error) {
-      res.status(401).send(error.message)
+      res.status(401).send({"err": error.message})
     }
 });
 

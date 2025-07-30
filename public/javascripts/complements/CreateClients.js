@@ -34,8 +34,9 @@ export function createWaitClient(cliente){
     
 
     let declineButton = cElm('div')
-    declineButton.classList.add('decline-cliente-button')
+    declineButton.classList.add('decline-client-button')
     declineButton.setAttribute("cliente_id", cliente._id)
+    declineButton.setAttribute("silla", cliente.silla)
     
 
     let arrow1 = cElm('div')
@@ -115,7 +116,7 @@ export function createDeclnClient (cliente){
     let strongE = cElm("strong")
 
     let divClientID = cElm("div")
-    divClientID.classList.add('cliente-turno-div')
+    divClientID.classList.add('cliente-nturno-div')
     divClientID.innerHTML = cliente.nturno
 
     let divClientName = cElm("div")
@@ -126,7 +127,7 @@ export function createDeclnClient (cliente){
     buttonSide.classList.add('buttonSide')
 
     let dclinadoText = cElm("div")
-    dclinadoText.classList.add("declinado-text")
+    dclinadoText.classList.add("client-text")
 
     let spanDcln = cElm("span")
     spanDcln.innerHTML = "Declinado"
@@ -134,6 +135,7 @@ export function createDeclnClient (cliente){
     let desDeclineButton = cElm("div")
     desDeclineButton.classList.add("desdecline-button")
     desDeclineButton.setAttribute('cliente_id', cliente._id)
+    desDeclineButton.setAttribute('silla', cliente.silla)
 
     let circularButton = cElm('div')
     circularButton.classList.add('circular-button')

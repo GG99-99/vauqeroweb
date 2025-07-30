@@ -57,13 +57,15 @@ class ClientReporitory{
         return {
             turnoForAsing: this.turnoForAsing,
             turnoNow: this.turnoNow,
-            silla: this.silla
+            silla: this.silla,
+            open: this.open
         }
     }
     constructor(silla) {
         this.turnoForAsing = 1;
         this.turnoNow = 1;
-        this.silla = silla 
+        this.silla = silla
+        this.open = 0;
         // esta variable es para manejar el ultimo turno registrado en addClient 
 
         // crear el archivo json  al que hara referencia la instancia
@@ -74,6 +76,7 @@ class ClientReporitory{
             let data = JSON.parse(fs.readFileSync(this.pathJson).toString())
             this.turnoForAsing = data.turnoForAsing
             this.turnoNow = data.turnoNow
+            this.open = data.open
 
         }
         else{
@@ -86,7 +89,6 @@ class ClientReporitory{
         try {
 
             let id = getNextId()
-            console.log(id)
             let Cliente = ClientDB.create({_id: id, nturno:this.turnoForAsing ,name: name, silla: this.silla}).save(); // GUARDA EL REGISTRO EN LA BASE DE DATOS
             const cliente = {_id:id, nturno: Cliente.nturno, name: name, silla: this.silla};
             this.turnoForAsing++
@@ -170,33 +172,37 @@ class ClientReporitory{
         if (this.turnoNow > 1){
             try 
             {
+
+
                 let cliente = ClientDB.findOne({nturno: this.turnoNow-1, silla: this.silla})
-                if(cliente)  // verificamos que exista un cliente anterior
+                if(cliente && cliente.status === 'listo')  // verificamos que exista un cliente anterior
                 {
-                    this.turnoNow -= 1  //disminuimos el turno actual
+                     this.turnoNow -= 1  //disminuimos el turno actual
+                    cliente.status = "esperando";
+                    ClientDB.update({nturno: this.turnoNow, silla: this.silla}, cliente).save();
+                    fs.writeFileSync(this.pathJson, JSON.stringify(this));
 
+                    return {"turno": this.turnoNow, "clienteActual": cliente}
+                }
+                else if (cliente && cliente.status==="declinado")
+                {  // este else se ejecutara si el cliente anterior existe pero esta como declinado
+                    let contador = 1
+                        while (cliente && cliente.status === "declinado" ) {
+                            contador +=1
+                            if(contador === this.turnoNow) {
+                                return false
+                            }
+                            cliente = ClientDB.findOne({nturno: this.turnoNow-contador, silla: this.silla})
 
-                    if (cliente.status === "listo")
-                    {
-                        cliente.status = "esperando";
-                        ClientDB.update({nturno: this.turnoNow, silla:this.silla}, cliente).save();
-                        fs.writeFileSync(this.pathJson, JSON.stringify(this));
-
-                        return {"turno": this.turnoNow, "clienteActual": cliente}
-
-                    }else {  // este else se ejecutara si el cliente anterior existe pero esta como declinado
-
-                        while (cliente.status === "declinado") {
-                            this.turnoNow -= 1
-                            cliente = ClientDB.findOne({nturno: this.turnoNow, silla: this.silla})
                         }
 
+                        this.turnoNow = this.turnoNow - contador;
                         cliente.status = "esperando";
                         ClientDB.update({nturno: this.turnoNow, silla:this.silla}, cliente).save()
                         fs.writeFileSync(this.pathJson, JSON.stringify(this));
-
                         return {"turno": this.turnoNow, "clienteActual": cliente}
-                    }
+
+
                 }
 
             }catch(err){console.log(err)}
@@ -206,23 +212,22 @@ class ClientReporitory{
 
     //me falta el desdecline
     desDecline(id) {
-        //console.log(turno)
+
         let ID = parseInt(id);
         let cliente = ClientDB.findOne({_id: ID})
-        let backClient = ClientDB.findOne({nturno: cliente.nturno-1, silla: this.silla})
+        // let backClient = ClientDB.findOne({nturno: cliente.nturno-1, silla: this.silla})
         //let clientDesDecline = ClientDB.findOne({_id})
 
-        if (backClient.status === 'listo' || backClient.status === 'declinado')
-        {
+        if (cliente.nturno < this.turnoNow){
             cliente.status = 'listo'
             ClientDB.update({_id: ID}, cliente).save()
-            return cliente  // su status sera listo
+            return {"cliente": cliente } // su status sera listo
 
-        }else if (backClient.status === 'esperando')
+        }else if (cliente.nturno > this.turnoNow)
         {
             cliente.status = 'esperando'
-            ClientDB.update({_id: ID}).save()
-            return cliente // su status sera esperando
+            ClientDB.update({_id: ID}, cliente).save()
+            return {"cliente": cliente }
         }
     }
     
@@ -257,6 +262,11 @@ class ClientReporitory{
         }catch(err){console.log(err)}
     }
 
+    openAndClose(){
+        this.open = this.open === 0 ? 1 : 0;
+        fs.writeFileSync(this.pathJson, JSON.stringify(this));
+        return {'open': this.open, 'silla':this.silla}
+    }
 } 
 
 

@@ -44,6 +44,6 @@ btnSillas.forEach(btnSilla => {btnSilla.addEventListener('click', () => {
   })
 })})
 
-
+//
 
 

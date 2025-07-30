@@ -6,6 +6,7 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+var practiceJoin = require(path.join(__dirname,'bin','practice-path'));
 /*
 El middleware cookieParser se utiliza para analizar las cookies adjuntas al objeto de solicitud del cliente. Hace que las cookies estén disponibles en req.cookies y las cookies firmadas en req.signedCookies.
 */

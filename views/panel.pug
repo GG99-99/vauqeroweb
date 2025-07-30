@@ -33,9 +33,17 @@ block content
 
         each plq in peluqueros
             div(class = "plq-div" silla=plq.silla)
-                div(class="turno-box")
-                    div(class="turno-text") Turno actual:
-                    div(class="turno" silla=plq.silla)= plq.turnoNow
+
+
+                div.top-plq
+                    div(class="open-box", silla=plq.silla, open=plq.open)
+                        div(id="outer-circle" class=plq.open === 1 ? "green-outer" : "red-outer",)
+                            div(id="inner-circle" class=plq.open === 1 ? "green-inner" : "red-inner",)
+                        div(id="open-text" ) #{ plq.open === 1 ? "Abierto" : "Cerrado" }
+
+                    div(class="turno-box")
+                        div(class="turno-text") Turno actual:
+                        div(class="turno" silla=plq.silla)= plq.turnoNow
 
                 div(class="list-client-box")
                     ul(class="list-client-ul")
@@ -51,7 +59,7 @@ block content
                                                 strong
                                                     div(class='cliente-turno-div')=cliente.nturno
                                                 div(class='cliente-name-div')=cliente.name
-                                            div(class="decline-cliente-button", cliente_id=cliente._id, silla=plq.silla)
+                                            div(class="decline-client-button", cliente_id=cliente._id, silla=plq.silla)
                                                 div(class="arrow1")
                                                 div(class="arrow2")
 
@@ -63,7 +71,7 @@ block content
                                                 div(class='cliente-name-div')=cliente.name
 
                                             div(class='buttonSide')
-                                                div(class='declinado-text')
+                                                div(class='client-text')
                                                     span Declinado
                                                 div(class= 'desdecline-button', cliente_id=cliente._id, silla=cliente.silla)
                                                     div(class='circular-button')
@@ -74,7 +82,7 @@ block content
                                                 strong
                                                     div(class='cliente-turno-div')=cliente.nturno
                                                 div(class='cliente-name-div')=cliente.name
-                                            div(class='listo-text') listo
+                                            div(class='client-text') listo
 
 
                 div(class="buttons-updown-box")
@@ -96,6 +104,14 @@ block content
                 input(type="text" class="input-addclient" placeholder="Nombre")
             div
                 input(type="button" class="btn-addClient" value="Agregar" data-silla="")
+
+    div(class='frmContainer-not-open')
+        div(class='sub-frm')
+            div(class='not-open-text')
+                | La silla
+                span  no
+                |  esta abierta.
+            div(class="ok-button") Aceptar
 
     script(type="module" src="javascripts/PB-panel.js")
     script(type="module" src="javascripts/PB-panelTabs.js")

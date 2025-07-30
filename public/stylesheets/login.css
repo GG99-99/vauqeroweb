@@ -69,11 +69,7 @@ label{
     cursor: default;
 }
 
-/*.login-boxes{
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-}*/
+
 
 .text-inputs{
     display: flex;
@@ -81,11 +77,7 @@ label{
     gap: 5px;
 }
 
-/*.submit-box{
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-}*/
+
 
 .submit-button{
     height: 3.4vh;
@@ -106,3 +98,27 @@ label{
 .submit-button:hover {
     background-color: #45a049;
   }
+
+
+/*   CLASES PARA INGRSO INCORRECTO   */
+
+.hide{
+    visibility: hidden;
+}
+
+.red{
+    color: red;
+
+}
+
+.red-input{
+    border: 1px solid rgb(250,0,0);
+}
+
+.red-shadow {
+    text-shadow:
+            0 0 7px #ff000024,
+            0 0 10px #f00,
+            0 0 21px #f00,
+            0 0 42px #f00;
+}
