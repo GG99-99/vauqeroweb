@@ -42,7 +42,6 @@ header{
     border: 1px solid rgb(171, 171, 171);
     background-color: rgba(171, 171, 171, 0.3);
     color: #fff;
-    height: 40px;
     font-size: 2vh;
     height: 5vh;
 }
@@ -84,8 +83,7 @@ label{
     width: 30vw;
     font-weight: 600;
     background-color: #259856;
-    cursor: pointer;
-    box-shadow: transparent;
+    /*box-shadow: transparent;*/
     border-color: transparent;
     border-radius: 0.43vh;
     font-size: 1.8vh;

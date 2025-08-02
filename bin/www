@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+const path = require('path');
+
 
 /**
  * Module dependencies.
@@ -6,7 +8,7 @@
 
 
 //var debug = require('debug')('vaqueroweb:server');
-const { port, server, app} = require('./Server')
+const { port, server, app} = require(path.join(__dirname, '..', 'Server.js'));
 
 
 

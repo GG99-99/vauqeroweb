@@ -1,5 +1,6 @@
 var express = require('express');
-const { UserRepository } = require('../repositorys/user-repository');
+let path = require('path');
+const { UserRepository } = require(path.join(__dirname, '..', 'repositorys', 'user-repository.js'));
 var router = express.Router();
 
 

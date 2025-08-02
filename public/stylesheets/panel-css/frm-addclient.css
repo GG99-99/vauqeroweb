@@ -1,0 +1,70 @@
+
+/* ------ Formulario agregar cliente ------ */
+
+.frmContainer, .frmContainer-not-open{
+    display: none;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    color: white;
+    top: 0;
+
+}
+
+
+
+.frmAddClient{
+    gap: 2vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.box-input-text{
+    display: flex;
+    flex-direction: column;
+}
+
+.p-addclient{
+    font-size: 1.6rem;
+}
+
+
+.input-addclient{
+
+    height: 4vh;
+    padding: 20px;
+    width: 40rem;
+    font-size: 21px;
+    border-radius: 0.5vh;
+    border-style: solid;
+    border-color: white;
+
+    background-color: rgba(171, 171, 171, 0.3);
+    color: #fff;
+}
+
+.input-addclient::placeholder{
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.input-addclient:focus{
+    outline: none;
+
+}
+
+.btn-addClient{
+    background-color: transparent;
+    height: 5vh;
+    width: 11rem;
+    border: 0.5px solid #ffffff;
+    font-size: 18px;
+    cursor: pointer;
+    opacity: 100%;
+    color: white;
+
+    border-radius: 0.5rem;
+}

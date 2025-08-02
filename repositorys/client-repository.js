@@ -172,21 +172,24 @@ class ClientReporitory{
         if (this.turnoNow > 1){
             try 
             {
+                let cliente_actual = ClientDB.findOne({nturno: this.turnoNow, silla: this.silla})
+                // let next_clients = ClientDB.find({nturno: {$gt: this.turnoNow}, silla: this.silla})
 
+                if (cliente_actual.status !== 'declinado'){
 
-                let cliente = ClientDB.findOne({nturno: this.turnoNow-1, silla: this.silla})
-                if(cliente && cliente.status === 'listo')  // verificamos que exista un cliente anterior
-                {
-                     this.turnoNow -= 1  //disminuimos el turno actual
-                    cliente.status = "esperando";
-                    ClientDB.update({nturno: this.turnoNow, silla: this.silla}, cliente).save();
-                    fs.writeFileSync(this.pathJson, JSON.stringify(this));
+                    let cliente = ClientDB.findOne({nturno: this.turnoNow-1, silla: this.silla})
+                    if(cliente && cliente.status === 'listo')  // verificamos que exista un cliente anterior
+                    {
+                        this.turnoNow -= 1  //disminuimos el turno actual
+                        cliente.status = "esperando";
+                        ClientDB.update({nturno: this.turnoNow, silla: this.silla}, cliente).save();
+                        fs.writeFileSync(this.pathJson, JSON.stringify(this));
 
-                    return {"turno": this.turnoNow, "clienteActual": cliente}
-                }
-                else if (cliente && cliente.status==="declinado")
-                {  // este else se ejecutara si el cliente anterior existe pero esta como declinado
-                    let contador = 1
+                        return {"turno": this.turnoNow, "clienteActual": cliente}
+                    }
+                    else if (cliente && cliente.status==="declinado")
+                    {  // este else se ejecutara si el cliente anterior existe pero esta como declinado
+                        let contador = 1
                         while (cliente && cliente.status === "declinado" ) {
                             contador +=1
                             if(contador === this.turnoNow) {
@@ -203,7 +206,12 @@ class ClientReporitory{
                         return {"turno": this.turnoNow, "clienteActual": cliente}
 
 
+                    }
+                }else{
+                    return false;
                 }
+
+
 
             }catch(err){console.log(err)}
         }
@@ -228,7 +236,12 @@ class ClientReporitory{
             cliente.status = 'esperando'
             ClientDB.update({_id: ID}, cliente).save()
             return {"cliente": cliente }
+        }else if(cliente.nturno === this.turnoNow){
+            cliente.status = 'esperando'
+            ClientDB.update({_id: ID}, cliente).save()
+            return {"cliente": cliente, "is_actual": true }
         }
+
     }
     
     returnTurn(){ // para que se muestre los clientes en espera a vaquero y tambien a los clientes

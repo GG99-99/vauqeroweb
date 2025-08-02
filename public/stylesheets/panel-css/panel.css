@@ -1,0 +1,149 @@
+body{
+    background-image: none;
+}
+
+ul{
+    list-style: none;
+}
+
+.hide{
+    display: none;
+}
+
+
+.focus{
+    background-color: black;
+    color: white;
+}
+
+/*  ------------------ Header ------------------  */
+header{
+    display: flex;
+    height: 9vh;
+    padding: 3vh 5vw;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(0,0,0,0.3);
+
+}
+.icon{
+    height: 5vh;
+    width: 5vh;
+    border: 1px solid;
+    border-color: rgb(179, 179, 179);
+    border-radius: 1vh;
+    padding: 0.5vh;
+}
+
+.btnAddClient{
+    cursor: pointer;
+}
+
+.logout-box{
+    cursor: pointer;
+}
+
+/*  ------------------ Article ------------------  */
+
+article{
+    padding-top: 3vh;
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    height: 91vh;
+}
+
+
+.btns-sillas{
+    display: flex;
+    gap: 2vw;
+}
+
+.btn-silla{
+    border-radius: 7%;
+    border: solid 1px rgb(10, 10, 10);
+    padding: 1vh;
+    cursor: pointer;
+
+}
+
+
+
+.plq-div{
+    display: flex;
+    flex-direction: column;
+    height: 91vh;
+    align-items: center;
+    gap: 2vh;
+    margin-top: 2vh;
+    position: relative;
+}
+
+
+
+
+.turno-box{
+    display: flex;
+    gap: 2vw;
+}
+
+.turno-text{
+    font-size: 4vh;
+}
+
+.turno{
+    font-size: 4vh;
+}
+
+.list-client-box{
+    height: 59vh;
+    width: 80vw;
+    
+}
+
+/* BOTONES DE SUBIR Y BAJAR TURNO */
+.buttons-updown-box{
+    display: flex;
+    gap: 15vw;
+}
+
+.button-downturn, .button-upturn{
+    background-color: transparent;
+    height: 5.5vh;
+    width: 5.5vh;
+    font-size: 1.5vh;
+    cursor: pointer;
+    border: solid 0.2vh #000000;
+    border-radius: 30%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.line{
+    width: 60%;
+    height: 7%;
+    background-color: #000000;
+    
+}
+
+.line-vertical::after{
+    content: " ";
+    width: 60%;
+    height: 7%;
+    background-color: #000000;
+    transform: rotate(90deg);
+    display: inline-block;
+    position: absolute;
+    right: 19%;
+    
+}
+
+
+
+
+

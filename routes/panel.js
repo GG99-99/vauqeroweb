@@ -1,10 +1,12 @@
-const { ClientReporitory } = require('../repositorys/client-repository')
+const path = require('path');
+
+const { ClientReporitory } = require(path.join(__dirname, '..', 'repositorys', 'client-repository.js'))
+const { SECRET_JWT_KEY } = require(path.join(__dirname, '..', 'repositorys', 'config.js'))
+const ioRoute = path.resolve(__dirname, "..", "ioSocket.js")
+
 var express = require('express');
 var router = express.Router();
 const  jwt = require('jsonwebtoken')
-const { SECRET_JWT_KEY } = require('../repositorys/config')
-const path = require('path');
-const ioRoute = path.resolve(__dirname, "..", "ioSocket.js")
 const {plqs} = require(ioRoute)  // peluqueros
 
 

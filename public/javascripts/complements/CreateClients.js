@@ -123,8 +123,8 @@ export function createDeclnClient (cliente){
     divClientName.classList.add("cliente-name-div")
     divClientName.innerHTML = cliente.name
 
-    let buttonSide = cElm("div")
-    buttonSide.classList.add('buttonSide')
+    let desdecline_box = cElm("div")
+    desdecline_box.classList.add('desdecline-box')
 
     let dclinadoText = cElm("div")
     dclinadoText.classList.add("client-text")
@@ -145,10 +145,10 @@ export function createDeclnClient (cliente){
         divInformation.appendChild(strongE)
             strongE.appendChild(divClientID)
             divInformation.appendChild(divClientName)
-    liElement.appendChild(buttonSide)
-        buttonSide.appendChild(dclinadoText)
+    liElement.appendChild(desdecline_box)
+        desdecline_box.appendChild(dclinadoText)
             dclinadoText.appendChild(spanDcln)
-        buttonSide.appendChild(desDeclineButton)
+        desdecline_box.appendChild(desDeclineButton)
             desDeclineButton.appendChild(circularButton)
     //liElement.appendChild(divDeclnText)
     

@@ -1,4 +1,7 @@
 
+.hide{
+    display: none;
+}
 
 header{
     min-height: 100vh;
@@ -73,15 +76,21 @@ header{
     margin-block: 0;
 }
 
+
 /* ------------------- Btn-Sillas---------------------*/
 
 .btn-silla-box{
     display: flex;
     gap: 7vw;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 80%;
+
 }
 
 .btn-silla{
-    border-radius: 8%;
+    border-radius: 8px;
     border: solid 1px rgb(10, 10, 10);
     padding: 1vh;
     cursor: pointer;
@@ -94,7 +103,24 @@ header{
     color: white;
 }
 
+.open-box{
+    padding: 7px;
+    border-radius: 10px;
+    position: absolute;
+    left: 0;
+}
+.open{
+    background-color: #45a049;
+    font-weight: 600;
+    color: white;
+}
 
+.close{
+    background-color: #f62929;
+    color: white;
+    font-weight: 600;
+
+}
 /* -------------------- list Clients  ----------------------*/
 
 .list-client-ul{

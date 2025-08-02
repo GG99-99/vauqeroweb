@@ -1,8 +1,10 @@
+const path = require('path');
+
 var express = require('express');
-const { UserRepository } = require('../repositorys/user-repository');
+const { UserRepository } = require(path.join(__dirname, '..', 'repositorys', 'user-repository.js'))
 var router = express.Router();
 const  jwt = require('jsonwebtoken')
-const { SECRET_JWT_KEY } = require('../repositorys/config')
+const { SECRET_JWT_KEY } = require(path.join(__dirname, '..', 'repositorys', 'config.js'))
 const cookieParser = require('cookie-parser')
 
 /* GET users listing. */

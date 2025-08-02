@@ -1,0 +1,60 @@
+/* ---------------------- Modular logout ---------------------- */
+.logout-screen{
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.526);
+    position: fixed;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.logout-card-box{
+    height: 30vh;
+    width: 70vw;
+    background-color: rgb(213, 213, 213);
+    border-radius: 2vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8vh;
+}
+
+.logout-button-box{
+    display: flex;
+    align-items: center;
+    gap: 2vw;
+
+}
+
+.logout-text{
+    padding: 5%;
+    font-size: 2vh;
+}
+
+.logout-no-close, .logout-close{
+    width: 30vw;
+    height: 5vh;
+    border: 1px solid rgba(0, 0, 0, 0.526);
+    display: flex;
+    border-radius: 0.7vw;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5vh;
+    transition: all 0.5s;
+
+}
+
+.logout-no-close:hover{
+    background-color: rgba(225, 0, 0, 0.821);
+    color: white;
+}
+
+.logout-close:hover{
+    background-color: rgba(1, 189, 1, 0.688);
+    color: white;
+}
+/*---------------------------------------------------------*/

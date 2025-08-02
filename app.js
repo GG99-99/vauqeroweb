@@ -6,7 +6,7 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var practiceJoin = require(path.join(__dirname,'bin','practice-path'));
+// var practiceJoin = require(path.join(__dirname,'practice-path'));
 /*
 El middleware cookieParser se utiliza para analizar las cookies adjuntas al objeto de solicitud del cliente. Hace que las cookies estén disponibles en req.cookies y las cookies firmadas en req.signedCookies.
 */
@@ -17,12 +17,13 @@ const cors = require('cors');
 
 
 // aqui se exportan las rutas
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var registerRouter = require('./routes/register');
-var loginRouter = require('./routes/login')
-var { router: panelRouter} = require('./routes/panel')
-var logoutRouter = require('./routes/logout');
+let indexRouter = require(path.join(__dirname, 'routes', 'index.js'));
+let usersRouter = require(path.join(__dirname, 'routes', 'users.js'));
+let registerRouter = require(path.join(__dirname, 'routes', 'register.js'));
+let loginRouter = require(path.join(__dirname, 'routes', 'login.js'))
+let {router: panelRouter} = require(path.join(__dirname, 'routes', 'panel.js'))
+let logoutRouter = require(path.join(__dirname, 'routes', 'logout.js'))
+
 const { createServer } = require('http');
 
 

@@ -7,7 +7,15 @@ block script
 
 block linkCss 
     link(rel='stylesheet', href='/stylesheets/style.css')
-    link(rel='stylesheet', href='/stylesheets/panel.css')
+    link(rel='stylesheet', href='/stylesheets/panel-css/panel.css')
+    link(rel='stylesheet', href='/stylesheets/panel-css/frm-addclient.css')
+    link(rel='stylesheet', href='/stylesheets/panel-css/frm-abrir-silla.css')
+    link(rel='stylesheet', href='/stylesheets/panel-css/frm-logout.css')
+    link(rel='stylesheet', href='/stylesheets/panel-css/client-style.css')
+
+
+
+
 
 
 block content 
@@ -46,7 +54,7 @@ block content
                         div(class="turno" silla=plq.silla)= plq.turnoNow
 
                 div(class="list-client-box")
-                    ul(class="list-client-ul")
+                    ul(class="clients-container" silla=plq.silla)
 
                         each cliente in clientes
                             if cliente.silla === plq.silla
@@ -70,7 +78,7 @@ block content
                                                     div(class='cliente-turno-div')=cliente.nturno
                                                 div(class='cliente-name-div')=cliente.name
 
-                                            div(class='buttonSide')
+                                            div(class='desdecline-box')
                                                 div(class='client-text')
                                                     span Declinado
                                                 div(class= 'desdecline-button', cliente_id=cliente._id, silla=cliente.silla)

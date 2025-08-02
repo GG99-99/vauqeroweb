@@ -1,0 +1,117 @@
+/*-----------------------------------------------*/
+
+.clients-container{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+    padding: 3%;
+    overflow: scroll;
+    height: 100%;
+    align-items: center;
+}
+
+li{
+    list-style: none;
+    display: flex;
+
+}
+
+.list-client-li{
+    border: 1px solid black;
+    border-radius: 1vw;
+    padding: 1vh;
+    height: 8vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 65vw;
+    transition: width 0.3s;
+}
+
+.ACTUAL{
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    width: 100%;
+}
+
+.li_client-information{
+    display: inline-flex;
+    gap: 5%;
+    width: 50%;
+}
+
+
+
+.cliente-name-div, .cliente-nturno-div{
+    font-size: 2vh;
+}
+
+.decline-client-button, .desdecline-button{
+    height: 4vh;
+    width: 4vh;
+    border: 1px solid #000000;
+    border-radius: 1vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.arrow1, .arrow2{
+    width: 80%;
+    height: 10%;
+    background-color: #000000;
+    position: absolute;
+    border-radius: 2px;
+
+}
+
+.arrow1{
+    rotate: 135deg;
+}
+
+.arrow2{
+    rotate: 45deg;
+}
+
+
+
+/*   CLIENTES DECLINADOS   */
+
+.desdecline-box{
+    gap: 2vw;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.circular-button{
+    height: 2.5vh;
+    width: 2.5vh;
+    border-radius: 50%;
+    border: 1px solid #000000;
+}
+
+.client-text{
+    display: inline-block;
+    height: auto;
+    text-align: center;
+}
+
+
+
+
+
+
+
+.OPASITY30{
+    opacity: 30%;
+}
+
+.GREEN{
+    color: rgba(0, 188, 13, 0.747);
+    border-color: rgba(0, 188, 13, 0.747);
+}

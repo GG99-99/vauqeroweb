@@ -1,0 +1,103 @@
+/*  CAJA PARA INDICAR APERTURA O CIERRE  */
+
+
+.top-plq{
+    display: flex;
+    position: relative;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.open-box{
+    border : 1px solid rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    gap: 3px;
+    border-radius: 80px;
+    position: absolute;
+    left: 0;
+    cursor: pointer;
+}
+
+#outer-circle{
+    height: 23px;
+    width: 23px;
+    /*border : 1px solid rgba(0,0,0,0.4);*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.25s;
+
+}
+
+#inner-circle{
+    height: 15px;
+    width: 15px;
+    /*border : 1px solid rgba(0,0,0,0.4);*/
+    border-radius: 50%;
+    transition: background-color 0.25s;
+}
+
+.green-outer{
+
+    background-color: rgba(3, 213, 81, 0.3);
+}
+
+.red-outer{
+    background-color: rgba(213, 0, 0, 0.43);
+}
+
+.green-inner{
+    background-color: rgba(171,255,202,1);
+}
+
+.red-inner{
+    background-color: rgba(255, 65, 65, 1);
+}
+#open-text{
+    font-size: 20px;
+}
+/*--------------------------------------------*/
+
+
+
+/*  --- FRM DE AVERTENCIA --- */
+
+.sub-frm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 30%;
+    background-color: rgb(213, 213, 213);
+    border-radius: 20px;
+    color: black;
+    gap: 10px;
+    padding: 15px;
+
+}
+
+.not-open-text{
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.not-open-text>span{
+    color: red;
+}
+.ok-button{
+    cursor: pointer;
+    display: flex;
+    height: 30px;
+    text-align: center;
+    align-items: center;
+    background-color: #1e1d1d;
+    border-radius: 6px ;
+    color: white;
+    padding: 8px;
+
+
+}

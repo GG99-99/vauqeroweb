@@ -1,10 +1,13 @@
 const path = require('path');
-const ioRoute = path.resolve(__dirname, "..", "ioSocket.js")
+const ioRoute = path.resolve(__dirname, "ioSocket.js")
+const appRoute = path.resolve(__dirname, "app.js")
+const cookie = require('cookie');
+
+
 const {io} = require(ioRoute);
-var http = require('http');
-//var app = require('../app');
-const appRoute = path.resolve(__dirname, "..", "app.js")
+const http = require('http');
 const app = require(appRoute)
+require('dotenv').config();
 
 
 /**
@@ -22,11 +25,20 @@ var server = http.createServer(app);
 io.attach(server)
 // Middleware para verificar la ruta de origen
 io.use((socket, next) => {
+    // console.log(socket.handshake);
   const path = socket.handshake.headers.referer; // Obtiene la URL de origen
   socket.route = path.includes('/panel') ? 'RoomAdmin' : false; // Asigna una sala según la ruta, la propiedad route, la creamos nosotros
   next();
 });
 
+io.use((socket, next) => {  // este middelware agrega el token de acceso al socket como una propiedad
+    let cookies = cookie.parse(socket.handshake.headers.cookie || '');
+    if(cookies.access_token){
+        socket.access_token = cookies.access_token;
+    }
+    next();
+
+})
 
 
 function normalizePort(val) {
