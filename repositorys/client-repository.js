@@ -14,7 +14,7 @@ const ClientDB = Schema('Client', {
     nturno: {type: Number, require: true},
     name: {type: String, require: true},
     silla: {type: String, require: true},
-    status: {type: String, default: "esperando"}
+    status: {type: String, default: "esperando"},
 
     
 })
@@ -218,7 +218,6 @@ class ClientReporitory{
         
     }
 
-    //me falta el desdecline
     desDecline(id) {
 
         let ID = parseInt(id);
@@ -244,6 +243,7 @@ class ClientReporitory{
 
     }
     
+
     returnTurn(){ // para que se muestre los clientes en espera a vaquero y tambien a los clientes
         return this.turnoNow
     }

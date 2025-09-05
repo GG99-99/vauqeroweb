@@ -11,7 +11,7 @@
     "delay": "2"
   },
   "scripts": {
-    "start": "nodemon --ignore '*' .bin/www"
+    "start": "nodemon --ignore \"*\" www"
   },
   "events": {
     "start": "clear"

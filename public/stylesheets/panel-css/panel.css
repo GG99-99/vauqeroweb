@@ -1,5 +1,6 @@
 body{
     background-image: none;
+    background-color: #f2f2f2;
 }
 
 ul{
@@ -15,6 +16,8 @@ ul{
     background-color: black;
     color: white;
 }
+
+
 
 /*  ------------------ Header ------------------  */
 header{
@@ -96,16 +99,21 @@ article{
     font-size: 4vh;
 }
 
-.list-client-box{
-    height: 59vh;
-    width: 80vw;
-    
-}
+/*.list-client-box{*/
+/*    height: 59vh;*/
+/*    width: 80vw;*/
+/*    */
+/*}*/
+
+
 
 /* BOTONES DE SUBIR Y BAJAR TURNO */
 .buttons-updown-box{
     display: flex;
     gap: 15vw;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
 }
 
 .button-downturn, .button-upturn{

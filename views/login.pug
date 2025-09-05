@@ -2,7 +2,7 @@ extends layout
 
 block linkCss 
     link(rel='stylesheet', href='/stylesheets/style.css')
-    link(rel='stylesheet', href='/stylesheets/login.css')
+    link(rel='stylesheet', href='/stylesheets/login_register/login.css')
 
 block content 
     header(class='main')
@@ -18,8 +18,8 @@ block content
                 div    
                     label(for="")  Clave 
                     input(type="password" id="password" class="input")
-                    span(class="span_invalid_data red hide") usuario o clave ncorrectos
+                    span(class="span_invalid_data red hide") usuario o clave incorrectos
 
                 
                 input(type="submit" class="submit-button" id="submit")
-    script(src="/javascripts/PB-login.js")
+    script(src="/javascripts/login_register/PB-login.js")

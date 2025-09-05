@@ -4,9 +4,10 @@
 .top-plq{
     display: flex;
     position: relative;
-    width: 100%;
+    width: 80%;
     align-items: center;
     justify-content: center;
+    margin-top: 0.5rem;
 }
 
 .open-box{

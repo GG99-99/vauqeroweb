@@ -1,0 +1,32 @@
+extends layout
+
+block linkCss 
+     link(rel='stylesheet', href='/stylesheets/style.css')
+     link(rel='stylesheet', href='/stylesheets/login_register/login.css')
+     link(rel='stylesheet', href='/stylesheets/login_register/register.css')
+
+
+
+block content 
+    header(class='main')
+        div(class="login-div")
+            div(class="login-title")
+                p(class="login-p") Registrarse  
+
+            div( class="login-boxes")
+                div
+                    label(for="")  Usuario  
+                    input(type="text" id="username" class="input")
+
+                div 
+                    label(for="")  Correo 
+                    input(type="text" id="email" class='input')    
+
+                div    
+                    label(for="")  Clave 
+                    input(type="password" id="password" class="input")
+                    span(class="span_invalid_data red hide") usuario o correo incorrectos 
+
+                
+                input(type="submit" class="submit-button" id="submit")
+    script(src="/javascripts/login_register/PB-register.js")

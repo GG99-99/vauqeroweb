@@ -12,6 +12,9 @@ block linkCss
     link(rel='stylesheet', href='/stylesheets/panel-css/frm-abrir-silla.css')
     link(rel='stylesheet', href='/stylesheets/panel-css/frm-logout.css')
     link(rel='stylesheet', href='/stylesheets/panel-css/client-style.css')
+    link(rel='stylesheet', href='/stylesheets/panel-css/edit-clients.css')
+
+
 
 
 
@@ -19,7 +22,7 @@ block linkCss
 
 
 block content 
-    div(class="logout-screen")
+    div(class="screen logout")
         div(class="logout-card-box")
             div(class="logout-text")
                 p Estas seguro que quieres cerrar sesion? 
@@ -53,44 +56,44 @@ block content
                         div(class="turno-text") Turno actual:
                         div(class="turno" silla=plq.silla)= plq.turnoNow
 
-                div(class="list-client-box")
-                    ul(class="clients-container" silla=plq.silla)
 
-                        each cliente in clientes
-                            if cliente.silla === plq.silla
+                ul(class="clients-container" silla=plq.silla)
 
-                                case cliente.status
-                                    when 'esperando'
-                                        li.list-client-li(class=cliente.nturno === plq.turnoNow ? "ACTUAL": " " , nturno = cliente.nturno, cliente_id=cliente._id, silla=cliente.silla)
+                    each cliente in clientes
+                        if cliente.silla === plq.silla
 
-                                            div(class="li_client-information")
-                                                strong
-                                                    div(class='cliente-turno-div')=cliente.nturno
-                                                div(class='cliente-name-div')=cliente.name
-                                            div(class="decline-client-button", cliente_id=cliente._id, silla=plq.silla)
-                                                div(class="arrow1")
-                                                div(class="arrow2")
+                            case cliente.status
+                                when 'esperando'
+                                    li.list-client-li(class=cliente.nturno === plq.turnoNow ? "ACTUAL": " " , nturno = cliente.nturno, cliente_id=cliente._id, silla=cliente.silla)
 
-                                    when 'declinado'
-                                       li(class="list-client-li OPASITY30 declinado", nturno=cliente.turno, cliente_id=cliente._id, silla=cliente.silla)
-                                            div(class="li_client-information")
-                                                strong
-                                                    div(class='cliente-turno-div')=cliente.nturno
-                                                div(class='cliente-name-div')=cliente.name
+                                        div(class="li_client-information")
+                                            strong
+                                                div(class='cliente-turno-div')=cliente.nturno
+                                            div(class='cliente-name-div')=cliente.name
+                                        div(class="decline-client-button", cliente_id=cliente._id, silla=plq.silla)
+                                            div(class="arrow1")
+                                            div(class="arrow2")
 
-                                            div(class='desdecline-box')
-                                                div(class='client-text')
-                                                    span Declinado
-                                                div(class= 'desdecline-button', cliente_id=cliente._id, silla=cliente.silla)
-                                                    div(class='circular-button')
+                                when 'declinado'
+                                   li(class="list-client-li OPASITY30 declinado", nturno=cliente.turno, cliente_id=cliente._id, silla=cliente.silla)
+                                        div(class="li_client-information")
+                                            strong
+                                                div(class='cliente-turno-div')=cliente.nturno
+                                            div(class='cliente-name-div')=cliente.name
 
-                                    when 'listo'
-                                         li(class="list-client-li GREEN" nturno = cliente.nturno, cliente_id=cliente._id, silla=cliente.silla)
-                                            div(class="li_client-information")
-                                                strong
-                                                    div(class='cliente-turno-div')=cliente.nturno
-                                                div(class='cliente-name-div')=cliente.name
-                                            div(class='client-text') listo
+                                        div(class='desdecline-box')
+                                            div(class='client-text')
+                                                span Declinado
+                                            div(class= 'desdecline-button', cliente_id=cliente._id, silla=cliente.silla)
+                                                div(class='circular-button')
+
+                                when 'listo'
+                                     li(class="list-client-li GREEN" nturno = cliente.nturno, cliente_id=cliente._id, silla=cliente.silla)
+                                        div(class="li_client-information")
+                                            strong
+                                                div(class='cliente-turno-div')=cliente.nturno
+                                            div(class='cliente-name-div')=cliente.name
+                                        div(class='client-text') listo
 
 
                 div(class="buttons-updown-box")
@@ -102,7 +105,6 @@ block content
 
 
 
-    footer
 
     div(class='frmContainer')
         div(class="frmAddClient")
@@ -121,7 +123,24 @@ block content
                 |  esta abierta.
             div(class="ok-button") Aceptar
 
-    script(type="module" src="javascripts/PB-panel.js")
-    script(type="module" src="javascripts/PB-panelTabs.js")
-      
-     
+    div.edit-client-box.screen(data-cliente_id='')
+        div.input-name-box 
+            div.input-name-ttl Cambiar Nombre
+            div.input-name-subbox 
+                div.past-name-container
+                    span Anterior:  
+                    div.past-name 
+
+                div.input-new-name-container
+                    span Nuevo: 
+                    input(type='text' id="new-name")
+                    div(id="btn-change-name")
+    
+    div.change-name-btn(data-cliente_id='')
+            span Editar Nombre
+
+
+
+    script(type="module" src="javascripts/panel-js/PB-panel.js")
+    script(type="module" src="javascripts/panel-js/PB-panelTabs.js")
+        script(type="module" src="javascripts/panel-js/PB-edit-client.js")

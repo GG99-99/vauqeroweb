@@ -2,8 +2,9 @@
 
 import { io } from 'https://cdn.socket.io/4.8.1/socket.io.esm.min.js';
 
-import { createWaitClient, createDeclnClient, createGreenClient } from './complements/CreateClients.js';
+import { createWaitClient, createDeclnClient, createGreenClient } from '../complements/CreateClients.js';
 import {container_scroll} from "./PB-panelTabs.js";
+import {EClnt} from "./PB-edit-client.js"
 
 
 var socket = io();
@@ -242,8 +243,6 @@ function downTurn(silla){
 
 }
 
-
-
 // --------------- AGREGAR CLIENTE --------------- //
 
 function addClient(silla) {
@@ -282,14 +281,17 @@ function desDecline(id, silla){
 
 }
 
+// --------------- BOTON DECLINAR BOTON --------------- //
+
+
 // --------------- ABRIR O CERRAR SILLA --------------- //
 
 function openAndClose(silla){
 	socket.emit('openAndClose', silla)
 }
 
-// -------------- MANEJO DE SESION ------------- //
 
+// -------------- MANEJO DE SESION ------------- //
 async function closeSesion() {
 	const url = "http://localhost:3000/logout"
 	fetch(url, {method: "POST"})
@@ -305,15 +307,15 @@ async function closeSesion() {
 		})}
 
 function openScreenLogout(){
-	let logoutScreen = document.querySelector('.logout-screen')
+	let logoutScreen = document.querySelector('.screen.logout')
 	logoutScreen.style.display = 'flex'
 }
 
 function closeScreenLogout(){
-	let logoutScreen = document.querySelector('.logout-screen')
+	let logoutScreen = document.querySelector('.screen.logout')
 	logoutScreen.style.display = 'none'
 }
-
+// -------------------------------------------- //
 
 // BOTON SUBIR TURNO
 const buttonUpTurn = document.querySelectorAll(".button-upturn");
@@ -355,29 +357,86 @@ closeLogoutScreenButton.addEventListener('click', closeScreenLogout)
 const buttonLogout = document.querySelector(".logout-close");
 buttonLogout.addEventListener('click', closeSesion)
 
-// BOTON DECLINAR CLIENTE
-let declineElementButtons = document.querySelectorAll('.decline-client-button')
-declineElementButtons.forEach(button => {
-	button.addEventListener('click', event => {
-		let target = event.currentTarget
-		let id = target.getAttribute('cliente_id');
-		let silla = target.getAttribute('silla');
-		declineClient(id, silla)
-
-	})})
 
 
-// BOTON DES-DECLINAR CLIENTE
-let desDeclineButton = document.querySelectorAll('.desdecline-button')
-desDeclineButton.forEach(button => {
-	button.addEventListener('click', event => {
-		let target = event.currentTarget
-		let id = target.getAttribute('cliente_id');
-		let silla = target.getAttribute('silla');
-		desDecline(id, silla)
-	})})
+// SELECCIONAR TODOS LOS CLIENTES Y AGREGAR EVENTOS (decline btn, desdecline btn, sostener)
+let all_clientes = document.querySelectorAll('.list-client-li')
+all_clientes.forEach(cliente => {
+	
+	// boton de declinar
+	let declineElementButton = cliente.querySelector('.decline-client-button')
+	if(declineElementButton){
+		// timer lo usaremos para el contador
+		let timer;
+		
+		declineElementButton.addEventListener('mousedown', event => {
+			timer = EClnt.contador(()=>{return true}, 0.6)
+			// si la pulsacion llega a 0.6 no realizara la accion de declinar
+			
+			
+		})
+		
+		declineElementButton.addEventListener('mouseup', event => {
+			timer.stop() //detengo el contador
+			let total_time = timer.gettime();
+			// si el tiempo de pulsasion es menor al 0.2 s
+			if(total_time <= 0.2){
+				let target = event.currentTarget
+				let id = target.getAttribute('cliente_id');
+				let silla = target.getAttribute('silla');
+				declineClient(id, silla)
+			}
+			
+		})
 
+	}
 
+	// boton de desdeclinar
+	let desDeclineButton = cliente.querySelector('.desdecline-button')
+	if(desDeclineButton){
+		let timer;
+		desDeclineButton.addEventListener('mousedown', event => {
+			 timer = EClnt.contador(()=>{return true}, 0.6)
+		})
+		
+		desDeclineButton.addEventListener('mouseup', event => {
+			event.preventDefault();
+			timer.stop() // detenemos el temporizador
+			let total_time = timer.gettime(); // obtenemos el tiempo que duro el contador corriendo
+			
+			if(total_time <= 0.2){
+				let target = event.currentTarget
+				let id = target.getAttribute('cliente_id');
+				let silla = target.getAttribute('silla');
+				desDecline(id, silla)
+			}
+		})
+	}
+
+	
+	let timer;
+	// evento de sostener
+	cliente.addEventListener("mousedown", event => {
+		// let edit_btn = document.querySelector(".change-name-btn");
+		event.preventDefault();
+		let elm = event.currentTarget;
+		
+		timer = EClnt.contador(()=>{
+			EClnt.editar(elm);
+			EClnt.showEditBtn(elm)
+		}, 0.6)
+
+	})
+
+	cliente.addEventListener("mouseup", event => {
+		event.preventDefault();
+		timer.stop();
+		// console.log("el tiempo total fue: " + timer.gettime());
+		
+	})
+	
+
+})
 
 // CONTENEDOR DE VENTANA AGREGAR CLIENTES
 
@@ -421,3 +480,12 @@ frm_not_open.addEventListener('click', (event) => {
 	target.style.display = 'none'
 })
 
+
+
+// -------- EVENTO PARA BOTON EDITAR NOMBRE -------- //
+let edit_btn = document.querySelector(".change-name-btn")
+edit_btn.addEventListener('click', (event)=>{
+	// let target = event.eventTarget; 
+	EClnt.clickEditBtn()
+
+})
