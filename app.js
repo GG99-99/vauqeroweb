@@ -1,10 +1,20 @@
-// arrancar DEBUG=vaqueroweb:* npm start
+const path = require('path');
+const ioRoute = path.resolve(__dirname, "ioSocket.js")
+const cookie = require('cookie');
 
 
+const {io} = require(ioRoute);
+const http = require('http');
+require('dotenv').config();
 
+
+// ------------------------------ app -------------------------------- //
+/***************************************************************************************
+  * extraido del archivo app.js                                                        *
+                                                                                       *
+****************************************************************************************/
 var createError = require('http-errors');
 var express = require('express');
-var path = require('path');
 var cookieParser = require('cookie-parser');
 // var practiceJoin = require(path.join(__dirname,'practice-path'));
 /*
@@ -68,4 +78,126 @@ app.use(function(err, req, res, next) {
 });
 
 
-module.exports = app;
+
+// ------------------------------ server -------------------------------- //
+/***************************************************************************************
+  * extraido del archivo serever.js                                                        *
+                                                                                       *
+****************************************************************************************/
+
+
+/**
+ * Get port from environment for store in Express.
+ */
+var port = normalizePort(process.env.PORT || '3000');
+/**
+ * Create HTTP server.
+ */
+var server = http.createServer(app);
+
+
+/* 
+  Attatch server to socket.io 
+*/
+io.attach(server)
+
+// Middleware para verificar la ruta de origen
+io.use((socket, next) => {
+    // console.log(socket.handshake);
+  const path = socket.handshake.headers.referer; // Obtiene la URL de origen
+  socket.route = path.includes('/panel') ? 'RoomAdmin' : false; // Asigna una sala según la ruta, la propiedad route, la creamos nosotros
+  next();
+});
+
+io.use((socket, next) => {  // este middelware agrega el token de acceso al socket como una propiedad
+    let cookies = cookie.parse(socket.handshake.headers.cookie || '');
+    if(cookies.access_token){
+        socket.access_token = cookies.access_token;
+    }
+    next();
+
+})
+
+function normalizePort(val) {
+    var port = parseInt(val, 10);
+  
+    if (isNaN(port)) {
+      // named pipe
+      return val;
+    }
+  
+    if (port >= 0) {
+      // port number
+      return port;
+    }
+  
+    return false;
+}
+
+
+
+
+// ------------------------------ www -------------------------------- //
+/***************************************************************************************
+  * extraido del archivo www.js                                                        *
+                                                                                       *
+****************************************************************************************/
+
+app.set('port', port);
+/*
+  Listen on provided port, on all network interfaces.
+*/
+server.listen(port);
+
+
+//server.on('error', onError);
+//server.on('listening', onListening);
+
+
+
+
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+// function onError(error) {
+//   if (error.syscall !== 'listen') {
+//     throw error;
+//   }
+
+//   var bind = typeof port === 'string'
+//     ? 'Pipe ' + port
+//     : 'Port ' + port;
+
+//   // handle specific listen errors with friendly messages
+//   switch (error.code) {
+//     case 'EACCES':
+//       console.error(bind + ' requires elevated privileges');
+//       process.exit(1);
+//       break;
+//     case 'EADDRINUSE':
+//       console.error(bind + ' is already in use');
+//       process.exit(1);
+//       break;
+//     default:
+//       throw error;
+//   }
+// }
+
+// /**
+//  * Event listener for HTTP server "listening" event.
+//  */
+
+// function onListening() {
+//   var addr = server.address();
+//   var bind = typeof addr === 'string'
+//     ? 'pipe ' + addr
+//     : 'port ' + addr.port;
+//   debug('Listening on ' + bind);
+// }
+
+
+
+
+module.exports = {port, app}
