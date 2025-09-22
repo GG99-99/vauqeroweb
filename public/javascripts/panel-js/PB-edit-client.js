@@ -1,3 +1,39 @@
+/*************************************
+|                                     |
+|   CLASE EClnt PARA EDITAR CLIENTES  |
+|       - contador                    |
+|       - editar                      |
+|       - showEditBtn                 |
+|       - hideEditsBtn                |
+|       - hideFrmEditName             |
+|       - clickEditBtnName            |
+|                                     |
+ *************************************/
+ 
+
+/************************************************************************************************
+|   contador: es para contar el tiempo que se mantiene presionado un cliente, para desencadenar  |
+|   x o y evento las condiciones se manejan en el PB-panel                                       |
+|                                                                                                |
+|   editar: es para mostarar el frm oscuro y el cliente que a sido seleccionado se le agrega     |
+|   la clase selected                                                                            |
+|                                                                                                |
+|   showEditBtn: es para mostrar el boton para editar nombre, contiene algunas condicionas       |
+|   para la posicion del boton                                                                   |
+|                                                                                                |
+|   hideEditsBtn: para ocultar la caja con el input y el boton para cambiar el nombre            |
+|   ingresado                                                                                    |
+|                                                                                                |
+|   hideFrmEditName: para ocultar especialmente el frm y desseleccionar el cliente               |
+|                                                                                                |
+|   clickEditBtnName: para cuando se presione el boton para proceder al cuadro de edicion        |
+|   se llame a la funcion showEditBtn con las configuraciones de lugar                           |
+|                                                                                                |
+ ************************************************************************************************/
+
+
+
+
 export class EClnt{
 
 	
@@ -42,13 +78,21 @@ export class EClnt{
 	}
 	
 	static showEditBtn(elm){
-		let edit_btn = document.querySelector(".change-name-btn");
-		edit_btn.dataset.cliente_id = elm.getAttribute("cliente_id");
-		elm.appendChild(edit_btn);
+		let btns_box = document.querySelector(".edits-btns-options")
+
+		// boton cambio de nombre
+		let edit_name_btn = document.querySelector(".change-name-btn");
+		edit_name_btn.dataset.cliente_id = elm.getAttribute("cliente_id");
+
+		// boton cambio de turno
+		let edit_turno_btn = document.querySelector(".change-turno")
+		edit_turno_btn.dataset.cliente_id = elm.getAttribute("cliente_id");
+
+		elm.appendChild(btns_box);
 		
 		
-		edit_btn.style.display = 'block'
-		edit_btn.style.height = 'auto'
+		btns_box.style.display = 'flex'
+		// btns_box.style.height = 'auto'
 		
 		// configurar si aparecera arriba o abajo del cliente el card
 		let container = document.querySelector(`.clients-container[silla="${elm.getAttribute("silla")}"]`);
@@ -59,25 +103,35 @@ export class EClnt{
 		let distanceBottom = Math.round(containerRect.bottom - elmRect.bottom);
 		
 		if(distanceTop > distanceBottom){
-			edit_btn.style.top = "-80%";
+			btns_box.style.top = "-170%";
 		}
 		else{
-			edit_btn.style.top = "120%";
+			btns_box.style.top = "135%";
 		}
 	}
 	
 	static hideEditsBtn(){
-		let edit_btn = document.querySelector(".change-name-btn");
-		edit_btn.style.display = 'none'
-		edit_btn.style.top = "0";
+		let edits_btn = document.querySelector(".edits-btns-options");
+		edits_btn.style.display = 'none'
+		edits_btn.style.top = "0";
 
 		let frmEditCLient = document.querySelector(".input-name-box")
 		frmEditCLient.style.display = 'none';
 
+		let textInput = frmEditCLient.querySelector("#new-name");
+		textInput.value = ""
 
 	}
 
-	static clickEditBtn(){
+	static hideFrmEditName(){
+		let frm = document.querySelector(".edit-client-box")
+		frm.style.display = 'none'
+		frm.style.zIndex = 1000;
+		let cliente = document.querySelector(".selected")
+		cliente.classList.remove("selected")
+	}
+
+	static clickEditBtnName(){
 		let frm = document.querySelector(".edit-client-box")
 		frm.style.zIndex = 4000;
 
@@ -91,6 +145,12 @@ export class EClnt{
 		let pastname_box = containerChangeName.querySelector(".past-name")
 		pastname_box.innerHTML = pastname.innerHTML
 
+	}
+
+	
+
+	static changeName(){
+		
 	}
 	
 

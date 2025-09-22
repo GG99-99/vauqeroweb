@@ -95,7 +95,6 @@ var port = normalizePort(process.env.PORT || '3000');
  */
 var server = http.createServer(app);
 
-
 /* 
   Attatch server to socket.io 
 */
@@ -103,7 +102,6 @@ io.attach(server)
 
 // Middleware para verificar la ruta de origen
 io.use((socket, next) => {
-    // console.log(socket.handshake);
   const path = socket.handshake.headers.referer; // Obtiene la URL de origen
   socket.route = path.includes('/panel') ? 'RoomAdmin' : false; // Asigna una sala según la ruta, la propiedad route, la creamos nosotros
   next();

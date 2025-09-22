@@ -2,14 +2,18 @@
 
 import { io } from 'https://cdn.socket.io/4.8.1/socket.io.esm.min.js';
 
-import { createWaitClient, createDeclnClient, createGreenClient } from '../complements/CreateClients.js';
+import { createWaitClient, createDeclnClient, createGreenClient, searchClnID } from '../complements/CreateClients.js';
 import {container_scroll} from "./PB-panelTabs.js";
 import {EClnt} from "./PB-edit-client.js"
 
 
+
 var socket = io();
 
-//  MODIFICACION A LOS METODOS DE CREAR CLIENTES
+
+/***************************************************
+|   MIDDLEWARE PARA LOS METODOS DE AGREGAR CLIENES  |
+ ***************************************************/
 class CRC{
 
 	static crtWaitClnt(client){
@@ -58,8 +62,9 @@ class CRC{
 
 
 
-// --------- SOCKETS HANDLER (respuestas) ---------- \\
-
+/*********************
+|   SOCKETS HABDLERS  |
+ *********************/
 
 socket.on('upturnRES', (msg) => {
 
@@ -145,22 +150,20 @@ socket.on("declineRES", (res)=>{
 
 socket.on("desDeclineRES", res =>{
 	let client = res.cliente;
+	let element_for_update = searchClnID(client._id)
+
 	if (client.status === 'listo')
 	{
-		let clientDesDecline = CRC.crtGreenClnt(client)
-		let elemntForUpdate = document.querySelector(`.list-client-li[cliente_id="${client._id}"]`)
-
-		elemntForUpdate.replaceWith(clientDesDecline)
+		let client_DesDecline = CRC.crtGreenClnt(client)
+		element_for_update.replaceWith(client_DesDecline)
 
 	}else if (client.status === 'esperando' && !res.is_actual){
 		let client_DesDecline = CRC.crtWaitClnt(client)
-		let elemnt_for_update = document.querySelector(`.list-client-li[cliente_id="${client._id}"]`)
-		elemnt_for_update.replaceWith(client_DesDecline)
+		element_for_update.replaceWith(client_DesDecline)
 
 	}else if(res.is_actual){
 		let client_DesDecline = CRC.crtActualClnt(client)
-		let elemnt_for_update = document.querySelector(`.list-client-li[cliente_id="${client._id}"]`)
-		elemnt_for_update.replaceWith(client_DesDecline)
+		element_for_update.replaceWith(client_DesDecline)
 	}
 
 
@@ -203,9 +206,18 @@ socket.on("openAndCloseRES", (res) => {
 
 })
 
+socket.on("changeNameRES", res =>{
+	let client = searchClnID(res.id)
+	let name_div = client.querySelector(".cliente-name-div")
+	name_div.innerHTML = res.name
+
+})
 
 
-// FUNCION PARA VALIDAR APERTURA
+
+/**************************************************
+|   FUNCION PARA VALIDAR LA APERTURA DE UNA SILLA  |
+ **************************************************/
 function verify_is_open(){
 	let btn_silla_focus = document.querySelector(`.btn-silla.focus`)
 	let silla = btn_silla_focus.getAttribute("silla")
@@ -291,6 +303,15 @@ function openAndClose(silla){
 }
 
 
+/***********************************
+|   FUNCION PARA CAMBIAR EL NOMBRE  |
+ ***********************************/
+function changeNameFunc(id, value){
+	let msg = {'id': id, 'newName' : value}
+	socket.emit("changeName", msg )
+}
+
+
 // -------------- MANEJO DE SESION ------------- //
 async function closeSesion() {
 	const url = "http://localhost:3000/logout"
@@ -317,7 +338,9 @@ function closeScreenLogout(){
 }
 // -------------------------------------------- //
 
-// BOTON SUBIR TURNO
+/*************************
+|   // BOTON SUBIR TURNO  |
+ *************************/
 const buttonUpTurn = document.querySelectorAll(".button-upturn");
 buttonUpTurn.forEach(button => {
 	button.addEventListener('click', (e)=>{
@@ -327,7 +350,9 @@ buttonUpTurn.forEach(button => {
 })
 
 
-// BOTON BAJAR TURNO
+/*************************
+|   // BOTON BAJAR TURNO  |
+ *************************/
 const buttonDownTurn = document.querySelectorAll(".button-downturn")
 buttonDownTurn.forEach((button)=>{
 	button.addEventListener("click", (e)=>{
@@ -337,7 +362,9 @@ buttonDownTurn.forEach((button)=>{
 })
 
 
-// BOTON AGREGAR CLIENTE
+/*****************************
+|   // BOTON AGREGAR CLIENTE  |
+ *****************************/
 const buttonAddClient = document.querySelector(".btn-addClient");
 buttonAddClient.addEventListener('click', event => {
 	let btn_silla_focus = document.querySelector(`.btn-silla.focus`)
@@ -345,25 +372,35 @@ buttonAddClient.addEventListener('click', event => {
 	addClient(silla)
 });
 
-// boton de abrir la pantalla para cerrar sesion
+/*****************************************************
+|   // BOTON DE ABRIR LA PANTALLA PARA CERRAR SESION  |
+ *****************************************************/
 const oppenLogoutScreenButton = document.querySelector(".openLogoutScreenButton")
 oppenLogoutScreenButton.addEventListener('click', openScreenLogout)
 
-// boton de cerrar la pantala de cerrar sesion
+/***************************************************
+|   // BOTON DE CERRAR LA PANTALA DE CERRAR SESION  |
+ ***************************************************/
 const closeLogoutScreenButton = document.querySelector(".logout-no-close")
 closeLogoutScreenButton.addEventListener('click', closeScreenLogout)
 
-// boton cerrar sesion
+/***************************
+|   // BOTON CERRAR SESION  |
+ ***************************/
 const buttonLogout = document.querySelector(".logout-close");
 buttonLogout.addEventListener('click', closeSesion)
 
 
 
-// SELECCIONAR TODOS LOS CLIENTES Y AGREGAR EVENTOS (decline btn, desdecline btn, sostener)
+/************************************************************************************************
+|   // SELECCIONAR TODOS LOS CLIENTES Y AGREGAR EVENTOS (DECLINE BTN, DESDECLINE BTN, SOSTENER)  |
+ ************************************************************************************************/
 let all_clientes = document.querySelectorAll('.list-client-li')
 all_clientes.forEach(cliente => {
 	
-	// boton de declinar
+    /**********************
+    |   BOTON DE DECLINAR  |
+     **********************/
 	let declineElementButton = cliente.querySelector('.decline-client-button')
 	if(declineElementButton){
 		// timer lo usaremos para el contador
@@ -391,7 +428,9 @@ all_clientes.forEach(cliente => {
 
 	}
 
-	// boton de desdeclinar
+    /*************************
+    |   BOTON DE DESDECLINAR  |
+     *************************/
 	let desDeclineButton = cliente.querySelector('.desdecline-button')
 	if(desDeclineButton){
 		let timer;
@@ -414,10 +453,17 @@ all_clientes.forEach(cliente => {
 	}
 
 	
+	
+    /******************************************
+    |   EVENTO SOSTENER, MOUSE-UP, MOUSE-DOWN  |
+     ******************************************/
 	let timer;
-	// evento de sostener
+	let mouseDown = false;
+	
 	cliente.addEventListener("mousedown", event => {
 		// let edit_btn = document.querySelector(".change-name-btn");
+
+		mouseDown = true;
 		event.preventDefault();
 		let elm = event.currentTarget;
 		
@@ -429,18 +475,45 @@ all_clientes.forEach(cliente => {
 	})
 
 	cliente.addEventListener("mouseup", event => {
+		mouseDown = false;
 		event.preventDefault();
-		timer.stop();
+		if(timer){
+			timer.stop();
+		}
+		
 		// console.log("el tiempo total fue: " + timer.gettime());
+		
+	})
+
+	cliente.addEventListener("mouseleave", event =>{
+		event.preventDefault();
+		if(mouseDown){
+			timer.stop();
+			// console.log("el tiempo total fue: " + timer.gettime());
+			mouseDown = false
+
+
+		}
 		
 	})
 	
 
 })
 
-// CONTENEDOR DE VENTANA AGREGAR CLIENTES
+
+
+
+
+/*******************************************
+|   CONTENEDOR DE VENTANAS AGREGAR CLIENTE  |
+ *******************************************/
 
 let frmContainer = document.querySelector('.frmContainer')
+frmContainer.addEventListener('click', (event) => {
+	if(event.target === frmContainer){
+		frmContainer.style.display = 'none'
+	}
+});
 
 let addClientButton = document.querySelector('.btn-AddClient-box')
 addClientButton.addEventListener('click', (event) => {
@@ -450,15 +523,14 @@ addClientButton.addEventListener('click', (event) => {
 
 })
 
-frmContainer.addEventListener('click', (event) => {
-	if(event.target === frmContainer){
-		frmContainer.style.display = 'none'
-	}
-});
 
 
 
-// ------- EVENTOS PARA CAJA DE ABIERTO O CERRADO ------------ //
+
+/**********************************************
+|   EVENTOS PARA EL DIV DE OPEN Y CLOSE SILLA  |
+ **********************************************/
+
 let open_boxs = document.querySelectorAll('.open-box');
 open_boxs.forEach(open_box => {
 	open_box.addEventListener('click', (event) => {
@@ -482,10 +554,30 @@ frm_not_open.addEventListener('click', (event) => {
 
 
 
-// -------- EVENTO PARA BOTON EDITAR NOMBRE -------- //
+/***********************************
+|   EVENTO PARA EL BOTON DE EDITAR  |
+ ***********************************/
 let edit_btn = document.querySelector(".change-name-btn")
 edit_btn.addEventListener('click', (event)=>{
-	// let target = event.eventTarget; 
-	EClnt.clickEditBtn()
+	EClnt.clickEditBtnName()
 
+})
+
+
+/**********************************************
+|   EVENTO PARA EL BOTON DE CAMBIAR EL NOMBRE  |
+ **********************************************/
+
+let btn_changeName = document.querySelector("#btn-change-name")
+btn_changeName.addEventListener('click', event => {
+	let selectedClient = document.querySelector(".selected")
+	let id = selectedClient.getAttribute("cliente_id")
+	let inputBox = document.querySelector("#new-name")
+	let newName = inputBox.value.trim();
+
+	if(newName){
+		changeNameFunc(id, newName)
+		EClnt.hideEditsBtn();
+		EClnt.hideFrmEditName();
+	}
 })

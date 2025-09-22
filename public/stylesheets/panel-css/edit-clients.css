@@ -18,23 +18,32 @@ input[type="text"]:active {
 
 
 
-.edit-client-box {
+.edit-client-box, .edit-client-box-turno {
     height: 100%;
     top: 0;
+    display: none;
 
 }
 
-.change-name-btn{
-    width: 8.9rem;
-    height: 0;
+.edits-btns-options{
+    position: absolute;
+    display: none;
+    z-index: 1500;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.edit-options-btn{
+    width: 9.1rem;
+    height: auto;
     background-color: #101010;
     color: #c5c5c5;
     border-radius: 5px;
     text-align: left;
-    padding: 0.5rem;
-    position: absolute;
+    padding: 0.8rem;
+    /* position: absolute; */
     z-index: 1500;
-    display: none;
+    /* display: none; */
     cursor: pointer;
 
 }
@@ -42,8 +51,8 @@ input[type="text"]:active {
 
 
 /* ------ INPUT BOX FOR EDIT ------ */
-.input-name-box{
-    height: 15rem;
+.input-name-box, .input-nturno-box{
+    height: 17rem;
     width: 16rem;
     background-color: #101010b6;
     /* border: solid 1px; */
@@ -63,14 +72,19 @@ input[type="text"]:active {
 
 .input-name-ttl{
     align-self: center;
+    font-size: 17px;
+    text-shadow: 0 0 7px #ffffff24, 0 0 10px #fff, 0 0 21px #fff, 0 0 102px #fff;
 }
 
 
-#new-name{
+#new-name, #new-turno{
     border: 1px solid rgb(171, 171, 171);
     background-color: rgba(171, 171, 171, 0.3);
     color: #fff;
     padding: 0.3rem;
+    margin-top: 3px;
+
+    color: #0092cbec;
 }
 
 .input-new-name-container{
@@ -81,9 +95,29 @@ input[type="text"]:active {
 .input-name-subbox{
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.3rem;
 }
 
-.past-name{
+.past-name, .past-nturno{
     color: #ff6d6d;
+    margin-top: 3px;
+}
+
+
+#btn-change-name, #btn-change-turno{
+    
+    height: 2rem;
+    width: 90%;
+    
+    background-color: #62ff4f99;
+    margin-top: 14px;
+    align-self: center;
+    border-radius: 5px;
+    font-size: 17px;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
 }

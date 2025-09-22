@@ -1,15 +1,11 @@
 const { Server } = require('socket.io')
 const path = require('path');
-const { ClientReporitory } = require(path.join(__dirname, "repositorys",'client-repository.js'));
+const { plqs, plqGn} = require(path.join(__dirname, "repositorys",'client-repository.js'));
 
 const { SECRET_JWT_KEY } = require(path.join(__dirname, "repositorys", "config.js"));
-const  jwt = require('jsonwebtoken')
+const  jwt = require('jsonwebtoken');
 
-// plq - instancia de peluquero
-let plq01 = new ClientReporitory("A")
-let plq02 = new ClientReporitory("B")
 
-const plqs = [plq01, plq02]
 const io = new Server()
 
 io.on('connection', (socket) =>{
@@ -71,6 +67,11 @@ io.on('connection', (socket) =>{
 				let plq = plqs.find((plq) => plq.silla === silla);
 				let res = plq.openAndClose()
 				io.emit("openAndCloseRES", res)
+			})
+
+			socket.on('changeName', (msg)=>{
+				let res= plqGn.changeName(msg.id, msg.newName)
+				io.emit("changeNameRES", res)
 			})
 		}
 	}catch (e){

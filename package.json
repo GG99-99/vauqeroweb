@@ -11,7 +11,7 @@
     "delay": "2"
   },
   "scripts": {
-    "start": "nodemon --ignore \"*\" www"
+    "start": "nodemon --ignore \"*\" app.js"
   },
   "events": {
     "start": "clear"
@@ -28,6 +28,7 @@
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^9.0.2",
     "morgan": "~1.9.1",
+    "node-schedule": "^2.1.1",
     "pug": "2.0.0-beta11",
     "socket.io": "^4.8.1"
   },

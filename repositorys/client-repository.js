@@ -2,6 +2,8 @@
 const dbLocal = require("db-local");
 const fs = require("fs")
 const path = require('path');
+const schedule = require('node-schedule');
+// const { act } = require("react");
 
 
 
@@ -64,7 +66,7 @@ class ClientReporitory{
     constructor(silla) {
         this.turnoForAsing = 1;
         this.turnoNow = 1;
-        this.silla = silla
+        this.silla = silla;
         this.open = 0;
         // esta variable es para manejar el ultimo turno registrado en addClient 
 
@@ -282,8 +284,144 @@ class ClientReporitory{
     }
 } 
 
+/***********************************************************
+|   |  PARA OPERACIONES GENERALES CON LA BASE DE DATOS   |  |
+ ***********************************************************/
+
+class GnClientRepository{
+    changeName(id, name){
+        // console.log({'id': id, 'name':name});
+        let ID = parseInt(id)
+        let client_for_change = ClientDB.findOne({_id: ID})
+        client_for_change.name = name;
+
+        ClientDB.update({_id: ID}, client_for_change).save()      
+        return {'name':name, 'id': id};
+        
+
+    }
+
+    /*************************************************
+    |   ACTUALIZAR LOS TURNOS DESDE UN TURNO INICIAL  |
+     *************************************************/
+    async updateTurns( Turn, silla){
+        let nextQuery = (turn) => {return {nturno: parseInt(turn), silla: silla}}
+        let updatedClients = [];
+        let initTurn = parseInt(Turn);
+
+        let clienteNext = await ClientDB.findOne(nextQuery(initTurn));
+        let cliente = clienteNext;
+        let i = 1
+
+        do {
+            
+            clienteNext = await ClientDB.findOne(nextQuery(initTurn + i))
+            cliente.nturno++
+            await ClientDB.update({_id: cliente._id}, cliente).save()
+            updatedClients.push(cliente)
+            cliente = clienteNext;
+
+            i++
+
+        } while (clienteNext);
+
+        return updatedClients
+    }
+
+
+
+    send_listo(){
+
+        // Clientes silla A
+        let clientes_listosA = ClientDB.find({silla: 'A'}).reverse();
+        let indice_primer_esperando = clientes_listosA.findIndex(cln => cln.status == "esperando")
+
+        if(indice_primer_esperando !== -1){
+            clientes_listosA = clientes_listosA.slice(0, indice_primer_esperando)
+        }
+
+        // Clientes silla B
+        let clientes_listosB = ClientDB.find({silla: 'B'}).reverse();
+        indice_primer_esperando = clientes_listosB.findIndex(cln => cln.status == "esperando")
+
+        if (indice_primer_esperando !== -1){
+            clientes_listosB = clientes_listosB.slice(0,indice_primer_esperando)
+        }
+
+
+        return clientes_listosA.concat(clientes_listosB);
+
+    }
+
+    send_esperando(plqs){
+        let clientes_esperando = [];
+
+
+        for(let plq of plqs){
+            let clientes = ClientDB.find({silla: plq.silla}).reverse();
+            let indexFirstWait = clientes.findIndex(cln => cln.status == "esperando")
+
+            if(indexFirstWait != -1){
+                clientes = clientes.slice(indexFirstWait, -1);
+            }
+            clientes_esperando = clientes_esperando.concat(clientes)
+        }
+
+        return clientes_esperando;
+    }
+
+    sendAllClients(){
+        try{
+            // para selecionar toda la lista
+            return ClientDB.find().reverse()
+        }catch(err){console.log(err)}
+    }
+
+    findActuales(plqs){
+        let actuales =[];
+        for (let plq of plqs){
+            actuales.push(ClientDB.findOne({nturno: plq.turnoNow, silla: plq.silla}))
+        }
+        return actuales;
+
+    }
+}
+
+
+
+/**********************************************
+|   CODIGO PARA ELIMINAR CLIENTES A LAS 00:00  |
+ **********************************************/
+
+// const job = schedule.scheduleJob("*/1 * * * *", ()=>{
+//     let fechaRD = new Date();
+
+//     let opciones = {
+//         timeZone: 'America/Santo_Domingo',
+//         hour: '2-digit',
+//         minute: '2-digit',
+//         hour12: false
+//     }
+
+//     let horaRD = new Intl.DateTimeFormat("es-DO", opciones).format(fechaRD)
+//     let [hora, minuto] = horaRD.split(":")
+
+//     console.log("")
+//     console.log(horaRD);
+//     console.log("")
+// })
 
 
 
 
-module.exports = {ClientReporitory, ClientDB}
+
+// plq - instancias de peluquero
+let plq01 = new ClientReporitory("A")
+let plq02 = new ClientReporitory("B")
+
+let plqGn = new GnClientRepository();
+const plqs = [plq01, plq02]
+
+// console.log(plqGn.send_esperando())
+
+module.exports = {plqs, plqGn}

@@ -1,16 +1,17 @@
 extends layout
 
 block linkCss 
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    link(rel='stylesheet', href='/stylesheets/indexHeader.css')
-    link(rel='stylesheet', href='/stylesheets/indexArticle.css')
+    link(rel='stylesheet', href='/stylesheets/index/indexStyle.css')
+    link(rel='stylesheet', href='/stylesheets/index/indexHeader.css')
+    link(rel='stylesheet', href='/stylesheets/index/indexArticle.css')
 
 block content
   header
-    div(class='header-div')
-      div(class='header_tittel-box')
-        h1(class='header-h1') Peluqueria <span class='header-h1_span'>Vaquero</span>
-        p(class='welcome-p') Bienvenido / Welcome / 你好
+    //- div(class='header-div')
+    //-   div(class='header_tittel-box')
+    //-     h1(class='header-h1') Peluqueria <span class='header-h1_span'>Vaquero</span>
+    //-     p(class='welcome-p') Bienvenido / Welcome / 你好
+
     div(class='btn-silla-box')
         each plq in peluqueros
             div(class='btn-silla', silla=plq.silla) Silla #{plq.silla}
@@ -21,38 +22,64 @@ block content
     each plq in peluqueros
         div(class='plq-div' silla=plq.silla)
             div(class="turno" silla=plq.silla)= plq.turnoNow
-            ul(class="list-client-ul")
-                each cliente in clientes
-                    if cliente.silla === plq.silla
-                        case cliente.status
+            div(class="client-container" silla=plq.silla)
 
-                            when 'esperando'
-                                li.list-client-li(class=cliente.nturno === plq.turnoNow ? "ACTUAL": " " , nturno = cliente.nturno, cliente_id=cliente._id, silla=cliente.silla)
-                                    div(class="li_client-information")
-                                        strong
-                                            div(class='cliente-nturno-div')=cliente.nturno
-                                        div(class='cliente-name-div')=cliente.name
+                div(class='listos' silla=plq.silla) 
+                    each cliente in listos
+                        if cliente.silla === plq.silla
+                            case cliente.status 
+                                when 'listo'
+                                    div(class="client GREEN" cliente_id=cliente._id, silla=cliente.silla)
+                                              div(class="client-info")
+                                                  strong
+                                                      div(class='client-nturno')=cliente.nturno
+                                                  div(class='client-name')=cliente.name
+                                              div(class='client-text') listo
+                                
+                                when 'declinado'
+                                    div(class="client OPASITY30 declinado" cliente_id=cliente._id, silla=cliente.silla)
+                                      div(class="client-info")
+                                          strong
+                                              div(class='client-nturno')=cliente.nturno
+                                          div(class='client-name')=cliente.name
+                                      div(class='client-text') declinado
+                    
 
-                                    div(class="client-text") #{cliente.nturno === plq.turnoNow ? "En turno":"esperando"}
+                div(class='actual' silla=plq.silla)
+                    each cliente in actuales
+                        if cliente.silla === plq.silla
+                            div.client(class="ACTUAL", nturno = cliente.nturno, cliente_id=cliente._id, silla=cliente.silla)
+                                  div(class="client-info")
+                                      strong
+                                          div(class='client-nturno')=cliente.nturno
+                                      div(class='client-name')=cliente.name
+
+                                  div(class="client-text") En turno
+
+                
+                div(class='esperando' silla=plq.silla)
+                    each cliente in esperando 
+                        if cliente.silla === plq.silla 
+                            case cliente.status 
+
+                                when 'esperando'
+                                    div.client( nturno = cliente.nturno, cliente_id=cliente._id, silla=cliente.silla)
+                                      div(class="client-info")
+                                          strong
+                                              div(class='client-nturno')=cliente.nturno
+                                          div(class='client-name')=cliente.name
+
+                                      div(class="client-text") esperando
+
+                                when 'declinado'
+                                    div(class="client OPASITY30 declinado" cliente_id=cliente._id, silla=cliente.silla)
+                                      div(class="client-info")
+                                          strong
+                                              div(class='client-nturno')=cliente.nturno
+                                          div(class='client-name')=cliente.name
+                                      div(class='client-text') declinado
 
 
-
-
-                            when 'declinado'
-                                li(class="list-client-li OPASITY30 declinado" cliente_id=cliente._id, silla=cliente.silla)
-                                    div(class="li_client-information")
-                                        strong
-                                            div(class='cliente-nturno-div')=cliente.nturno
-                                        div(class='cliente-name-div')=cliente.name
-                                    div(class='client-text') declinado
-
-                            when 'listo'
-                                  li(class="list-client-li GREEN" cliente_id=cliente._id, silla=cliente.silla)
-                                    div(class="li_client-information")
-                                        strong
-                                            div(class='cliente-nturno-div')=cliente.nturno
-                                        div(class='cliente-name-div')=cliente.name
-                                    div(class='client-text') listo
 
 
   article 

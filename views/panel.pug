@@ -123,7 +123,7 @@ block content
                 |  esta abierta.
             div(class="ok-button") Aceptar
 
-    div.edit-client-box.screen(data-cliente_id='')
+    div.edit-client-box.edit-name.screen(data-cliente_id='')
         div.input-name-box 
             div.input-name-ttl Cambiar Nombre
             div.input-name-subbox 
@@ -134,11 +134,28 @@ block content
                 div.input-new-name-container
                     span Nuevo: 
                     input(type='text' id="new-name")
-                    div(id="btn-change-name")
+                    div(id="btn-change-name") Actualizar
     
-    div.change-name-btn(data-cliente_id='')
-            span Editar Nombre
+    div.edit-client-box.edit-name.screen(data-cliente_id='')
+        div.input-nturno-box 
+            div.input-name-ttl Cambiar Nombre
+            div.input-name-subbox 
+                div.past-name-container
+                    span Anterior:  
+                    div.past-nturno 
 
+                div.input-new-name-container
+                    span Nuevo: 
+                    input(type='text' id="new-turno")
+                    div(id="btn-change-turno") Actualiza
+
+
+
+    div.edits-btns-options 
+        div.change-name-btn.edit-options-btn(data-cliente_id='')
+                span Editar Nombre
+        div.edit-options-btn.change-turno(data-cliente_id='')
+                span Cambiar Turno
 
 
     script(type="module" src="javascripts/panel-js/PB-panel.js")

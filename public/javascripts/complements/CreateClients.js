@@ -1,4 +1,3 @@
-//import { declineClient } from "../PB-panel"
 
 
 export function createWaitClient(cliente){
@@ -158,6 +157,11 @@ export function createDeclnClient (cliente){
 // cElm ==> significa Create Element, la uso para escribir menos
 export function cElm(e) {
     return document.createElement(`${e}`)
+}
+
+export function searchClnID(id){
+    let elm = document.querySelector(`.list-client-li[cliente_id="${id}"]`);
+    return elm;
 }
 
 //module.exports = {createWaitClient, createGreenClient, createDeclnClient}

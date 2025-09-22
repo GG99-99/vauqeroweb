@@ -57,15 +57,17 @@ class CRC{
 
 
 
-// --------- sockets handlers (respuestas) ---------- \\
+/********************
+|   SOCKET HANDLERS  |
+ ********************/
 socket.on('upturnRES', (res) => {
-	let clienteListo = document.querySelector(`.list-client-li[cliente_id="${res.clienteListo._id}"]`)
+	let clienteListo = document.querySelector(`.client[cliente_id="${res.clienteListo._id}"]`)
 	let clienteListo_green = CRC.crtGreenClnt(res.clienteListo)
 	clienteListo.replaceWith(clienteListo_green)
 
 
 	let cliente_actual = CRC.crtActualClnt(res.clienteActual)
-	let client_for_replace = document.querySelector(`.list-client-li[cliente_id="${res.clienteActual._id}"]`)
+	let client_for_replace = document.querySelector(`.client[cliente_id="${res.clienteActual._id}"]`)
 	client_for_replace.replaceWith(cliente_actual)
 
 	// --- ACTUALIZAR TURNO
@@ -86,7 +88,7 @@ socket.on("downturnRES", (res) => {
 		turnoBox.innerHTML = res.turno
 
 
-		let newActualClient = document.querySelector(`.list-client-li[cliente_id="${res.clienteActual._id}"]`)
+		let newActualClient = document.querySelector(`.client[cliente_id="${res.clienteActual._id}"]`)
 
 		// remover texto por defecto de elemento
 		let newActualClient_wait = CRC.crtActualClnt(res.clienteActual)
@@ -99,12 +101,12 @@ socket.on("downturnRES", (res) => {
 
 socket.on("newClientRES", (cliente)=>{
 	let new_cliente = CRC.crtWaitClnt(cliente);
-	let ul = document.querySelector(".list-client-ul")
+	let ul = document.querySelector(".client-container")
 	ul.appendChild(new_cliente)
 })
 
 socket.on("declineRES", (res) =>{
-	let cliente_for_decline = document.querySelector(`.list-client-li[cliente_id="${res.clienteDecl._id}"]`)
+	let cliente_for_decline = document.querySelector(`.client[cliente_id="${res.clienteDecl._id}"]`)
 	cliente_for_decline.replaceWith(CRC.crtDeclineClnt(res.clienteDecl))  // cambiar el cliente a declinado
 
 	if(res.turno){
@@ -127,16 +129,16 @@ socket.on("declineRES", (res) =>{
 })
 
 socket.on("desDeclineRES", (res) =>{
+	let cliente_for_replace = document.querySelector(`.client[cliente_id="${res.cliente._id}"]`)
+
 	if(res.cliente.status === 'esperando'){
 		let cliente_wait = CRC.crtWaitClnt(res.cliente)
-		let cliente_for_replace = document.querySelector(`.list-client-li[cliente_id="${res.cliente._id}"]`)
 		cliente_for_replace.replaceWith(cliente_wait)
 
 
 	}
 	else if (res.cliente.status === 'listo'){
 		let cliente_gree = CRC.crtGreenClnt(res.cliente)
-		let cliente_for_replace = document.querySelector(`.list-client-li[cliente_id="${res.cliente._id}"]`)
 		cliente_for_replace.replaceWith(cliente_gree)
 	}
 })
@@ -155,6 +157,13 @@ socket.on("openAndCloseRES",(res) => {
 		open_box.classList.add("close")
 		open_box.innerHTML = "Cerrado"
 	}
+})
+
+socket.on("changeNameRES", res => {
+		let cliente = document.querySelector(`.client[cliente_id="${res.id}"]`)
+		let name_box = cliente.querySelector(".client-name")
+		name_box.innerHTML = res.name;
+
 })
 
 /* ---------------- DIVISION DE CLIENTES POR SU SILLA ----------------------*/
