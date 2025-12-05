@@ -1,7 +1,6 @@
 const { Server } = require('socket.io')
 const path = require('path');
 const { plqs, plqGn} = require(path.join(__dirname, "repositorys",'client-repository.js'));
-
 const { SECRET_JWT_KEY } = require(path.join(__dirname, "repositorys", "config.js"));
 const  jwt = require('jsonwebtoken');
 
@@ -16,7 +15,9 @@ io.on('connection', (socket) =>{
 
 	console.log("un usuario se ha conectado")
 	try{
+		
 		jwt.verify(socket.access_token, SECRET_JWT_KEY);
+
 		if(socket.rooms.has('RoomAdmin')){
 			socket.on('disconnect', ()=>{console.log("un usuario se ha desconectaado")})
 
@@ -26,13 +27,15 @@ io.on('connection', (socket) =>{
 
 				// Este es el evento que se envia a los usuarios de Panel y Index
 				if (upturnRes){
-					io.emit('upturnRES', {
-						"newTurno": upturnRes.turno,
-						"clienteListo": upturnRes.clienteListo,
-						"clienteActual": upturnRes.clienteActual,
-						"silla": upturnRes.silla,
-					})
+					io.emit('upturnRES', upturnRes)
 				}
+			})
+
+			
+			socket.on("downturn", (silla)=> {
+				let plq = plqs.find((plq) => plq.silla === silla);
+				let downTurnRes = plq.downTurn()
+				io.emit("downturnRES", downTurnRes)
 			})
 
 			socket.on("newClient", (name, silla) => {
@@ -44,11 +47,7 @@ io.on('connection', (socket) =>{
 
 			})
 
-			socket.on("downturn", (silla)=> {
-				let plq = plqs.find((plq) => plq.silla === silla);
-				let downTurnRes = plq.downTurn()
-				io.emit("downturnRES", downTurnRes)
-			})
+
 
 			socket.on("decline", (msg)=>{
 
@@ -87,9 +86,6 @@ io.on('connection', (socket) =>{
 
 
 })
-
-
-
 
 
 

@@ -82,11 +82,11 @@ export class EClnt{
 
 		// boton cambio de nombre
 		let edit_name_btn = document.querySelector(".change-name-btn");
-		edit_name_btn.dataset.cliente_id = elm.getAttribute("cliente_id");
+		edit_name_btn.dataset.client_id = elm.getAttribute("client_id");
 
 		// boton cambio de turno
 		let edit_turno_btn = document.querySelector(".change-turno")
-		edit_turno_btn.dataset.cliente_id = elm.getAttribute("cliente_id");
+		edit_turno_btn.dataset.client_id = elm.getAttribute("client_id");
 
 		elm.appendChild(btns_box);
 		
@@ -139,7 +139,7 @@ export class EClnt{
 		containerChangeName.style.display = 'grid';
 
 		let cliente = document.querySelector(".selected")
-		let pastname = cliente.querySelector(".cliente-name-div")
+		let pastname = cliente.querySelector(".client-name")
 
 		// asignar pastname al edit-client-box
 		let pastname_box = containerChangeName.querySelector(".past-name")

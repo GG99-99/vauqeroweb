@@ -19,11 +19,11 @@ li{
 
 }
 
-.list-client-li{
+.client{
     border: 1px solid black;
     border-radius: 1vw;
-    padding: 1vh;
-    height: 4rem;
+    padding: 2rem;
+    height: 4.3rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -41,7 +41,7 @@ li{
 
 }
 
-.li_client-information{
+.client-info{
     display: inline-flex;
     gap: 5%;
     width: 50%;
@@ -49,7 +49,7 @@ li{
 
 
 
-.cliente-name-div, .cliente-nturno-div{
+.client-name, .client-nturno{
     font-size: 2vh;
 }
 
@@ -114,7 +114,7 @@ li{
 
 
 
-.OPASITY30{
+.DECLINADO{
     opacity: 30%;
 }
 
@@ -122,3 +122,4 @@ li{
     color: rgba(0, 188, 13, 0.747);
     border-color: rgba(0, 188, 13, 0.747);
 }
+

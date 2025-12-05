@@ -1,53 +1,40 @@
-
-.hide{
+.hide {
     display: none;
 }
 
-header{
-    min-height: 100vh;
+header {
+    height: 100vh;
     width: 100vw;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: #ffffff;
-
-
-    
+    color: rgb(255, 255, 255);
 }
 
-
-
-.header-div{
+.header-div {
     position: relative;
-    /*top: 60px;*/
     display: flex;
     flex-direction: column;
     gap: 80px;
-    
 }
 
-.header-h1{
+.header-h1 {
     font-size: 8.8vw;
     font-weight: 500;
 }
 
-.header-h1_span{
-    color: #ffffff;
-
-    text-shadow:
-    /* White glow */
-    0 0 7px #c60a0a,
-    0 0 10px #c60a0a,
-    0 0 21px #c60a0a,
-    0 0 42px #c60a0a;
+.header-h1_span {
+    color: rgb(255, 255, 255);
+    text-shadow: rgb(198, 10, 10) 0px 0px 7px, rgb(198, 10, 10) 0px 0px 10px, rgb(198, 10, 10) 0px 0px 21px, rgb(198, 10, 10) 0px 0px 42px;
 }
 
-.welcome-p{
+.welcome-p {
     font-size: 5vw;
 }
-.plq-div{
+
+.plq-div {
     text-align: center;
     font-size: 6vw;
     width: 100%;
@@ -56,130 +43,93 @@ header{
     align-items: center;
     justify-content: center;
     margin-top: 3vh;
-    /* height: 60vh; */
-    overflow: scroll;
+    height: 80%;
 }
 
-.h3-personas-box{
-    text-shadow: 
-    0 0 7px #0a76c6,
-    0 0 10px #0a76c6,
-    0 0 21px #0a76c6,
-    0 0 42px #0a76c6;
-
-    margin-block: 0;
+.h3-personas-box {
+    text-shadow: rgb(10, 118, 198) 0px 0px 7px, rgb(10, 118, 198) 0px 0px 10px, rgb(10, 118, 198) 0px 0px 21px, rgb(10, 118, 198) 0px 0px 42px;
+    margin-block: 0px;
     font-weight: 600;
 }
 
-.number-personas{
+.number-personas {
     font-size: 12vw;
-    margin-block: 0;
+    margin-block: 0px;
 }
 
-
-/* ------------------- Btn-Sillas---------------------*/
-
-.btn-silla-box{
+.btn-silla-box {
     display: flex;
     gap: 7vw;
     align-items: center;
     justify-content: center;
     position: relative;
     width: 80%;
-
 }
 
-.btn-silla{
-    border-radius: 8px;
-    border: solid 1px rgb(10, 10, 10);
+.btn-silla {
+    border-radius: 1vh;
     padding: 1vh;
     cursor: pointer;
+    
+    height: 6vh;
+        width: 13vh;
+        font-size: 2vh;
+        
+    font-weight: 600;
+    align-items: center;
+    align-content: center;
 
-    font-size: 2vw;
+
+    box-shadow: rgba(0, 0, 0, 0.64) 0px 3px 13px;
 }
 
-.focus{
+.focus {
     background-color: black;
     color: white;
 }
 
-.open-box{
-    padding: 7px;
-    border-radius: 10px;
-    position: absolute;
-    left: 0;
-}
-.open{
-    background-color: #45a049;
-    font-weight: 600;
-    color: white;
-}
-
-.close{
-    background-color: #f62929;
-    color: white;
-    font-weight: 600;
-
-}
-/* -------------------- list Clients  ----------------------*/
-
-.client-container{
+.plq-info{
+    width: 60vw;
     display: flex;
-    flex-direction: column;
+    gap: 10px;
     align-items: center;
     justify-content: center;
-    gap: 1vh;
-    width: 100%;
-    overflow: scroll;
-    height: 100%;
-}
-
-li{
-    list-style: none;
-    display: flex;
+    /* position: relative; */
     
 }
 
-.client{
-    border: 1px solid black;
-    border-radius: 1vw;
-    padding: 1vh;
-    height: 8vh;
+.open-box {
+    padding: 1.3vh 1vh 1.3vh;
+
+    border-radius: 10vh;
+    font-size: 1.8vh;
+    
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    background-color: #b2b2b28c;
-    width: 50vw;
+    gap: 1vh;
+
+    position: absolute;
+    left: 3.5vh;
+     writing-mode: vertical-lr;
+    text-orientation: upright;
+
+    background-color: #110e0e;
+    font-weight: 600;
+    text-shadow: 0px 3px 17px rgba(255, 255, 255, 0.84);
 }
 
-.client-info{
-    display: inline-flex;
-    gap: 5%;
-    width: 50%;
+.ring{
+    width: 2vh;
+    height: 2vh;
+    border: 3px solid;
+    border-radius: 10vh;
+    
 }
 
-
-
-.client-name, .client-nturno{
-    font-size: 2vh;
+.open {
+    border-color: rgb(69, 160, 73);
 }
 
-.client-text{
-    font-size: 2vh;
-}
- /*---------------------------------------------------------*/
- .OPASITY30{
-    opacity: 30%;
-}
-
-.GREEN{
-    color: rgba(0, 188, 13, 0.747);
-    border-color: rgba(0, 188, 13, 0.747);
-}
-
-.ACTUAL{
-    margin-top: 2vh;
-    margin-bottom: 2vh;
-    width: 100%;
-    width: 65vw;
+.close {
+    border-color: rgb(246, 41, 41);
 }

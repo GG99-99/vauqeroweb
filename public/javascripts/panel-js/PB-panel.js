@@ -23,7 +23,7 @@ class CRC{
 
 		declineButton.addEventListener('click', event => {
 			let target = event.currentTarget
-			let id = target.getAttribute('cliente_id');
+			let id = target.getAttribute('client_id');
 			let silla = target.getAttribute('silla');
 			declineClient(id, silla)
 
@@ -42,7 +42,7 @@ class CRC{
 		let desDeclineButton = elm.querySelector(".desdecline-button")
 		desDeclineButton.addEventListener('click', event => {
 			let target = event.currentTarget
-			let id = target.getAttribute('cliente_id');
+			let id = target.getAttribute('client_id');
 			let silla = target.getAttribute('silla');
 			desDecline(id, silla)
 
@@ -60,90 +60,132 @@ class CRC{
 	}
 }
 
+//
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
 
+// cambiar el turno
+function changeTurno(turno, silla){
+  let turnoBox = document.querySelector(`.turno[silla="${silla}"]`);
+  turnoBox.innerHTML = turno;
+}
+
+// convertir a actual
+function convertActual(id){
+  let newActualClient = document.querySelector(`.client[client_id="${id}"]`)
+	newActualClient.classList.add("ACTUAL")
+}
+
+// convertir cliente a listo
+function convertListo(client){
+  let replaceClient = CRC.crtGreenClnt(client);
+	let elemntForUpdate = document.querySelector(`.client[client_id="${client._id}"]`)
+	elemntForUpdate.replaceWith(replaceClient)
+}
+
+// cambiar silla a rojo
+function sillaToRed(open_box){
+  let outer_circle = open_box.querySelector(`#outer-circle`)
+	outer_circle.classList.remove("green-outer")
+	outer_circle.classList.add("red-outer")
+
+	let inner_circle = open_box.querySelector(`#inner-circle`)
+	inner_circle.classList.remove("green-inner")
+	inner_circle.classList.add("red-inner")
+	
+	let open_text = open_box.querySelector(`#open-text`)
+	open_text.innerText = "Cerrado"
+}
+
+// cambiar silla a verde
+function sillaToGreen(open_box){
+  let outer_circle = open_box.querySelector(`#outer-circle`)
+		outer_circle.classList.remove("red-outer")
+		outer_circle.classList.add("green-outer")
+
+		let inner_circle = open_box.querySelector(`#inner-circle`)
+		inner_circle.classList.remove("red-inner") 
+		inner_circle.classList.add("green-inner")
+
+		let open_text = open_box.querySelector(`#open-text`)
+		open_text.innerText = "Abierto"
+}
+
+
+//
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
 
 /*********************
 |   SOCKETS HABDLERS  |
  *********************/
 
-socket.on('upturnRES', (msg) => {
+socket.on('upturnRES', (res) => {
+   // { "newTurno": this.turnoNow, "clienteListo": clienteListo, "clienteActual": newClientActual, 'silla': this.silla }
+   // 
+	changeTurno(res.newTurno, res.silla)
 
+	convertActual(res.clienteActual._id)
+	container_scroll(res.silla)
 
-	let turnoBox = document.querySelector(`.turno[silla="${msg.silla}"]`)
-	turnoBox.innerHTML = msg.newTurno
-
-	let newActualClient = document.querySelector(`.list-client-li[cliente_id="${msg.clienteActual._id}"]`)
-	newActualClient.classList.add("ACTUAL")
-	container_scroll(msg.silla)
-
-	if(msg.clienteListo)
-	{
-		let replaceClient = CRC.crtGreenClnt(msg.clienteListo);
-
-		let elemntForUpdate = document.querySelector(`.list-client-li[cliente_id="${msg.clienteListo._id}"]`)
-		elemntForUpdate.replaceWith(replaceClient)
-
-
-
-	}
-
-
+	if(res.clienteListo){ convertListo(res.clienteListo) }
 })
 
 socket.on("downturnRES", (res) => {
 
-	if (res){
-
-		let lastActualClient = document.querySelector(`.ACTUAL[silla='${res.clienteActual.silla}']`)
-		lastActualClient.classList.remove("ACTUAL")
-
-
-		let turnoBox = document.querySelector(`.turno[silla='${res.clienteActual.silla}']`)
-		turnoBox.innerHTML = res.turno
-
-
-		let newActualClient = document.querySelector(`.list-client-li[cliente_id="${res.clienteActual._id}"]`)
-
-		let replaceClient = CRC.crtWaitClnt(res.clienteActual)
-		replaceClient.classList.add("ACTUAL")
-
-
-
-		newActualClient.replaceWith(replaceClient)
-
-		//let container = document.querySelector(`.clients-container[silla="${res.clienteActual.silla}"]`)
-		container_scroll(res.clienteActual.silla)
-
-
-
-	}
-
-
+  if (res){
+  
+  		let lastActualClient = document.querySelector(`.ACTUAL[silla='${res.clienteActual.silla}']`)
+  		lastActualClient.classList.remove("ACTUAL")
+  
+  		changeTurno(res.newTurno, res.clienteActual.silla)
+  
+  		let client_for_actual = document.querySelector(`.client[client_id="${res.clienteActual._id}"]`)
+  		let client_actual_create = CRC.crtActualClnt(res.clienteActual)
+  		client_for_actual.replaceWith(client_actual_create)
+  
+  		
+  		container_scroll(res.clienteActual.silla)
+  }
 })
 
 socket.on("newClientRES", (cliente)=>{
 
 	let liElement = CRC.crtWaitClnt(cliente);
-	//let ul = document.querySelector(`.plq-div[silla="${cliente.silla}"]`)
 	let list = document.querySelector(`.clients-container[silla="${cliente.silla}"]`)
 	list.appendChild(liElement)
-
-
-
 })
 
 socket.on("declineRES", (res)=>{
-	let declineClientEl = CRC.crtDeclineClnt(res.clienteDecl);
-
-	let client_for_decline = document.querySelector(`.list-client-li[cliente_id="${res.clienteDecl._id}"]`);
-
+	let declineClientEl = CRC.crtDeclineClnt(res.clientDecl);
+	let client_for_decline = searchClnID(res.clientDecl._id);
 	client_for_decline.replaceWith(declineClientEl);
 
 	if (res.turno){
-		let turnoBox = document.querySelector(`.turno[silla='${res.clienteDecl.silla}']`)
+		let turnoBox = document.querySelector(`.turno[silla='${res.clientDecl.silla}']`)
 		turnoBox.innerHTML = res.turno
 
-		let newActualClient = document.querySelector(`.list-client-li[cliente_id="${res.turno}"]`)
+		let newActualClient = searchClnID(res.newActualClient._id)
 		newActualClient.classList.add("ACTUAL")
 	}
 })
@@ -165,54 +207,40 @@ socket.on("desDeclineRES", res =>{
 		let client_DesDecline = CRC.crtActualClnt(client)
 		element_for_update.replaceWith(client_DesDecline)
 	}
-
-
 })
 
 socket.on("openAndCloseRES", (res) => {
-	let open_box = document.querySelector(`.open-box[silla="res.silla"]`)
-	if(res.open){
-		let open_box = document.querySelector(`.open-box[silla="${res.silla}"]`)
-		open_box.setAttribute("open",res.open)
-
-		let outer_circle = open_box.querySelector(`#outer-circle`)
-		if(outer_circle.classList.contains("red-outer")){outer_circle.classList.remove("red-outer")}
-		outer_circle.classList.add("green-outer")
-
-		let inner_circle = open_box.querySelector(`#inner-circle`)
-		if(inner_circle.classList.contains("red-inner")){inner_circle.classList.remove("red-inner")}
-		inner_circle.classList.add("green-inner")
-
-		let open_text = open_box.querySelector(`#open-text`)
-		open_text.innerText = "Abierto"
+  
+	let open_box = document.querySelector(`.open-box[silla="${res.silla}"]`)
+	open_box.setAttribute("open",res.open)
+	
+	if(res.open){ 
+    sillaToGreen(open_box)
+    return
 	}
-	else {
-		let open_box = document.querySelector(`.open-box[silla="${res.silla}"]`)
-		open_box.setAttribute("open", res.open)
-
-		let outer_circle = open_box.querySelector(`#outer-circle`)
-		if (outer_circle.classList.contains(
-			"green-outer")) {outer_circle.classList.remove("green-outer")}
-		outer_circle.classList.add("red-outer")
-
-		let inner_circle = open_box.querySelector(`#inner-circle`)
-		if (inner_circle.classList.contains(
-			"green-inner")) {inner_circle.classList.remove("green-inner")}
-		inner_circle.classList.add("red-inner")
-
-		let open_text = open_box.querySelector(`#open-text`)
-		open_text.innerText = "Cerrado"
-	}
-
+	
+	sillaToRed(open_box)
 })
 
 socket.on("changeNameRES", res =>{
 	let client = searchClnID(res.id)
-	let name_div = client.querySelector(".cliente-name-div")
+	let name_div = client.querySelector(".client-name")
 	name_div.innerHTML = res.name
-
 })
 
+//
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
 
 
 /**************************************************
@@ -227,12 +255,14 @@ function verify_is_open(){
 
 	if(open === 1){
 		return true
+		
 	}else{
 		let frm = document.querySelector(`.frmContainer-not-open`)
 		frm.style.display = "flex"
 		return false
 	}
 }
+
 
 
 
@@ -325,7 +355,7 @@ async function closeSesion() {
 					window.location = "http://localhost:3000/login";
 				};
 			} catch(error){console.log(error)}
-		})}
+})}
 
 function openScreenLogout(){
 	let logoutScreen = document.querySelector('.screen.logout')
@@ -395,7 +425,7 @@ buttonLogout.addEventListener('click', closeSesion)
 /************************************************************************************************
 |   // SELECCIONAR TODOS LOS CLIENTES Y AGREGAR EVENTOS (DECLINE BTN, DESDECLINE BTN, SOSTENER)  |
  ************************************************************************************************/
-let all_clientes = document.querySelectorAll('.list-client-li')
+let all_clientes = document.querySelectorAll('.client')
 all_clientes.forEach(cliente => {
 	
     /**********************
@@ -419,7 +449,7 @@ all_clientes.forEach(cliente => {
 			// si el tiempo de pulsasion es menor al 0.2 s
 			if(total_time <= 0.2){
 				let target = event.currentTarget
-				let id = target.getAttribute('cliente_id');
+				let id = target.getAttribute('client_id');
 				let silla = target.getAttribute('silla');
 				declineClient(id, silla)
 			}
@@ -445,7 +475,7 @@ all_clientes.forEach(cliente => {
 			
 			if(total_time <= 0.2){
 				let target = event.currentTarget
-				let id = target.getAttribute('cliente_id');
+				let id = target.getAttribute('client_id');
 				let silla = target.getAttribute('silla');
 				desDecline(id, silla)
 			}
@@ -571,7 +601,7 @@ edit_btn.addEventListener('click', (event)=>{
 let btn_changeName = document.querySelector("#btn-change-name")
 btn_changeName.addEventListener('click', event => {
 	let selectedClient = document.querySelector(".selected")
-	let id = selectedClient.getAttribute("cliente_id")
+	let id = selectedClient.getAttribute("client_id")
 	let inputBox = document.querySelector("#new-name")
 	let newName = inputBox.value.trim();
 

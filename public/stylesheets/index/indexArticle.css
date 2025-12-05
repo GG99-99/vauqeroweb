@@ -59,6 +59,10 @@ article{
     flex-direction: column;
 }
 
+iframe{
+    border-radius: 1vh;
+}
+
 .map-link, .direccion-p{
     color: #ffff;
     font-size: var(--normal-size);

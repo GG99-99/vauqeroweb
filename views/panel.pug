@@ -1,12 +1,40 @@
-extend layout 
+extend layout
+
+mixin  client(cliente, clases)
+    div.client(
+        class=clases
+        client_id=cliente._id,
+        silla=cliente.silla,
+        nturno = cliente.nturno,
+        name=cliente.name )
+
+        div(class="client-info")
+            strong
+                div(class='client-nturno')=cliente.nturno
+            div(class='client-name')=cliente.name
+
+        block
+
+mixin declineBtn(cliente)
+    div(class="decline-client-button", client_id=cliente._id, silla=cliente.silla)
+        div(class="arrow1")
+        div(class="arrow2")
 
 
-block script 
-     
+mixin desdeclineBox(cliente)
+    div(class='desdecline-box')
+        div(class='client-text')
+            span Declinado
+        div(class= 'desdecline-button', client_id=cliente._id, silla=cliente.silla)
+            div(class='circular-button')
 
 
-block linkCss 
-    link(rel='stylesheet', href='/stylesheets/style.css')
+block script
+
+
+
+block linkCss
+    // link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/panel-css/panel.css')
     link(rel='stylesheet', href='/stylesheets/panel-css/frm-addclient.css')
     link(rel='stylesheet', href='/stylesheets/panel-css/frm-abrir-silla.css')
@@ -21,17 +49,18 @@ block linkCss
 
 
 
-block content 
+
+block content
     div(class="screen logout")
         div(class="logout-card-box")
             div(class="logout-text")
-                p Estas seguro que quieres cerrar sesion? 
+                p Estas seguro que quieres cerrar sesion?
             div(class="logout-button-box")
-                div(class="logout-no-close") No 
-                div(class="logout-close") Si 
-    header 
+                div(class="logout-no-close") No
+                div(class="logout-close") Si
+    header
         div(class="btn-AddClient-box")
-            img(src="/images/nuevo-cliente.png", alt="" class="icon") 
+            img(src="/images/nuevo-cliente.png", alt="" class="icon")
         div(class="logout-box")
             img(src="/images/cerrar-sesion.png", alt="" class="icon openLogoutScreenButton")
 
@@ -57,42 +86,26 @@ block content
                         div(class="turno" silla=plq.silla)= plq.turnoNow
 
 
-                ul(class="clients-container" silla=plq.silla)
+                div(class="clients-container" silla=plq.silla)
 
                     each cliente in clientes
                         if cliente.silla === plq.silla
 
                             case cliente.status
                                 when 'esperando'
-                                    li.list-client-li(class=cliente.nturno === plq.turnoNow ? "ACTUAL": " " , nturno = cliente.nturno, cliente_id=cliente._id, silla=cliente.silla)
-
-                                        div(class="li_client-information")
-                                            strong
-                                                div(class='cliente-turno-div')=cliente.nturno
-                                            div(class='cliente-name-div')=cliente.name
-                                        div(class="decline-client-button", cliente_id=cliente._id, silla=plq.silla)
-                                            div(class="arrow1")
-                                            div(class="arrow2")
+                                    if cliente.nturno === plq.turnoNow
+                                        +client(cliente, "ACTUAL")
+                                            +declineBtn(cliente)
+                                    else
+                                        +client(cliente, "")
+                                            +declineBtn(cliente)
 
                                 when 'declinado'
-                                   li(class="list-client-li OPASITY30 declinado", nturno=cliente.turno, cliente_id=cliente._id, silla=cliente.silla)
-                                        div(class="li_client-information")
-                                            strong
-                                                div(class='cliente-turno-div')=cliente.nturno
-                                            div(class='cliente-name-div')=cliente.name
-
-                                        div(class='desdecline-box')
-                                            div(class='client-text')
-                                                span Declinado
-                                            div(class= 'desdecline-button', cliente_id=cliente._id, silla=cliente.silla)
-                                                div(class='circular-button')
+                                   +client(cliente, ["DECLINADO", "declinado"])
+                                        +desdeclineBox(cliente)
 
                                 when 'listo'
-                                     li(class="list-client-li GREEN" nturno = cliente.nturno, cliente_id=cliente._id, silla=cliente.silla)
-                                        div(class="li_client-information")
-                                            strong
-                                                div(class='cliente-turno-div')=cliente.nturno
-                                            div(class='cliente-name-div')=cliente.name
+                                     +client(cliente, ["GREEN"])
                                         div(class='client-text') listo
 
 
@@ -106,7 +119,7 @@ block content
 
 
 
-    div(class='frmContainer')
+    div(class=' frm frmContainer')
         div(class="frmAddClient")
             div
                 p(class="p-addclient")  Ingresar nuevo cliente
@@ -115,7 +128,7 @@ block content
             div
                 input(type="button" class="btn-addClient" value="Agregar" data-silla="")
 
-    div(class='frmContainer-not-open')
+    div(class='frm frmContainer-not-open')
         div(class='sub-frm')
             div(class='not-open-text')
                 | La silla
@@ -123,38 +136,38 @@ block content
                 |  esta abierta.
             div(class="ok-button") Aceptar
 
-    div.edit-client-box.edit-name.screen(data-cliente_id='')
-        div.input-name-box 
+    div.edit-client-box.edit-name.screen(data-client_id='')
+        div.input-name-box
             div.input-name-ttl Cambiar Nombre
-            div.input-name-subbox 
+            div.input-name-subbox
                 div.past-name-container
-                    span Anterior:  
-                    div.past-name 
+                    span Anterior:
+                    div.past-name
 
                 div.input-new-name-container
-                    span Nuevo: 
+                    span Nuevo:
                     input(type='text' id="new-name")
                     div(id="btn-change-name") Actualizar
-    
-    div.edit-client-box.edit-name.screen(data-cliente_id='')
-        div.input-nturno-box 
+
+    div.edit-client-box.edit-name.screen(data-client_id='')
+        div.input-nturno-box
             div.input-name-ttl Cambiar Nombre
-            div.input-name-subbox 
+            div.input-name-subbox
                 div.past-name-container
-                    span Anterior:  
-                    div.past-nturno 
+                    span Anterior:
+                    div.past-nturno
 
                 div.input-new-name-container
-                    span Nuevo: 
+                    span Nuevo:
                     input(type='text' id="new-turno")
                     div(id="btn-change-turno") Actualiza
 
 
 
-    div.edits-btns-options 
-        div.change-name-btn.edit-options-btn(data-cliente_id='')
+    div.edits-btns-options
+        div.change-name-btn.edit-options-btn(data-client_id='')
                 span Editar Nombre
-        div.edit-options-btn.change-turno(data-cliente_id='')
+        div.edit-options-btn.change-turno(data-client_id='')
                 span Cambiar Turno
 
 

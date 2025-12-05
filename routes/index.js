@@ -13,11 +13,11 @@ const {plqs, plqGn} = require(path.join(__dirname, "..","repositorys",'client-re
 router.get('/', function(req, res, next) {
 
   let All_Clients = plqGn.sendAllClients();
-  let clientes_listos = plqGn.send_listo();
+  let clientes_listos = plqGn.send_listo(plqs);
   let actuales = plqGn.findActuales(plqs)
   let clientes_esperando = plqGn.send_esperando(plqs);
   
-  console.log(clientes_esperando)
+  // console.log(clientes_esperando)
 
   res.render('index',{
     peluqueros: plqs,

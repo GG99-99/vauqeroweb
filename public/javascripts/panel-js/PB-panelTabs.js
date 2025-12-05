@@ -54,7 +54,7 @@ btnSillas.forEach(btnSilla => {btnSilla.addEventListener('click', () => {
 
 export function container_scroll(silla) {
 	const container = document.querySelector(`.clients-container[silla="${silla}"]`);
-	const client_focus = container.querySelector(`.list-client-li.ACTUAL[silla="${silla}"]`);
+	const client_focus = container.querySelector(`.client.ACTUAL[silla="${silla}"]`);
 	if(client_focus){
 		// Calcular posición relativa
 		const containerRect = container.getBoundingClientRect();
@@ -69,8 +69,6 @@ export function container_scroll(silla) {
 			behavior: 'smooth'
 		});
 	}
-
-
 
 }
 

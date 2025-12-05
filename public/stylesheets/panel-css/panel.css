@@ -1,7 +1,14 @@
+* {
+    padding:  0;
+    margin: 0;
+    box-sizing: border-box;
+
+}
+
 body{
     background-image: none;
     background-color: #f2f2f2;
-}
+    
 
 ul{
     list-style: none;
@@ -22,8 +29,8 @@ ul{
 /*  ------------------ Header ------------------  */
 header{
     display: flex;
-    height: 9vh;
-    padding: 3vh 5vw;
+    /*height: 9vh;*/
+    padding: 1.5rem;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid rgba(0,0,0,0.3);
@@ -54,7 +61,7 @@ article{
     flex-direction: column;
 
     align-items: center;
-    height: 91vh;
+    /*height: 81vh;*/
 }
 
 
@@ -76,7 +83,7 @@ article{
 .plq-div{
     display: flex;
     flex-direction: column;
-    height: 91vh;
+    height: 78vh;
     align-items: center;
     gap: 2vh;
     margin-top: 2vh;

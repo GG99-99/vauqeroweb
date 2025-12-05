@@ -1,0 +1,122 @@
+/* -------------------- list Clients  ----------------------*/
+
+.client-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    overflow: scroll;
+    height: 100%;
+    padding: 10px;
+    gap: 1vh
+    
+}
+
+li{
+    list-style: none;
+    display: flex;
+    
+}
+
+.client{
+    border-radius: 0.8vh;
+    padding-left: 3vh;
+    padding-right: 3vh;
+    height: 7vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* background-color: #242424; */
+    width: 60vw;
+    position: relative;
+    flex-shrink: 0;
+
+    
+background: linear-gradient(90deg, rgba(32, 32, 32, 1) 0%, rgba(46, 46, 46, 1) 100%);
+box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+
+
+.client::after{
+    content: " ";
+    border-top-left-radius: 0.6vh;
+    border-bottom-left-radius: 0.6vh;
+    width: 0.9vh;
+    background-color: rgba(199, 124, 2, 1);
+    box-shadow: 0 0 20px rgba(199, 124, 2, 0.4),
+                0 4px 8px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    height: 100%;
+    left: 0;
+    
+}
+
+.client-info{
+    display: inline-flex;
+    gap: 5%;
+    width: 50%;
+}
+
+
+
+.client-name, .client-nturno, .client-text{
+    font-size: 1.7vh;
+}
+
+/*---------------------------------------------------------*/
+
+.listos, .esperando{
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+
+
+ /*---------------------------------------------------------*/
+ .DECLINADO{
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.3);
+
+}
+
+.DECLINADO:after{
+    background-color: rgba(245, 0, 38, 0.75);
+               
+    box-shadow: 0 0 20px rgba(187, 0, 29, 0.5),
+                0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+
+.GREEN, .DECLINADO, .client-text{
+    
+    /* color: rgb(0 0 0 / 75%); */
+    font-weight: 800;
+    /*border-left-width: 10px;
+    border-left-color: rgba(0, 188, 13, 0.747);*/
+    position: relative;
+
+}
+
+.GREEN:after{
+   
+    background-color: rgba(2, 228, 18, 0.75);
+    box-shadow: 0 0 20px rgba(0, 188, 13, 0.5),
+                0 4px 8px rgba(0, 0, 0, 0.2);
+    
+}
+
+.ACTUAL{
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    width: 100%;
+    width: 75vw;
+}
+
+.ACTUAL::after{
+    background-color: rgba(232, 225, 27, 1);
+    box-shadow: 0 0 20px rgba(232, 225, 27, 0.5),
+                0 4px 8px rgba(0, 0, 0, 0.15);
+}

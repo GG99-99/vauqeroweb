@@ -1,9 +1,27 @@
 extends layout
 
+mixin  client(client, clases, texto)
+    div.client(
+        class=clases 
+        client_id=client._id, 
+        silla=client.silla,
+        nturno = client.nturno, 
+        name=client.name )
+
+        div(class="client-info")
+            strong
+                div(class='client-nturno')=client.nturno
+            div(class='client-name')=client.name
+        div(class='client-text')=texto 
+        
+        
+
 block linkCss 
     link(rel='stylesheet', href='/stylesheets/index/indexStyle.css')
     link(rel='stylesheet', href='/stylesheets/index/indexHeader.css')
     link(rel='stylesheet', href='/stylesheets/index/indexArticle.css')
+    link(rel='stylesheet', href='/stylesheets/index/indexClient.css')
+
 
 block content
   header
@@ -16,69 +34,37 @@ block content
         each plq in peluqueros
             div(class='btn-silla', silla=plq.silla) Silla #{plq.silla}
 
-            div.open-box(class=plq.open === 1 ? "open" : "close", silla=plq.silla, open=plq.open)
-                div(id="open-text" ) #{ plq.open === 1 ? "Abierto" : "Cerrado" }
-
     each plq in peluqueros
         div(class='plq-div' silla=plq.silla)
-            div(class="turno" silla=plq.silla)= plq.turnoNow
-            div(class="client-container" silla=plq.silla)
-
-                div(class='listos' silla=plq.silla) 
-                    each cliente in listos
-                        if cliente.silla === plq.silla
-                            case cliente.status 
-                                when 'listo'
-                                    div(class="client GREEN" cliente_id=cliente._id, silla=cliente.silla)
-                                              div(class="client-info")
-                                                  strong
-                                                      div(class='client-nturno')=cliente.nturno
-                                                  div(class='client-name')=cliente.name
-                                              div(class='client-text') listo
-                                
-                                when 'declinado'
-                                    div(class="client OPASITY30 declinado" cliente_id=cliente._id, silla=cliente.silla)
-                                      div(class="client-info")
-                                          strong
-                                              div(class='client-nturno')=cliente.nturno
-                                          div(class='client-name')=cliente.name
-                                      div(class='client-text') declinado
+        
+            div.plq-info
+                div.open-box( silla=plq.silla, open=plq.open)
+                    div.ring(silla=plq.silla, class=plq.open === 1 ? "open" : "close")
+                    div(id="open-text" ) #{ plq.open === 1 ? "ABIERTO" : "CERRADO" }
                     
+                div(class="turno" silla=plq.silla)= plq.turnoNow
+                
 
-                div(class='actual' silla=plq.silla)
-                    each cliente in actuales
-                        if cliente.silla === plq.silla
-                            div.client(class="ACTUAL", nturno = cliente.nturno, cliente_id=cliente._id, silla=cliente.silla)
-                                  div(class="client-info")
-                                      strong
-                                          div(class='client-nturno')=cliente.nturno
-                                      div(class='client-name')=cliente.name
+            div(class="client-container" silla=plq.silla)
+                each cliente in clientes
+                    if cliente.silla === plq.silla 
+                        case cliente.status 
+                                
+                                    when 'listo'
+                                        +client(cliente, 'GREEN', 'listo')
+                                        
+                                    
+                                    when 'declinado'
+                                        +client(cliente, ['DECLINADO', 'declinado'], 'declinado')
 
-                                  div(class="client-text") En turno
+                                    when 'esperando'
+                                        if cliente.nturno === plq.turnoNow 
+                                            +client(cliente, 'ACTUAL', 'esperando')
+
+                                        else 
+                                            +client(cliente, '', 'esperando')
 
                 
-                div(class='esperando' silla=plq.silla)
-                    each cliente in esperando 
-                        if cliente.silla === plq.silla 
-                            case cliente.status 
-
-                                when 'esperando'
-                                    div.client( nturno = cliente.nturno, cliente_id=cliente._id, silla=cliente.silla)
-                                      div(class="client-info")
-                                          strong
-                                              div(class='client-nturno')=cliente.nturno
-                                          div(class='client-name')=cliente.name
-
-                                      div(class="client-text") esperando
-
-                                when 'declinado'
-                                    div(class="client OPASITY30 declinado" cliente_id=cliente._id, silla=cliente.silla)
-                                      div(class="client-info")
-                                          strong
-                                              div(class='client-nturno')=cliente.nturno
-                                          div(class='client-name')=cliente.name
-                                      div(class='client-text') declinado
-
 
 
 
@@ -106,4 +92,4 @@ block content
                 path(fill-rule="evenodd" clip-rule="evenodd" d="M12 23C10.7764 23 10.0994 22.8687 9 22.5L6.89443 23.5528C5.56462 24.2177 4 23.2507 4 21.7639V19.5C1.84655 17.492 1 15.1767 1 12C1 5.92487 5.92487 1 12 1C18.0751 1 23 5.92487 23 12C23 18.0751 18.0751 23 12 23ZM6 18.6303L5.36395 18.0372C3.69087 16.4772 3 14.7331 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C11.0143 21 10.552 20.911 9.63595 20.6038L8.84847 20.3397L6 21.7639V18.6303Z" fill="#ffff")
             
 
-  script(type="module" src="/javascripts/PB-index.js")
+  script(type="module", src="/javascripts/index/PB-index.js") 

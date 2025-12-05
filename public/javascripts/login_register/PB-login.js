@@ -13,29 +13,24 @@ async function sendData(){
         }).then(response => {
 
         try {
+            if(response.status == 429){
+            console.log(response)
+            }
             if (!response.ok){
 
                 // ESTILOS PARA INGRESOS INCORRECTOS
-                let inputs = document.querySelectorAll(".input");
-                inputs.forEach(input => {
-                    input.classList.add("red-input");
-                })
-
-                let span_invalid_data = document.querySelector(".span_invalid_data")
-                span_invalid_data.classList.remove('hide')
-
-                let login_p = document.querySelector(".login-p")
-                login_p.classList.add("red-shadow")
+                badLogin()
 
 
-
-                throw new Error("Ah ocurrido un error")
+                // throw new Error("Ah ocurrido un error")
             };
             if (response.ok){
                 console.log("todo esta bien")
                 window.location = "http://localhost:3000/panel";
             };
-        } catch(error){console.log(error)}
+        } catch(error){
+            //console.log(error)
+            }
 });
 }
         
@@ -49,3 +44,16 @@ document.addEventListener("keydown", (e) => {
         sendData();
     }
 })
+
+function badLogin(){
+    let inputs = document.querySelectorAll(".input");
+    inputs.forEach(input => {
+        input.classList.add("red-input");
+    })
+
+    let span_invalid_data = document.querySelector(".span_invalid_data")
+    span_invalid_data.classList.remove('hide')
+
+    let login_p = document.querySelector(".login-p")
+    login_p.classList.add("red-shadow")
+}

@@ -1,41 +1,50 @@
 
 
-export function createWaitClient(cliente){
-    //let ulFather = document.getElementsByClassName("list-client-ul") 
-    // [ 1 ]
+function createClientBase(client, clases){
+    let Client = cElm("div")
+    Client.classList.add("client")
+    Client.setAttribute("client_id", client._id)
+    Client.setAttribute("nturno", client.nturno)
+    Client.setAttribute("silla", client.silla)
+    Client.setAttribute("name", client.name)
 
-    // [ 1.1 ]
-    let liElement = cElm("li")
-    liElement.classList.add("list-client-li")
-    liElement.setAttribute('cliente_id', cliente._id)
-    liElement.setAttribute("nturno", cliente.nturno)
-    liElement.setAttribute("silla", cliente.silla)
+    if(clases){
+        clases.forEach(clase => {
+            Client.classList.add(clase)
+        });
+    }
 
     // [ 1.1.1  A ]
-    let divInformation = cElm("div")
-    divInformation.classList.add("li_client-information")
+    let Info = cElm("div")
+    Info.classList.add("client-info")
     
 
-    // [ 1.1.1.1 A ]
     let strongE = cElm("strong")
     
 
-    // [ 1.1.1.1.1A  ]
     let divClientID = cElm("div")
-    divClientID.classList.add('cliente-nturno-div')
-    divClientID.innerHTML = cliente.nturno
+    divClientID.classList.add('client-nturno')
+    divClientID.innerHTML = client.nturno
     
 
-    // [ 1.1.1.1 B]
     let divClientName = cElm("div")
-    divClientName.classList.add("cliente-name-div")
-    divClientName.innerHTML = cliente.name
-    
+    divClientName.classList.add("client-name")
+    divClientName.innerHTML = client.name
 
+    Client.appendChild(Info)
+    Info.appendChild(strongE)
+    strongE.appendChild(divClientID)
+    Info.appendChild(divClientName)
+
+    return Client
+
+}
+
+function crcBtnDeclinar(client){
     let declineButton = cElm('div')
     declineButton.classList.add('decline-client-button')
-    declineButton.setAttribute("cliente_id", cliente._id)
-    declineButton.setAttribute("silla", cliente.silla)
+    declineButton.setAttribute("client_id", client._id)
+    declineButton.setAttribute("silla", client.silla)
     
 
     let arrow1 = cElm('div')
@@ -44,114 +53,86 @@ export function createWaitClient(cliente){
 
     let arrow2 = cElm('div')
     arrow2.classList.add("arrow2")
-    
 
-    liElement.appendChild(divInformation)
-    divInformation.appendChild(strongE)
-    strongE.appendChild(divClientID)
-    divInformation.appendChild(divClientName)
-    liElement.appendChild(declineButton)
     declineButton.appendChild(arrow1)
     declineButton.appendChild(arrow2)
-    //ulFather.appendChild(liElement)
 
-    
-    return liElement
-    
+    return declineButton;
 }
 
-export function createGreenClient(cliente){
-
-    let liClient = cElm("li")
-    liClient.classList.add("list-client-li",  "GREEN")
-    liClient.setAttribute('cliente_id', cliente._id)
-    liClient.setAttribute("nturno", cliente.nturno)
-    liClient.setAttribute("silla", cliente.silla)
-
-
-    // crear div con clase li_client-information
-    let divLiClientInformation = cElm("div")
-    divLiClientInformation.classList.add("li_client-information")
-    
-
-    
-    let divStrong = cElm("strong")
-
-    let divClientID = cElm("div")
-    divClientID.classList.add("cliente-nturno-div")
-    divClientID.innerHTML = cliente.nturno
-
-    let divClientName = cElm("div")
-    divClientName.classList.add("cliente-name-div")
-    divClientName.innerHTML = cliente.name
-
-
-    let divListoText = cElm("div")
-    divListoText.classList.add("client-text")
-    divListoText.innerHTML = "listo"
-
-
-    divStrong.appendChild(divClientID)
-    divLiClientInformation.append(divStrong, divClientName)
-    liClient.append(divLiClientInformation, divListoText)
-    //ulFather.appendChild(liClient)
-
-    return liClient
-}
-
-export function createDeclnClient (cliente){
-
-    let liElement = cElm("li")
-    liElement.classList.add("list-client-li")
-    liElement.classList.add("OPASITY30")
-    liElement.classList.add("declinado")
-    liElement.setAttribute("cliente_id", cliente._id)
-    liElement.setAttribute("nturno", cliente.nturno)
-    liElement.setAttribute("silla", cliente.silla)
-
-    let divInformation = cElm("div")
-    divInformation.classList.add("li_client-information")
-
-    let strongE = cElm("strong")
-
-    let divClientID = cElm("div")
-    divClientID.classList.add('cliente-nturno-div')
-    divClientID.innerHTML = cliente.nturno
-
-    let divClientName = cElm("div")
-    divClientName.classList.add("cliente-name-div")
-    divClientName.innerHTML = cliente.name
-
+function crcBoxDesDeclinar(client){
     let desdecline_box = cElm("div")
     desdecline_box.classList.add('desdecline-box')
 
-    let dclinadoText = cElm("div")
-    dclinadoText.classList.add("client-text")
-
-    let spanDcln = cElm("span")
-    spanDcln.innerHTML = "Declinado"
+    desdecline_box.innerHTML += "Declinado"
 
     let desDeclineButton = cElm("div")
     desDeclineButton.classList.add("desdecline-button")
-    desDeclineButton.setAttribute('cliente_id', cliente._id)
-    desDeclineButton.setAttribute('silla', cliente.silla)
+    desDeclineButton.setAttribute('client_id', client._id)
+    desDeclineButton.setAttribute('silla', client.silla)
 
     let circularButton = cElm('div')
     circularButton.classList.add('circular-button')
+
+    desdecline_box.appendChild(desDeclineButton)
+        desDeclineButton.appendChild(circularButton)
+
+    return desdecline_box
+}
+
+export function crcTextClient(msg){
+    let divListoText = cElm("div")
+    divListoText.classList.add("client-text")
+    divListoText.innerHTML = msg
+
+    return divListoText;
+}
+
+
+
+
+
+export function createWaitClient(client){
     
-   // ulFather.appendChild(liElement)
-    liElement.appendChild(divInformation)
-        divInformation.appendChild(strongE)
-            strongE.appendChild(divClientID)
-            divInformation.appendChild(divClientName)
-    liElement.appendChild(desdecline_box)
-        desdecline_box.appendChild(dclinadoText)
-            dclinadoText.appendChild(spanDcln)
-        desdecline_box.appendChild(desDeclineButton)
-            desDeclineButton.appendChild(circularButton)
-    //liElement.appendChild(divDeclnText)
     
-    return liElement
+    let Client = createClientBase(client)
+
+    // boton de declinar
+    let declineButton = crcBtnDeclinar(client);
+
+
+    Client.appendChild(declineButton)
+    
+    
+
+    
+    return Client
+    
+}
+
+export function createGreenClient(client){
+
+
+    let Client = createClientBase(client, ["GREEN"])
+
+
+    let divListoText = crcTextClient("listo")
+    Client.append(divListoText)
+    
+
+    return Client
+}
+
+export function createDeclnClient (client){
+
+    let Client = createClientBase(client, ["DECLINADO", "declinado"])
+    
+
+    let desdecline_box = crcBoxDesDeclinar(client);
+    
+    
+    Client.appendChild(desdecline_box)
+    return Client
 }
 
 // cElm ==> significa Create Element, la uso para escribir menos
@@ -160,7 +141,7 @@ export function cElm(e) {
 }
 
 export function searchClnID(id){
-    let elm = document.querySelector(`.list-client-li[cliente_id="${id}"]`);
+    let elm = document.querySelector(`.client[client_id="${id}"]`);
     return elm;
 }
 
