@@ -1,11 +1,18 @@
-import { io } from 'https://cdn.socket.io/4.8.1/socket.io.esm.min.js';
+import { io } from '../cdn/socket.io.esm.min.js';
+import {observer} from "./hideClient.js";
+import {warnEvent} from "./warnEvent.js";
+
 const socket = io();
 import {createWaitClient, createGreenClient, createDeclnClient, crcTextClient, cElm, searchClnID} from "../complements/CreateClients.js"
 import {container_scroll} from "./container-scroll.js"
 
+
+
 class CRC{
 	static crtWaitClnt(cliente) {
 		let cliente_wait = createWaitClient(cliente);
+		observer.observe(cliente_wait);
+		
 		let client_text = cElm('div')
 		client_text.innerHTML = 'esperando';
 		client_text.classList.add('client-text');
@@ -18,12 +25,16 @@ class CRC{
 	}
 
 	static crtGreenClnt(cliente) {
-		return createGreenClient(cliente);
+		let greenClient = createGreenClient(cliente)
+		observer.observe(greenClient)
+		return greenClient;
 
 	}
 
 	static crtDeclineClnt(cliente) {
 		let cliente_decline = createDeclnClient(cliente);
+		observer.observe(cliente_decline);
+		
 		let btn_for_remove = cliente_decline.querySelector(".desdecline-box");
 		btn_for_remove.remove()
 
@@ -32,9 +43,11 @@ class CRC{
 
 		return cliente_decline;
 	}
+	
 	static crtActualClnt(cliente) {
 		let cliente_actual = CRC.crtWaitClnt(cliente);
-
+		observer.observe(cliente_actual);
+		
 		// remover client-text por default
 		CRC.removeClientText(cliente_actual)
 
@@ -51,6 +64,7 @@ class CRC{
 		return cliente_actual;
 
 	}
+	
 	static removeClientText(cliente) {
 		let text = cliente.querySelector(".client-text");
 		text.remove();
@@ -104,6 +118,7 @@ function elmToEsperando(elm){
 	let elmObj = htmlToClient(elm);
 	elm.replaceWith(CRC.crtWaitClnt(elmObj))
 }
+
 function elmToListo(elm){
 	let elmObj = htmlToClient(elm);
 	elm.replaceWith(CRC.crtGreenClnt(elmObj))
@@ -120,6 +135,13 @@ function elmToActual(elm){
 }
 
 
+/***************************************************
+|   AGREGAR OBSERVER A CADA CLIENTE PARA ANIMACION  |
+ ***************************************************/
+let clients = document.querySelectorAll(".client")
+for(let client of clients) observer.observe(client);
+
+
 /****************************************************
 |   desdeclineFunc                                   |
 |       - la utilizamos para desdeclinar un cliente  |
@@ -133,8 +155,6 @@ function desdeclineFunc(client){
 		elmToListo(searchClnID(client._id))
 	}
 }
-
-
 
 //
 // 
@@ -184,8 +204,10 @@ socket.on('upturnRES', (res) => {
 		 updateTurn(res.newTurno, res.silla);
 		 elmToListo(searchClnID(res.clienteListo._id))
 		 elmToActual(searchClnID(res.clienteActual._id))
+		warnEvent(`El turno de la silla ${res.silla} aumento`)
 	}
 })
+
 
 socket.on("downturnRES", (res) => {
 	/* 
@@ -198,13 +220,18 @@ socket.on("downturnRES", (res) => {
 		updateTurn(res.newTurno, res.clienteActual.silla)
 		elmToActual(searchClnID(res.clienteActual._id))
 		elmToEsperando(searchClnID(res.lastActual._id))
+		warnEvent(`El turno de la silla ${res.clienteActual.silla} disminuyo`)
+		
 	}
 })
+
 
 socket.on("newClientRES", (cliente)=>{
 	let new_cliente = CRC.crtWaitClnt(cliente);
 	let container = document.querySelector(`.client-container[silla='${cliente.silla}']`)
 	container.appendChild(new_cliente)
+	warnEvent(`Se agrego un cliente a la silla ${cliente.silla} `)
+	
 })
 
 
@@ -220,6 +247,8 @@ socket.on("declineRES", (res) =>{
 	if(res.turno) updateTurn(res.turno, res.silla);
 	elmToDecline(searchClnID(res.clientDecl._id))
 	if(res.newActualClient) elmToActual(searchClnID(res.newActualClient._id))
+	warnEvent(`Se declino el cliente ${res.clientDecl.name}, silla: ${res.clientDecl.silla} `)
+	
 })
 
 
@@ -229,7 +258,8 @@ socket.on("desDeclineRES", (res) =>{
 	"is_actual": undefined/true}
 	*/
 
-	desdeclineFunc(res.cliente)	
+	desdeclineFunc(res.cliente)
+	warnEvent(`Se desdeclino el cliente ${res.cliente.name}, silla: ${res.cliente.silla} `)
 })
 
 
@@ -253,6 +283,8 @@ socket.on("changeNameRES", res => {
 
 })
 
+
+
 /* ---------------- DIVISION DE CLIENTES POR SU SILLA ----------------------*/
 
 
@@ -271,7 +303,6 @@ sillas.forEach(silla => {
 // agregar evento de toque a los btn-silla
 const btnSillas = document.querySelectorAll('.btn-silla')
 btnSillas.forEach(btnSilla => {
-
 
 	// evento de click
 	btnSilla.addEventListener('click', () => {
@@ -317,7 +348,3 @@ function show_open_btn(){
 
 // hay que llamarla almenos una vez para formatear
 show_open_btn()
-
-
-
-

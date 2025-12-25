@@ -61,6 +61,7 @@ block content
     header
         div(class="btn-AddClient-box")
             img(src="/images/nuevo-cliente.png", alt="" class="icon")
+            div Bienvenido #{username}
         div(class="logout-box")
             img(src="/images/cerrar-sesion.png", alt="" class="icon openLogoutScreenButton")
 
@@ -122,7 +123,7 @@ block content
     div(class=' frm frmContainer')
         div(class="frmAddClient")
             div
-                p(class="p-addclient")  Ingresar nuevo cliente
+                p  Ingresar nuevo cliente
             div(class="box-input-text")
                 input(type="text" class="input-addclient" placeholder="Nombre")
             div
@@ -149,26 +150,14 @@ block content
                     input(type='text' id="new-name")
                     div(id="btn-change-name") Actualizar
 
-    div.edit-client-box.edit-name.screen(data-client_id='')
-        div.input-nturno-box
-            div.input-name-ttl Cambiar Nombre
-            div.input-name-subbox
-                div.past-name-container
-                    span Anterior:
-                    div.past-nturno
-
-                div.input-new-name-container
-                    span Nuevo:
-                    input(type='text' id="new-turno")
-                    div(id="btn-change-turno") Actualiza
+    
 
 
 
     div.edits-btns-options
         div.change-name-btn.edit-options-btn(data-client_id='')
                 span Editar Nombre
-        div.edit-options-btn.change-turno(data-client_id='')
-                span Cambiar Turno
+        
 
 
     script(type="module" src="javascripts/panel-js/PB-panel.js")

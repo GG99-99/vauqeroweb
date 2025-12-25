@@ -1,0 +1,30 @@
+
+.down-info{
+    background-color: #313131;
+    color: white;
+    border-radius: 0.9vh;
+    padding: 1vh;
+    font-size: 2vh;
+    width: fit-content;
+    height: fit-content;
+    position: fixed;
+    top: 2vh;
+
+    left: 50%;
+    transform: translateX(-50%) translateY(-200px);
+
+    z-index: 1000;
+    /*box-shadow: var(--box-shadow-var);*/
+    transition: transform 0.4s ease;
+    transition: opacity 0.4s ease;
+    
+}
+
+
+
+
+.down{
+    transform: translateX(-50%) translateY(0px);
+    
+}
+

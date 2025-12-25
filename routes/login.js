@@ -18,6 +18,7 @@ const rateLimit = require('express-rate-limit');
 // 	ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
 // })
 
+
 /* GET users listing. */
 router.route('/')
   .get((req, res) => {
@@ -40,7 +41,7 @@ router.route('/')
 
     try{
       const user = await UserRepository.login({ username, password });  // Se envian los datos a (UserRepository) para que realice el proceso de (login) que incluye las (validaciones basicas)
-      const token = jwt.sign({id: user.id, username: user.username}, SECRET_JWT_KEY, 
+      const token = jwt.sign({id: user._id, username: user.username}, SECRET_JWT_KEY, 
       {
         expiresIn: '1h'
       });  //Json Web Token para la sesion

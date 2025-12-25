@@ -29,7 +29,7 @@ async function sendData(){
                 window.location = "http://localhost:3000/panel";
             };
         } catch(error){
-            //console.log(error)
+            console.log(error)
             }
 });
 }

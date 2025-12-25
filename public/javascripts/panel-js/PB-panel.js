@@ -29,11 +29,20 @@ class CRC{
 
 		})
 
+		elm.addEventListener("mousedown", mouseDownCln)
+		elm.addEventListener("mouseup", mouseUpCln)
+		elm.addEventListener("mouseleave", mouseLeaveCln)
+
 		return elm
 	}
 
 	static crtGreenClnt(client){
 		let elm = createGreenClient(client)
+
+		elm.addEventListener("mousedown", mouseDownCln)
+		elm.addEventListener("mouseup", mouseUpCln)
+		elm.addEventListener("mouseleave", mouseLeaveCln)
+
 		return elm
 	}
 
@@ -48,6 +57,11 @@ class CRC{
 
 
 		})
+
+		elm.addEventListener("mousedown", mouseDownCln)
+		elm.addEventListener("mouseup", mouseUpCln)
+		elm.addEventListener("mouseleave", mouseLeaveCln)
+
 
 		return elm
 	}
@@ -425,9 +439,36 @@ buttonLogout.addEventListener('click', closeSesion)
 /************************************************************************************************
 |   // SELECCIONAR TODOS LOS CLIENTES Y AGREGAR EVENTOS (DECLINE BTN, DESDECLINE BTN, SOSTENER)  |
  ************************************************************************************************/
+let mouseDown = false;
+let timer;
+
+function mouseDownCln(event){
+	mouseDown = true;
+	event.preventDefault();
+	let elm = event.currentTarget;
+	
+	timer = EClnt.contador(()=>{
+		EClnt.editar(elm);
+		EClnt.showEditBtn(elm)
+	}, 0.4)
+}
+function mouseUpCln(event){
+	mouseDown = false;
+	event.preventDefault();
+	if(timer){
+		timer.stop();
+	}
+}
+function mouseLeaveCln(event){
+	event.preventDefault();
+	if(mouseDown){
+		timer.stop();
+		mouseDown = false
+	}
+}
+
 let all_clientes = document.querySelectorAll('.client')
 all_clientes.forEach(cliente => {
-	
     /**********************
     |   BOTON DE DECLINAR  |
      **********************/
@@ -487,49 +528,16 @@ all_clientes.forEach(cliente => {
     /******************************************
     |   EVENTO SOSTENER, MOUSE-UP, MOUSE-DOWN  |
      ******************************************/
-	let timer;
-	let mouseDown = false;
 	
-	cliente.addEventListener("mousedown", event => {
-		// let edit_btn = document.querySelector(".change-name-btn");
-
-		mouseDown = true;
-		event.preventDefault();
-		let elm = event.currentTarget;
-		
-		timer = EClnt.contador(()=>{
-			EClnt.editar(elm);
-			EClnt.showEditBtn(elm)
-		}, 0.6)
-
-	})
-
-	cliente.addEventListener("mouseup", event => {
-		mouseDown = false;
-		event.preventDefault();
-		if(timer){
-			timer.stop();
-		}
-		
-		// console.log("el tiempo total fue: " + timer.gettime());
-		
-	})
-
-	cliente.addEventListener("mouseleave", event =>{
-		event.preventDefault();
-		if(mouseDown){
-			timer.stop();
-			// console.log("el tiempo total fue: " + timer.gettime());
-			mouseDown = false
-
-
-		}
-		
-	})
 	
+	
+	cliente.addEventListener("mousedown", mouseDownCln)
+
+	cliente.addEventListener("mouseup", mouseUpCln)
+
+	cliente.addEventListener("mouseleave", mouseLeaveCln)
 
 })
-
 
 
 

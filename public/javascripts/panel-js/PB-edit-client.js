@@ -85,8 +85,6 @@ export class EClnt{
 		edit_name_btn.dataset.client_id = elm.getAttribute("client_id");
 
 		// boton cambio de turno
-		let edit_turno_btn = document.querySelector(".change-turno")
-		edit_turno_btn.dataset.client_id = elm.getAttribute("client_id");
 
 		elm.appendChild(btns_box);
 		
@@ -103,10 +101,10 @@ export class EClnt{
 		let distanceBottom = Math.round(containerRect.bottom - elmRect.bottom);
 		
 		if(distanceTop > distanceBottom){
-			btns_box.style.top = "-170%";
+			btns_box.style.top = "-100%";
 		}
 		else{
-			btns_box.style.top = "135%";
+			btns_box.style.top = "120%";
 		}
 	}
 	
@@ -114,6 +112,9 @@ export class EClnt{
 		let edits_btn = document.querySelector(".edits-btns-options");
 		edits_btn.style.display = 'none'
 		edits_btn.style.top = "0";
+
+		let body = document.querySelector("body")
+		body.appendChild(edits_btn)
 
 		let frmEditCLient = document.querySelector(".input-name-box")
 		frmEditCLient.style.display = 'none';
@@ -149,9 +150,9 @@ export class EClnt{
 
 	
 
-	static changeName(){
+	// static changeName(){
 		
-	}
+	// }
 	
 
 

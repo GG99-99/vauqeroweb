@@ -82,7 +82,7 @@ var port = normalizePort(process.env.PORT || '3000');
  */
 
 // use app.listen which returns an http.Server instance
-var server = app.listen(port);
+var server = app.listen(port, "0.0.0.0");
 
 // Attach server to socket.io
 io.attach(server)

@@ -11,6 +11,7 @@ header {
     justify-content: center;
     text-align: center;
     color: rgb(255, 255, 255);
+    padding-top: 6.5vh;
 }
 
 .header-div {

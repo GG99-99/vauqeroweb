@@ -13,7 +13,6 @@ io.on('connection', (socket) =>{
 	let room = socket.route
 	if (room){socket.join(room)}
 
-	console.log("un usuario se ha conectado")
 	try{
 		
 		jwt.verify(socket.access_token, SECRET_JWT_KEY);

@@ -27,14 +27,23 @@ li{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* background-color: #242424; */
     width: 60vw;
     position: relative;
     flex-shrink: 0;
 
     
-background: linear-gradient(90deg, rgba(32, 32, 32, 1) 0%, rgba(46, 46, 46, 1) 100%);
-box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    background: linear-gradient(90deg, rgba(32, 32, 32, 1) 0%, rgba(46, 46, 46, 1) 100%);
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+
+    opacity: 0;
+    transform: translateX(50px);
+    transition: 150ms;
+
+}
+
+.show{
+    opacity: 1;
+    transform: translateX(0);
 }
 
 
